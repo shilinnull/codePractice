@@ -1,4 +1,4 @@
-#include<iostream>
+ï»¿#include<iostream>
 using namespace std;
 
 
@@ -25,10 +25,10 @@ using namespace std;
 //{
 //	int* p1 = (int*)malloc(sizeof(int));
 //	free(p1);
-//	// 1.malloc/calloc/reallocµÄÇø±ðÊÇÊ²Ã´£¿
+//	// 1.malloc/calloc/reallocçš„åŒºåˆ«æ˜¯ä»€ä¹ˆï¼Ÿ
 //	int* p2 = (int*)calloc(4, sizeof(int));
 //	int* p3 = (int*)realloc(p2, sizeof(int) * 10);
-//	// ÕâÀïÐèÒªfree(p2)Âð£¿
+//	// è¿™é‡Œéœ€è¦free(p2)å—ï¼Ÿ
 //	free(p3);
 //}
 
@@ -38,13 +38,13 @@ using namespace std;
 //
 //void main()
 //{
-//	// ¶¯Ì¬ÉêÇëÒ»¸öintÀàÐÍµÄ¿Õ¼ä
+//	// åŠ¨æ€ç”³è¯·ä¸€ä¸ªintç±»åž‹çš„ç©ºé—´
 //	int* ptr4 = new int;
 //	
-//	// ¶¯Ì¬ÉêÇëÒ»¸öintÀàÐÍµÄ¿Õ¼ä²¢³õÊ¼»¯Îª10
+//	// åŠ¨æ€ç”³è¯·ä¸€ä¸ªintç±»åž‹çš„ç©ºé—´å¹¶åˆå§‹åŒ–ä¸º10
 //	int* ptr5 = new int(10);
 //	
-//	// ¶¯Ì¬ÉêÇë10¸öintÀàÐÍµÄ¿Õ¼ä
+//	// åŠ¨æ€ç”³è¯·10ä¸ªintç±»åž‹çš„ç©ºé—´
 //	int* ptr6 = new int[3];
 //	
 //	delete ptr4;
@@ -86,13 +86,13 @@ using namespace std;
 //
 //int main()
 //{
-//	// new/delete ºÍ malloc/free×î´óÇø±ðÊÇ new/delete¶ÔÓÚ¡¾×Ô¶¨ÒåÀàÐÍ¡¿³ýÁË¿ª¿Õ¼ä»¹»áµ÷ÓÃ¹¹Ôìº¯ÊýºÍÎö¹¹º¯Êý
+//	// new/delete å’Œ malloc/freeæœ€å¤§åŒºåˆ«æ˜¯ new/deleteå¯¹äºŽã€è‡ªå®šä¹‰ç±»åž‹ã€‘é™¤äº†å¼€ç©ºé—´è¿˜ä¼šè°ƒç”¨æž„é€ å‡½æ•°å’Œæžæž„å‡½æ•°
 //	A* p1 = (A*)malloc(sizeof(A));
 //	A* p2 = new A(1);
 //	free(p1);
 //	delete p2;
 //	
-//	// ÄÚÖÃÀàÐÍÊÇ¼¸ºõÊÇÒ»ÑùµÄ
+//	// å†…ç½®ç±»åž‹æ˜¯å‡ ä¹Žæ˜¯ä¸€æ ·çš„
 //	int* p3 = (int*)malloc(sizeof(int)); // C
 //	int* p4 = new int;
 //	free(p3);
@@ -122,14 +122,14 @@ using namespace std;
 //
 //
 //
-//// ´´½¨µÄ²»´øÉÚ±øÎ»
+//// åˆ›å»ºçš„ä¸å¸¦å“¨å…µä½
 //ListNode* CreateList(int n)
 //{
-//	ListNode head(-1);  // ÉÚ±øÎ»
+//	ListNode head(-1);  // å“¨å…µä½
 //
 //	ListNode* tail = &head;
 //	int val;
-//	printf("ÇëÒÀ´ÎÊäÈë%d¸ö½ÚµãµÄÖµ£º>", n);
+//	printf("è¯·ä¾æ¬¡è¾“å…¥%dä¸ªèŠ‚ç‚¹çš„å€¼ï¼š>", n);
 //	for (int i = 0; i < n; i++)
 //	{
 //		cin >> val;
@@ -154,17 +154,17 @@ using namespace std;
 //
 //int main()
 //{
-//	// 1¡¢ÓÃ·¨ÉÏ£¬±ä¼ò½àÁË
+//	// 1ã€ç”¨æ³•ä¸Šï¼Œå˜ç®€æ´äº†
 //	int* p0 = (int*)malloc(sizeof(int));
 //	int* p1 = new int;
-//	int* p2 = new int[10]; // new 10¸öint¶ÔÏó
+//	int* p2 = new int[10]; // new 10ä¸ªintå¯¹è±¡
 //
-//	// 2¡¢¿ÉÒÔ¿ØÖÆ³õÊ¼»¯
-//	int* p3 = new int(10); // new 1¸öint¶ÔÏó,³õÊ¼»¯³É10
+//	// 2ã€å¯ä»¥æŽ§åˆ¶åˆå§‹åŒ–
+//	int* p3 = new int(10); // new 1ä¸ªintå¯¹è±¡,åˆå§‹åŒ–æˆ10
 //	int* p4 = new int[10] { 1, 2, 3, 4, 5 };
 //
-//	// 3¡¢×Ô¶¨ÒåÀàÐÍ£¬¿ª¿Õ¼ä+¹¹Ôìº¯Êý
-//	// 4¡¢newÊ§°ÜÁËÒÔºóÅ×Òì³££¬²»ÐèÒªÊÖ¶¯¼ì²é
+//	// 3ã€è‡ªå®šä¹‰ç±»åž‹ï¼Œå¼€ç©ºé—´+æž„é€ å‡½æ•°
+//	// 4ã€newå¤±è´¥äº†ä»¥åŽæŠ›å¼‚å¸¸ï¼Œä¸éœ€è¦æ‰‹åŠ¨æ£€æŸ¥
 //	ListNode* node1 = new ListNode(1);
 //	ListNode* node2 = new ListNode(2);
 //	ListNode* node3 = new ListNode(3);
@@ -177,7 +177,7 @@ using namespace std;
 //	delete[] p2;
 //
 //
-//	// Å×Òì³£
+//	// æŠ›å¼‚å¸¸
 //	try
 //	{
 //		func();
@@ -199,14 +199,14 @@ using namespace std;
 //		if (_callnewh(size) == 0)
 //		{
 //			// report no memory
-//			// Èç¹ûÉêÇëÄÚ´æÊ§°ÜÁË£¬ÕâÀï»áÅ×³öbad_alloc ÀàÐÍÒì³£
+//			// å¦‚æžœç”³è¯·å†…å­˜å¤±è´¥äº†ï¼Œè¿™é‡Œä¼šæŠ›å‡ºbad_alloc ç±»åž‹å¼‚å¸¸
 //			static const std::bad_alloc nomem;
 //			_RAISE(nomem);
 //		}
 //	return (p);
 //}
 ///*
-//operator delete: ¸Ãº¯Êý×îÖÕÊÇÍ¨¹ýfreeÀ´ÊÍ·Å¿Õ¼äµÄ
+//operator delete: è¯¥å‡½æ•°æœ€ç»ˆæ˜¯é€šè¿‡freeæ¥é‡Šæ”¾ç©ºé—´çš„
 //*/
 //void operator delete(void* pUserData)
 //{
@@ -227,7 +227,7 @@ using namespace std;
 //		return;
 //}
 ///*
-//freeµÄÊµÏÖ
+//freeçš„å®žçŽ°
 //*/
 //#define free(p) _free_dbg(p, _NORMAL_BLOCK)
 
@@ -248,12 +248,12 @@ using namespace std;
 //	int _a;
 //};
 //
-//// ¶¨Î»new/replacement new
+//// å®šä½new/replacement new
 //int main()
 //{
-//	// p1ÏÖÔÚÖ¸ÏòµÄÖ»²»¹ýÊÇÓëA¶ÔÏóÏàÍ¬´óÐ¡µÄÒ»¶Î¿Õ¼ä£¬»¹²»ÄÜËãÊÇÒ»¸ö¶ÔÏó£¬ÒòÎª¹¹Ôìº¯ÊýÃ»ÓÐÖ´ÐÐ
+//	// p1çŽ°åœ¨æŒ‡å‘çš„åªä¸è¿‡æ˜¯ä¸ŽAå¯¹è±¡ç›¸åŒå¤§å°çš„ä¸€æ®µç©ºé—´ï¼Œè¿˜ä¸èƒ½ç®—æ˜¯ä¸€ä¸ªå¯¹è±¡ï¼Œå› ä¸ºæž„é€ å‡½æ•°æ²¡æœ‰æ‰§è¡Œ
 //	A* p1 = (A*)malloc(sizeof(A));
-//	new(p1)A; // ×¢Òâ£ºÈç¹ûAÀàµÄ¹¹Ôìº¯ÊýÓÐ²ÎÊýÊ±£¬´Ë´¦ÐèÒª´«²Î
+//	new(p1)A; // æ³¨æ„ï¼šå¦‚æžœAç±»çš„æž„é€ å‡½æ•°æœ‰å‚æ•°æ—¶ï¼Œæ­¤å¤„éœ€è¦ä¼ å‚
 //	p1->~A();
 //	free(p1);
 //	A* p2 = (A*)operator new(sizeof(A));
@@ -264,12 +264,12 @@ using namespace std;
 //}
 //void MemoryLeaks()
 //{
-//	// 1.ÄÚ´æÉêÇëÁËÍü¼ÇÊÍ·Å
+//	// 1.å†…å­˜ç”³è¯·äº†å¿˜è®°é‡Šæ”¾
 //	int* p1 = (int*)malloc(sizeof(int));
 //	int* p2 = new int;
-//	// 2.Òì³£°²È«ÎÊÌâ
+//	// 2.å¼‚å¸¸å®‰å…¨é—®é¢˜
 //	int* p3 = new int[10];
-//	Func(); // ÕâÀïFuncº¯ÊýÅ×Òì³£µ¼ÖÂ delete[] p3Î´Ö´ÐÐ£¬p3Ã»±»ÊÍ·Å.
+//	Func(); // è¿™é‡ŒFuncå‡½æ•°æŠ›å¼‚å¸¸å¯¼è‡´ delete[] p3æœªæ‰§è¡Œï¼Œp3æ²¡è¢«é‡Šæ”¾.
 //	delete[] p3;
 //}
 
@@ -277,12 +277,12 @@ using namespace std;
 //int main()
 //{
 //	int* p = new int[10];
-//	// ½«¸Ãº¯Êý·ÅÔÚmainº¯ÊýÖ®ºó£¬Ã¿´Î³ÌÐòÍË³öµÄÊ±ºò¾Í»á¼ì²âÊÇ·ñ´æÔÚÄÚ´æÐ¹Â©
+//	// å°†è¯¥å‡½æ•°æ”¾åœ¨mainå‡½æ•°ä¹‹åŽï¼Œæ¯æ¬¡ç¨‹åºé€€å‡ºçš„æ—¶å€™å°±ä¼šæ£€æµ‹æ˜¯å¦å­˜åœ¨å†…å­˜æ³„æ¼
 //	_CrtDumpMemoryLeaks();
 //	return 0;
 //}
 //////////////////////////////////////////////////////////
-//// ³ÌÐòÍË³öºó£¬ÔÚÊä³ö´°¿ÚÖÐ¿ÉÒÔ¼ì²âµ½Ð¹Â©ÁË¶àÉÙ×Ö½Ú£¬µ«ÊÇÃ»ÓÐ¾ßÌåµÄÎ»ÖÃ
+//// ç¨‹åºé€€å‡ºåŽï¼Œåœ¨è¾“å‡ºçª—å£ä¸­å¯ä»¥æ£€æµ‹åˆ°æ³„æ¼äº†å¤šå°‘å­—èŠ‚ï¼Œä½†æ˜¯æ²¡æœ‰å…·ä½“çš„ä½ç½®
 //Detected memory leaks!
 //Dumping objects ->
 //{79} normal block at 0x00EC5FB8, 40 bytes long.
@@ -290,69 +290,320 @@ using namespace std;
 //Object dump complete.
 
 
-class A
-{
-public:
-	A(int a = 0)
-		: _a(a)
-	{
-		cout << "A():" << this << endl;
-	}
-
-	~A()
-	{
-		cout << "~A():" << this << endl;
-	}
-private:
-	int _a;
-};
-
+//class A
+//{
+//public:
+//	A(int a = 0)
+//		: _a(a)
+//	{
+//		cout << "A():" << this << endl;
+//	}
+//
+//	~A()
+//	{
+//		cout << "~A():" << this << endl;
+//	}
+//private:
+//	int _a;
+//};
+//
+////
+////int main()
+////{
+////	int* p1 = new int[10];
+////	delete[] p1;
+////
+////	A* p2 = new A[10];
+////	delete[] p2;
+////
+////	return 0;
+////}
+//
+//
+//class Stack
+//{
+//public:
+//	Stack()
+//	{
+//		_a = (int*)malloc(sizeof(int) * 4);
+//		_top = 0;
+//		_capacity = 4;
+//	}
+//
+//	~Stack()
+//	{
+//		free(_a);
+//		_top = _capacity = 0;
+//	}
+//private:
+//	int* _a;
+//	int _top;
+//	int _capacity;
+//};
 //
 //int main()
 //{
-//	int* p1 = new int[10];
-//	delete[] p1;
+//	A* ptr1 = new A;  // operator new + 1æ¬¡æž„é€ 
+//	A* ptr2 = new A[10]; // operator new[] + 10æ¬¡æž„é€ 
 //
-//	A* p2 = new A[10];
-//	delete[] p2;
+//	delete ptr1; // 1æ¬¡æžæž„ + operator delete
+//	delete[] ptr2; // 10æ¬¡æžæž„ + operator delete[]
+//
+//	Stack* pst = new Stack;
+//	delete pst;
+//
+//
+//	int* p1 = new int[10];
+//	return 0;
+//}
+
+//namespace shilin
+//{
+//	namespace A
+//	{
+//		// .......
+//		struct Node
+//		{
+//
+//		};
+//	}
+//}
+
+
+//int main()
+//{
+//	//struct shilin::A::Node node1;
+//
+//	int arr[10] = {0};
+//
+//	for (auto& e : arr)
+//	{
+//		e *= 2;
+//	}
 //
 //	return 0;
 //}
 
 
-class Stack
-{
-public:
-	Stack()
-	{
-		_a = (int*)malloc(sizeof(int) * 4);
-		_top = 0;
-		_capacity = 4;
-	}
+//class Date
+//{
+//public:
+////	Date()
+////	{
+////		_year = 1970;
+////		_month = 1;
+////		_day = 1;
+////	}
+////	Date(int year, int month, int day)
+////	{
+////		_year = year;
+////		_month = month;
+////		_day = day;
+////	}
+//	Date(int year = 1970, int month = 1, int day = 1)
+//	{
+//		_year = year;
+//		_month = month;
+//		_day = day;
+//	}
+//	friend bool operator==(const Date& d1, const Date& d2);
+//
+//	bool operator==(const Date& d2)
+//	{
+//		return _year == d2._year
+//			&& _month == d2._month
+//			&& _day == d2._day;
+//	}
+//
+//	Date& operator++(int)
+//	{
+//
+//	}
+//
+//private:
+//	int _year = 1970;
+//	int _month = 1;
+//	int _day = 1;
+//};
+//
+//bool operator==(const Date& d1, const Date& d2)
+//{
+//	return d1._year == d2._year
+//		&& d1._month == d2._month
+//		&& d1._day == d2._day;
+//}
+//
+//
+//
+//class A
+//{
+//public:
+//	A()
+//		:_a(1)
+//		,_b(2)
+//	{}
+//
+//private:
+//	int _a;
+//	int _b;
+//};
+//
+//
+//int main()
+//{
+//
+//	Date d1(1,1,1);
+//
+//	Date d2(2,2,2);
+//
+//	operator==(d1, d2);
+//
+//	d1 == d2;
+//
+//	d1.operator==(d2);
+//
+//	
+//
+//	return 0;
+//}
 
-	~Stack()
-	{
-		free(_a);
-		_top = _capacity = 0;
-	}
-private:
-	int* _a;
-	int _top;
-	int _capacity;
-};
+//class A
+//{
+//public:
+//	A(int a = 0)
+//		:_a(a)
+//	{
+//		cout << "A(int a)" << endl;
+//}
+//~A()
+//{
+//	cout << "~A()" << endl;
+//}
+//private:
+//	int _a;
+//};
+//class Solution {
+//public:
+//	int Sum_Solution(int n) {
+//		//...
+//		return n;
+//	}
+//};
+//int main()
+//{
+//	A aa1;
+//	// ä¸èƒ½è¿™ä¹ˆå®šä¹‰å¯¹è±¡ï¼Œå› ä¸ºç¼–è¯‘å™¨æ— æ³•è¯†åˆ«ä¸‹é¢æ˜¯ä¸€ä¸ªå‡½æ•°å£°æ˜Žï¼Œè¿˜æ˜¯å¯¹è±¡å®šä¹‰
+//	//A aa1();
+//	// ä½†æ˜¯æˆ‘ä»¬å¯ä»¥è¿™ä¹ˆå®šä¹‰åŒ¿åå¯¹è±¡ï¼ŒåŒ¿åå¯¹è±¡çš„ç‰¹ç‚¹ä¸ç”¨å–åå­—ï¼Œ
+//	// ä½†æ˜¯ä»–çš„ç”Ÿå‘½å‘¨æœŸåªæœ‰è¿™ä¸€è¡Œï¼Œæˆ‘ä»¬å¯ä»¥çœ‹åˆ°ä¸‹ä¸€è¡Œä»–å°±ä¼šè‡ªåŠ¨è°ƒç”¨æžæž„å‡½æ•°
+//	A();
+//	A aa2(2);
+//	// åŒ¿åå¯¹è±¡åœ¨è¿™æ ·åœºæ™¯ä¸‹å°±å¾ˆå¥½ç”¨ï¼Œå½“ç„¶è¿˜æœ‰ä¸€äº›å…¶ä»–ä½¿ç”¨åœºæ™¯ï¼Œè¿™ä¸ªæˆ‘ä»¬ä»¥åŽé‡åˆ°äº†å†è¯´
+//	Solution().Sum_Solution(10);
+//	return 0;
+//}
+//
+//class A
+//{
+//
+//public:
+//	A(int h = 0)
+//	{}
+//private:
+//	static int k;
+//	int h;
+//public:
+//	class B // Bå¤©ç”Ÿå°±æ˜¯Açš„å‹å…ƒ
+//	{
+//	public:
+//		void foo(const A& a)
+//		{
+//			cout << k << endl;//OK
+//			cout << a.h << endl;//OK
+//		}
+//	};
+//};
+//int A::k = 1;
+//int main()
+//{
+//	A::B b;
+//	b.foo(A());
+//
+//	A* p1 = (A*)malloc(sizeof(A));
+//
+//	new(p1)A(10);
+//
+//
+//	return 0;
+//}
+
+//
+//class A {
+//private:
+//	int a;
+//public:
+//	const int b;
+//	float*& c;
+//	static const char* d;
+//	static double* e;
+//};
+//
+//class AA
+//{
+//public:
+//	AA* abc() const
+//	{
+//		return *this;
+//	}
+//};
+//
+//int main()
+//{
+//	AA x;
+//	x.abc();
+//
+//	return 0;
+//}
+//
+//ï»¿class A
+//{
+//public:
+//  A(int a)
+//	:_a1(a)
+//	,_a2(_a1)
+//  {}
+//  void Print()
+//  {
+//	cout << _a1 << " " << _a2 << endl;
+//
+//  }
+//private:
+//  int _a2;
+//  int _a1;
+//}
+//
+//
+//
+//int main()
+//{
+//	A aa(1);
+//	aa.Print();
+//}
+
+
+
+template<class T1, class T2>
+
+template<typename T1, T2>
+
+template<typename T1, typename T2>
+
+template<class T1, typename T2>
+
 
 int main()
 {
-	A* ptr1 = new A;  // operator new + 1´Î¹¹Ôì
-	A* ptr2 = new A[10]; // operator new[] + 10´Î¹¹Ôì
-
-	delete ptr1; // 1´ÎÎö¹¹ + operator delete
-	delete[] ptr2; // 10´ÎÎö¹¹ + operator delete[]
-
-	Stack* pst = new Stack;
-	delete pst;
-
-
-	int* p1 = new int[10];
+	char* p = new char[100];
+	delete p;
 	return 0;
 }
