@@ -590,20 +590,23 @@ using namespace std;
 //	aa.Print();
 //}
 
-
-
-template<class T1, class T2>
-
-template<typename T1, T2>
-
-template<typename T1, typename T2>
-
-template<class T1, typename T2>
-
-
 int main()
 {
-	char* p = new char[100];
-	delete p;
+	char arr1[11] = "abcdef";
+	char arr2[10] = "ghi";
+
+	int len1 = strlen(arr1);
+	int len2 = strlen(arr2);
+	
+	//char* arr = (char*)malloc(sizeof(char) * len1 + len2);
+
+	int i = 0;
+	while (arr2[i] != '\0')
+	{
+		arr1[len1++] = arr2[i++];
+	}
+	
+	arr1[len1 + 1] = '\0';
+	printf("%s", arr1);
 	return 0;
 }
