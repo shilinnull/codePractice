@@ -74,17 +74,72 @@ print(c)
 
 # 输入4个输，输出平均值
 
-a = input('请输入第一个数字：')
-b = input('请输入第二个数字：')
-c = input('请输入第三个数字：')
-d = input('请输入第四个数字：')
-avg = float(a) + float(b) + float(c) + float(d)
-print(f'平均值是：{avg / 4}')
+# a = input('请输入第一个数字：')
+# b = input('请输入第二个数字：')
+# c = input('请输入第三个数字：')
+# d = input('请输入第四个数字：')
+# avg = float(a) + float(b) + float(c) + float(d)
+# print(f'平均值是：{avg / 4}')
 
+# a = 60 * 2 + 30
+# b = a / 1.25
+# c = b / 60
+# print(c)
 
+# print(10 % 7)
+# print(0 / 10)
 
+# print(1 / 2)
+# ** 乘方运算
+# print(10 ** 2.2)
+# print(4 ** 0.5)
 
+# 地板除法 （向下取整）
+# print(7 // 2)
+# print(-4 // 2)
 
+# 关系运算
+# print(1 < 10)
+# print(1 <= 10)
+# print(1 == 10)
+# print(1 > 10)
+# print(1 >= 10)
+#
+# print('hello' == 'hello')
+#
+# print(0.1 + 0.2)
 
+# a = 10
+# b = 20
+# c = 30
+# print(a < b and b < c)
+# print(a < b < c)
+# print(a < b and b > c)
+# print(a > b or b > c)
+# print(a < b or b > c)
+# print(not a < b)
+# print(not a > b)
+#
+# print(a > b and 20 / 0 == 1)
+# # print(b > a and 20 / 0 == 1)
+# print(a < b or 10 / 0 == 1)
 
+# 赋值
+# a = b = 10;
+# c,d = 20,30
+# print(c)
+# print(d)
+#
+# tmp = c
+# c = d
+# d = tmp
+# print(c)
+# print(d)
+#
+# a,b = b,a
+# print(c)
+# print(d)
+
+# print(len('a'))
+# a = 10;
 
