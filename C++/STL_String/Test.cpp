@@ -57,31 +57,103 @@ using namespace std;
 //	return 0;
 //}
 
-int main()
+//int main()
+//{
+//	string s0;
+//	string s1("hello world");
+//	string s2(s1);
+//	string s3(s1, 5, 3);
+//	string s4(s1, 5, 10);
+//	string s5(s1, 5);
+//
+//	cout << s0 << endl;
+//	cout << s1 << endl;
+//	cout << s2 << endl;
+//	cout << s3 << endl;
+//	cout << s4 << endl;
+//	cout << s5 << endl;
+//
+//	string s6(10, '#');
+//	cout << s6 << endl;
+//	
+//	s0 = s6;
+//	cout << s0 << endl;
+//	
+//	return 0;
+//}
+
+void Test_string1()
 {
-	string s0;
 	string s1("hello world");
-	string s2(s1);
-	string s3(s1, 5, 3);
-	string s4(s1, 5, 10);
-	string s5(s1, 5);
+	string::reverse_iterator rit = s1.rbegin();
+	while (rit != s1.rend())
+	{
+		cout << *rit << " ";
+		++rit;
+	}
+	cout << endl; 
 
-	cout << s0 << endl;
-	cout << s1 << endl;
+	const string s2("hello world");
+	string::const_iterator cit = s2.begin();
+	while (cit != s2.end())
+	{
+		cout << *cit << " ";
+		++cit;
+	}
+	cout << endl;
+}
+void Test_string2()
+{
+	string s1("hello world");
+	cout << s1.max_size() << endl;
+}
+void Test_string3()
+{
+	string s1("hello");
+	cout << s1.capacity() << endl;
+
+	s1.resize(20);
+	// s1.resize(30,'x');
+	// s1.resize(0);
+	cout << s1.capacity() << endl;
+	cout << s1.empty() << endl;
+	s1.shrink_to_fit();
+	cout << s1.capacity() << endl;
+
+
+	cout << s1.capacity() << endl;
+	cout << s1.size() << endl;
+
+	string s2("world");
+	s1.swap(s2);
 	cout << s2 << endl;
-	cout << s3 << endl;
-	cout << s4 << endl;
-	cout << s5 << endl;
 
-	string s6(10, '#');
-	cout << s6 << endl;
-	
-	s0 = s6;
-	cout << s0 << endl;
-	
-	return 0;
 }
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+int main()
+{
+	Test_string3();
+
+
+
+
+
+	return 0;
+}
 
 
 
