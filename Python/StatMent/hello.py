@@ -25,5 +25,39 @@
 # else:
 #     print("hello")
 
+# 循环
+# num = 1
+# while num <= 10:
+#     print(num)
+#     num += 1
+#
+
+# num = 1
+# sum = 0
+# while num <= 100:
+#     sum += num
+#     num += 1
+#     print(sum);
+
+# num = 1
+# result = 1
+# while num <= 5:
+#     result *= num
+#     num += 1
+# print(result)
+
+
+# num = 1
+# sum = 0
+# while num <= 5:
+#     factorResult = 1
+#     i = 1
+#     while i <= num:
+#         factorResult *= i
+#         i += 1
+#     sum += factorResult
+#     num += 1
+# print(sum)
+
 
 
