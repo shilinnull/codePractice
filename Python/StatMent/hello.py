@@ -59,5 +59,44 @@
 #     num += 1
 # print(sum)
 
+# for循环
+# for i in range(1,11):
+#     print(i)
+# range是一个内联函数
 
+# 第三个参数是步长
+# for i in range(2,12,2):
+#     print(i)
+
+# for i in range(10,0,-1):
+#     print(i)
+#
+# sum = 0
+# for i in range(1,101):
+#     sum += i
+# print(f'sum = {sum}')
+
+# continue break
+
+# for i in range(1,6):
+#     if i == 3:
+#         continue
+#     print(f"吃{i}个")
+
+
+# for i in range(1,6):
+#     if i == 3:
+#         break
+#     print(f"吃{i}个")
+
+# theSum = 0
+# count = 0
+# while True:
+#     num = input("请输入(分号';'结尾)：")
+#     if num == ';':
+#         break
+#     num = float(num)
+#     theSum += num
+#     count += 1
+# print(f'平均值为{theSum / count}')
 
