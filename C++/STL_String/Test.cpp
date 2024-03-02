@@ -300,39 +300,79 @@ void Teststring8()
 	string str;
 	str.push_back(' ');   // 在str后插入空格
 	str.append("hello");  // 在str后追加一个字符"hello"
-	str += 'b';           // 在str后追加一个字符'b'   
-	str += "it";          // 在str后追加一个字符串"it"
+	str += 'w';           // 在str后追加一个字符'w'   
+	str += "orld";          // 在str后追加一个字符串"orld"
 	cout << str << endl;
 	cout << str.c_str() << endl;   // 以C语言的方式打印字符串
+	cout << str.data() << endl;
+	
+	string s1("hello");
+	string s2 = s1;
+	if (s1 == s2)
+		cout << "True" << endl;
+	else
+		cout << "False" << endl;
+
+	if (s1.c_str() == s2.c_str())
+		cout << "True" << endl;
+	else
+		cout << "False" << endl;
 
 	// 获取file的后缀
 	string file("string.cpp");
+	// 从后往前找 '.'
 	size_t pos = file.rfind('.');
-	string suffix(file.substr(pos, file.size() - pos));
+	// 截取从pos位置开始到最后
+	string suffix(file.substr(pos,file.size() - pos));
 	cout << suffix << endl;
 
-	// npos是string里面的一个静态成员变量
-	// static const size_t npos = -1;
+	// 取出url中的协议
+	string url("https://www.cplusplus.com/reference/string/string/find/");
+	cout << url << endl;
+
+	size_t n = url.find(':');
+	if (n == string::npos)
+	{
+		cout << "invalid url" << endl;
+		return;
+	}
+	string protocol = url.substr(0, n);
+	cout << protocol << endl;
+	cout << url.substr(0, n) << endl;
+
 
 	// 取出url中的域名
-	string url("http://www.cplusplus.com/reference/string/string/find/");
-	cout << url << endl;
 	size_t start = url.find("://");
 	if (start == string::npos)
 	{
 		cout << "invalid url" << endl;
 		return;
 	}
-	start += 3;
+	start += 3; // 跳过 ://
 	size_t finish = url.find('/', start);
 	string address = url.substr(start, finish - start);
 	cout << address << endl;
+	cout << url.substr(start, finish - start) << endl;
 
 	// 删除url的协议前缀
 	pos = url.find("://");
 	url.erase(0, pos + 3);
 	cout << url << endl;
+
+
+	//string str("Please, replace the vowels in this sentence by asterisks.");
+	//cout << str << endl;
+
+	//size_t found = str.find_first_not_of("aeiou");
+	//while (found != string::npos)
+	//{
+	//	str[found] = '*';
+	//	found = str.find_first_not_of("aeiou", found + 1);
+	//}
+	//cout << str << endl;
+
 }
+
 
 
 
