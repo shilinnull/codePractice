@@ -1,4 +1,4 @@
-#include<iostream>
+ï»¿#include<iostream>
 #include<string>
 #include<vector>
 #include<list>
@@ -145,12 +145,12 @@ void Teststring1()
 void Teststring2()
 {
 	string s;
-	// ²âÊÔreserveÊÇ·ñ»á¸Ä±ästringÖĞÓĞĞ§ÔªËØ¸öÊı
+	// æµ‹è¯•reserveæ˜¯å¦ä¼šæ”¹å˜stringä¸­æœ‰æ•ˆå…ƒç´ ä¸ªæ•°
 	s.reserve(100);
 	cout << s.size() << endl;
 	cout << s.capacity() << endl;
 
-	// ²âÊÔreserve²ÎÊıĞ¡ÓÚstringµÄµ×²ã¿Õ¼ä´óĞ¡Ê±£¬ÊÇ·ñ»á½«¿Õ¼äËõĞ¡
+	// æµ‹è¯•reserveå‚æ•°å°äºstringçš„åº•å±‚ç©ºé—´å¤§å°æ—¶ï¼Œæ˜¯å¦ä¼šå°†ç©ºé—´ç¼©å°
 	s.reserve(50);
 	cout << s.size() << endl;
 	cout << s.capacity() << endl;
@@ -175,33 +175,33 @@ void TestPushBack()
 
 void Teststring3()
 {
-	// ×¢Òâ£ºstringÀà¶ÔÏóÖ§³ÖÖ±½ÓÓÃcinºÍcout½øĞĞÊäÈëºÍÊä³ö
+	// æ³¨æ„ï¼šstringç±»å¯¹è±¡æ”¯æŒç›´æ¥ç”¨cinå’Œcoutè¿›è¡Œè¾“å…¥å’Œè¾“å‡º
 	string s("hello, world!!!");
 	cout << s.size() << endl;
 	cout << s.length() << endl;
 	cout << s.capacity() << endl;
 	cout << s << endl;
 
-	// ½«sÖĞµÄ×Ö·û´®Çå¿Õ£¬×¢ÒâÇå¿ÕÊ±Ö»ÊÇ½«sizeÇå0£¬²»¸Ä±äµ×²ã¿Õ¼äµÄ´óĞ¡
+	// å°†sä¸­çš„å­—ç¬¦ä¸²æ¸…ç©ºï¼Œæ³¨æ„æ¸…ç©ºæ—¶åªæ˜¯å°†sizeæ¸…0ï¼Œä¸æ”¹å˜åº•å±‚ç©ºé—´çš„å¤§å°
 	s.clear();
 	cout << s.size() << endl;
 	cout << s.capacity() << endl;
 
-	// ½«sÖĞÓĞĞ§×Ö·û¸öÊıÔö¼Óµ½10¸ö£¬¶à³öÎ»ÖÃÓÃ'a'½øĞĞÌî³ä
-	// ¡°aaaaaaaaaa¡±
+	// å°†sä¸­æœ‰æ•ˆå­—ç¬¦ä¸ªæ•°å¢åŠ åˆ°10ä¸ªï¼Œå¤šå‡ºä½ç½®ç”¨'a'è¿›è¡Œå¡«å……
+	// â€œaaaaaaaaaaâ€
 	s.resize(10, 'a');
 	cout << s.size() << endl;
 	cout << s.capacity() << endl;
 
-	// ½«sÖĞÓĞĞ§×Ö·û¸öÊıÔö¼Óµ½15¸ö£¬¶à³öÎ»ÖÃÓÃÈ±Ê¡Öµ'\0'½øĞĞÌî³ä
+	// å°†sä¸­æœ‰æ•ˆå­—ç¬¦ä¸ªæ•°å¢åŠ åˆ°15ä¸ªï¼Œå¤šå‡ºä½ç½®ç”¨ç¼ºçœå€¼'\0'è¿›è¡Œå¡«å……
 	// "aaaaaaaaaa\0\0\0\0\0"
-	// ×¢Òâ´ËÊ±sÖĞÓĞĞ§×Ö·û¸öÊıÒÑ¾­Ôö¼Óµ½15¸ö
+	// æ³¨æ„æ­¤æ—¶sä¸­æœ‰æ•ˆå­—ç¬¦ä¸ªæ•°å·²ç»å¢åŠ åˆ°15ä¸ª
 	s.resize(15);
 	cout << s.size() << endl;
 	cout << s.capacity() << endl;
 	cout << s << endl;
 
-	// ½«sÖĞÓĞĞ§×Ö·û¸öÊıËõĞ¡µ½5¸ö
+	// å°†sä¸­æœ‰æ•ˆå­—ç¬¦ä¸ªæ•°ç¼©å°åˆ°5ä¸ª
 	s.resize(5);
 	cout << s.size() << endl;
 	cout << s.capacity() << endl;
@@ -228,7 +228,7 @@ void Teststring5()
 	cout << s1.capacity() << endl;
 	cout << s1.size() << endl;
 	
-	// ½«capacityËõĞ¡µ½size´óĞ¡Ò»Ñù´ó
+	// å°†capacityç¼©å°åˆ°sizeå¤§å°ä¸€æ ·å¤§
 	s1.shrink_to_fit();
 	cout << s1.capacity() << endl;
 	cout << s1.size() << endl;
@@ -236,10 +236,10 @@ void Teststring5()
 
 
 ////////////////////////////////////////////////////////////////
-// stringµÄ±éÀú
-// begin()+end()   for+[]  ·¶Î§for
-// ×¢Òâ£ºstring±éÀúÊ±Ê¹ÓÃ×î¶àµÄ»¹ÊÇfor+ÏÂ±ê »òÕß ·¶Î§for(C++11ºó²ÅÖ§³Ö)
-// begin()+end()´ó¶àÊıÊ¹ÓÃÔÚĞèÒªÊ¹ÓÃSTLÌá¹©µÄËã·¨²Ù×÷stringÊ±£¬±ÈÈç£º²ÉÓÃreverseÄæÖÃstring
+// stringçš„éå†
+// begin()+end()   for+[]  èŒƒå›´for
+// æ³¨æ„ï¼šstringéå†æ—¶ä½¿ç”¨æœ€å¤šçš„è¿˜æ˜¯for+ä¸‹æ ‡ æˆ–è€… èŒƒå›´for(C++11åæ‰æ”¯æŒ)
+// begin()+end()å¤§å¤šæ•°ä½¿ç”¨åœ¨éœ€è¦ä½¿ç”¨STLæä¾›çš„ç®—æ³•æ“ä½œstringæ—¶ï¼Œæ¯”å¦‚ï¼šé‡‡ç”¨reverseé€†ç½®string
 
 void Teststring7()
 {
@@ -251,7 +251,7 @@ void Teststring7()
 	s1[0] = 'H';
 	cout << s1 << endl;
 
-	// s2[0] = 'h';   ´úÂë±àÒëÊ§°Ü£¬ÒòÎªconstÀàĞÍ¶ÔÏó²»ÄÜĞŞ¸Ä
+	// s2[0] = 'h';   ä»£ç ç¼–è¯‘å¤±è´¥ï¼Œå› ä¸ºconstç±»å‹å¯¹è±¡ä¸èƒ½ä¿®æ”¹
 }
 
 void Teststring6()
@@ -262,7 +262,7 @@ void Teststring6()
 		cout << s[i] << ' ';
 	cout << endl;
 
-	// 2.µü´úÆ÷
+	// 2.è¿­ä»£å™¨
 	string::iterator it = s.begin();
 	while (it != s.end())
 	{
@@ -273,7 +273,7 @@ void Teststring6()
 
 
 	// string::reverse_iterator rit = s.rbegin();
-	// C++11Ö®ºó£¬Ö±½ÓÊ¹ÓÃauto¶¨Òåµü´úÆ÷£¬ÈÃ±àÒëÆ÷ÍÆµ½µü´úÆ÷µÄÀàĞÍ
+	// C++11ä¹‹åï¼Œç›´æ¥ä½¿ç”¨autoå®šä¹‰è¿­ä»£å™¨ï¼Œè®©ç¼–è¯‘å™¨æ¨åˆ°è¿­ä»£å™¨çš„ç±»å‹
 	auto rit = s.rbegin();
 	while (rit != s.rend()) {
 		cout << *rit << ' ';
@@ -282,7 +282,7 @@ void Teststring6()
 	cout << endl;
 
 
-	// 3.·¶Î§for
+	// 3.èŒƒå›´for
 	for (auto ch : s)
 		cout << ch << ' ';
 	cout << endl;
@@ -290,20 +290,20 @@ void Teststring6()
 }
 
 //////////////////////////////////////////////////////////////
-// ²âÊÔstring£º
-// 1. ²åÈë(Æ´½Ó)·½Ê½£ºpush_back  append  operator+= 
-// 2. ÕıÏòºÍ·´Ïò²éÕÒ£ºfind() + rfind()
-// 3. ½ØÈ¡×Ó´®£ºsubstr()
-// 4. É¾³ı£ºerase
+// æµ‹è¯•stringï¼š
+// 1. æ’å…¥(æ‹¼æ¥)æ–¹å¼ï¼špush_back  append  operator+= 
+// 2. æ­£å‘å’Œåå‘æŸ¥æ‰¾ï¼šfind() + rfind()
+// 3. æˆªå–å­ä¸²ï¼šsubstr()
+// 4. åˆ é™¤ï¼šerase
 void Teststring8()
 {
 	string str;
-	str.push_back(' ');   // ÔÚstrºó²åÈë¿Õ¸ñ
-	str.append("hello");  // ÔÚstrºó×·¼ÓÒ»¸ö×Ö·û"hello"
-	str += 'w';           // ÔÚstrºó×·¼ÓÒ»¸ö×Ö·û'w'   
-	str += "orld";          // ÔÚstrºó×·¼ÓÒ»¸ö×Ö·û´®"orld"
+	str.push_back(' ');   // åœ¨stråæ’å…¥ç©ºæ ¼
+	str.append("hello");  // åœ¨stråè¿½åŠ ä¸€ä¸ªå­—ç¬¦"hello"
+	str += 'w';           // åœ¨stråè¿½åŠ ä¸€ä¸ªå­—ç¬¦'w'   
+	str += "orld";          // åœ¨stråè¿½åŠ ä¸€ä¸ªå­—ç¬¦ä¸²"orld"
 	cout << str << endl;
-	cout << str.c_str() << endl;   // ÒÔCÓïÑÔµÄ·½Ê½´òÓ¡×Ö·û´®
+	cout << str.c_str() << endl;   // ä»¥Cè¯­è¨€çš„æ–¹å¼æ‰“å°å­—ç¬¦ä¸²
 	cout << str.data() << endl;
 	
 	string s1("hello");
@@ -318,15 +318,15 @@ void Teststring8()
 	else
 		cout << "False" << endl;
 
-	// »ñÈ¡fileµÄºó×º
+	// è·å–fileçš„åç¼€
 	string file("string.cpp");
-	// ´ÓºóÍùÇ°ÕÒ '.'
+	// ä»åå¾€å‰æ‰¾ '.'
 	size_t pos = file.rfind('.');
-	// ½ØÈ¡´ÓposÎ»ÖÃ¿ªÊ¼µ½×îºó
+	// æˆªå–ä»posä½ç½®å¼€å§‹åˆ°æœ€å
 	string suffix(file.substr(pos,file.size() - pos));
 	cout << suffix << endl;
 
-	// È¡³öurlÖĞµÄĞ­Òé
+	// å–å‡ºurlä¸­çš„åè®®
 	string url("https://www.cplusplus.com/reference/string/string/find/");
 	cout << url << endl;
 
@@ -341,20 +341,20 @@ void Teststring8()
 	cout << url.substr(0, n) << endl;
 
 
-	// È¡³öurlÖĞµÄÓòÃû
+	// å–å‡ºurlä¸­çš„åŸŸå
 	size_t start = url.find("://");
 	if (start == string::npos)
 	{
 		cout << "invalid url" << endl;
 		return;
 	}
-	start += 3; // Ìø¹ı ://
+	start += 3; // è·³è¿‡ ://
 	size_t finish = url.find('/', start);
 	string address = url.substr(start, finish - start);
 	cout << address << endl;
 	cout << url.substr(start, finish - start) << endl;
 
-	// É¾³ıurlµÄĞ­ÒéÇ°×º
+	// åˆ é™¤urlçš„åè®®å‰ç¼€
 	pos = url.find("://");
 	url.erase(0, pos + 3);
 	cout << url << endl;
@@ -375,11 +375,11 @@ void Teststring8()
 
 
 
-
+#include<string.h>
 int main()
 {
-	//TestPushBack();
-	Teststring8();
+	 //TestPushBack();
+	 Teststring8();
 
 	return 0;
 }
