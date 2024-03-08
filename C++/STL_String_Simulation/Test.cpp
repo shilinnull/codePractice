@@ -65,9 +65,22 @@ void Test4() {
 
 }
 
+void Test5() {
+	lsl::string s1("hello");
+	lsl::string s2("world");
+	cout << s1 << endl;
+	cout << s2 << endl;
+	
+	swap(s1, s2);
+	cout << s1 << endl;
+	cout << s2 << endl;
+	cout << s1.find('l') << endl;
+	cout << s1.find("el",2) << endl;
+}
+
 int main() {
 
-	Test4();
+	Test5();
 
 	return 0;
 }
