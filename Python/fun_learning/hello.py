@@ -39,9 +39,30 @@
 # _,b = getPoint()
 
 
-def factor(n):
-    if n == 1:
-        return 1
-    return n * factor(n - 1)
+# def factor(n):
+#     if n == 1:
+#         return 1
+#     return n * factor(n - 1)
+#
+# print(factor(5))
 
-print(factor(5))
+# 缺省参数
+# def add(x,y,debug = False):
+#     if debug:
+#         print(x,y)
+#     return x +y
+#
+# result = add(10,20,True)
+# result = add(10,20)
+# print(result)
+
+# 指定参数传参
+# def test(x,y):
+#     print(f'x = {x}')
+#     print(f'x = {y}')
+#
+#
+# test(x = 20,y = 10)
+# test(y = 100,x = 200)
+
+
