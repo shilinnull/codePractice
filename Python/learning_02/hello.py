@@ -28,13 +28,20 @@
 # calcSum(1,1000)
 
 
-def getPoint():
-    x = 10
-    y = 20
-    return x,y
+# def getPoint():
+#     x = 10
+#     y = 20
+#     return x,y
+#
+#
+# a,b = getPoint()
+# # 不要x，只要y
+# _,b = getPoint()
 
 
-a,b = getPoint()
-# 不要x，只要y
-_,b = getPoint()
+def factor(n):
+    if n == 1:
+        return 1
+    return n * factor(n - 1)
 
+print(factor(5))
