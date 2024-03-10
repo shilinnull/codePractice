@@ -104,3 +104,29 @@ b = [5, 6, 7, 8]
 # a.extend(b)
 # print(a)
 
+# 元组
+# 元组里的元素不可被修改，列表可以
+# a = ()
+# print(type(a))
+#
+# a = (1, 2, 3, 4, 5, 'hello', True, [])
+# print(a)
+# print(a[5])
+#
+# a = (1, 2 ,3, 4)
+# b = (5, 6, 7, 8)
+# c = a + b
+# a = a + b
+# print(c)
+# print(a)
+
+
+def getPoint():
+    x = 10
+    y = 20
+    return x,y
+
+
+a,b = getPoint()
+print(a,b)
+print(type(getPoint()))
