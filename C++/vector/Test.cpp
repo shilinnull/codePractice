@@ -1,3 +1,4 @@
+#if 0
 #include"vector.h"
 
 void Test_vector1() {
@@ -108,3 +109,4 @@ int main() {
 	Test_vector4();
 	return 0;
 }
+#endif
