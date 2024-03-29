@@ -10,10 +10,10 @@ namespace lsl {
 	public:
 		typedef T* iterator;
 		typedef const T* const_iterator;
-		
+
 		iterator begin() {
 			return _start;
-		} 
+		}
 		const_iterator begin() const {
 			return _start;
 		}
@@ -24,9 +24,9 @@ namespace lsl {
 		const_iterator end() const {
 			return _finish;
 		}
-		
+
 		size_t capacity() const {
-			return _endofstorage - _finish;
+			return _endofstorage - _start;
 		}
 		size_t size() const {
 			return _finish - _start;
@@ -49,16 +49,17 @@ namespace lsl {
 			}
 		}
 
-		vector(){}
-		
 		void reserve(size_t n) {
 			if (n > capacity()) {
 				// size要提前保存一下
 				size_t old_size = size();
 				T* tmp = new T[n];
-				
+
 				// 拷贝数据+释放原空间
-				memcpy(tmp, _start, size() * sizeof(T));
+				for (size_t i = 0; i < old_size; i++)
+				{
+					tmp[i] = _start[i];
+				}
 				delete[] _start;
 
 				// 进行替换
@@ -69,14 +70,15 @@ namespace lsl {
 			}
 		}
 
-		void resize(size_t n,const T& val = T()) {
+		void resize(size_t n, const T& val = T()) {
 			if (n > size()) {
 				reserve(n);
 				while (_finish < _start + n) {
 					*_finish = val;
 					++_finish;
 				}
-			}else{
+			}
+			else {
 				// 更新有效个数
 				_finish = _start + n;
 			}
@@ -85,24 +87,24 @@ namespace lsl {
 		void push_back(const T& val) {
 			// 检查
 			//if (_finish == _endofstorage) {
-			//	// 扩容
+			//	 // 扩容
 			//	reserve(capacity() == 0 ? 4 : 2 * capacity());
 			//}
 			//*_finish = val;
 			//++_finish;
 			insert(end(), val);
 		}
-		
+
 		bool empty() const {
 			return _start == _finish;
 		}
-		
+
 		void pop_back() {
 			//assert(!empty());
 			//--_finish;
 			earse(--end());
 		}
-		
+
 		void insert(iterator pos, const T& val) {
 			assert(pos >= _start && pos <= _finish);
 			if (_finish == _endofstorage) {
@@ -119,8 +121,8 @@ namespace lsl {
 			*pos = val;
 			++_finish;
 		}
-		
-		void erase(iterator pos) {
+
+		iterator erase(iterator pos) {
 			assert(pos >= _start && pos <= _finish);
 			iterator it = pos + 1;
 			while (it < _finish) {
@@ -128,12 +130,46 @@ namespace lsl {
 				++it;
 			}
 			--_finish;
+			return pos;
+		}
+		vector() {}
+
+		template<class InputIterator>
+		vector(InputIterator first, InputIterator last)
+		{
+			while (first != last) {
+				push_back(*first);
+				++first;
+			}
 		}
 
-		//~vector() {
-		//	delete[] _start;
-		//	_start = _finish = _endofstorage = nullptr;
-		//}
+		// n个val构造
+		vector(size_t n, const T& val = T()) {
+			reserve(n);
+			for (size_t i = 0; i < n; i++)
+			{
+				push_back(val);
+			}
+		}
+		vector(int n, const T& val = T()) {
+			reserve(n);
+			for (int i = 0; i < n; i++)
+			{
+				push_back(val);
+			}
+		}
+
+		vector(std::initializer_list<T> il) {
+			reserve(il.size());
+			for (auto& e : il) {
+				push_back(e);
+			}
+		}
+
+		~vector() {
+			delete[] _start;
+			_start = _finish = _endofstorage = nullptr;
+		}
 
 	private:
 		// 开始元素的位置
@@ -144,12 +180,13 @@ namespace lsl {
 		iterator _endofstorage = nullptr;
 	};
 
+	// 打印方法
 	template<class T>
 	void print_vector(const vector<T>& v) {
-	/*	for (size_t i = 0; i < v.size(); i++){
-			std::cout << v[i] << " ";
-		}
-		std::cout << std::endl;*/
+		//for (size_t i = 0; i < v.size(); i++){
+		//	std::cout << v[i] << " ";
+		//}
+		//std::cout << std::endl;
 		//typename vector<T>::const_iterator it = v.begin();
 		// auto it = v.begin();
 		//while (it != v.end()) {
