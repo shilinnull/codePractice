@@ -35,7 +35,7 @@ int main()
 
 	return 0;
 }
-#endif
+
 int main()
 {
 	list<int> lt;
@@ -77,7 +77,16 @@ int main()
 	}
 	cout << endl;
 }
+#endif
 
 
 
 
+int main()
+{
+	lsl::test_list3();
+
+
+
+	return 0;
+}
