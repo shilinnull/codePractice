@@ -1,4 +1,4 @@
-#include<iostream>
+ï»¿#include<iostream>
 #include<string>
 
 using namespace std;
@@ -12,25 +12,25 @@ using namespace std;
 //		cout << "age:" << _age << endl;
 //	}
 //protected:
-//	string _name = "peter"; // ĞÕÃû
-//	int _age = 18; // ÄêÁä
+//	string _name = "peter"; // å§“å
+//	int _age = 18; // å¹´é¾„
 //};
 //
 //class Student : public Person
 //{
 //protected:
-//	int _stuid; // Ñ§ºÅ
-//	int _major; // ×¨Òµ
+//	int _stuid; // å­¦å·
+//	int _major; // ä¸“ä¸š
 //};
 //
 //
 //class Teacher : public Person
 //{
 //protected:
-//	int _jobid; // ¹¤ºÅ
+//	int _jobid; // å·¥å·
 //};
 
-// »ùÀàAµÄ¶¨Òå
+// åŸºç±»Açš„å®šä¹‰
 //class A 
 //{
 //public:
@@ -41,52 +41,52 @@ using namespace std;
 //	int a_private_Num;
 //};
 //
-//// ÀàpubB Ê¹ÓÃpublicµÄ·½Ê½¼Ì³ĞA
+//// ç±»pubB ä½¿ç”¨publicçš„æ–¹å¼ç»§æ‰¿A
 //class pubB : public A
 //{
 //public:
 //	pubB()
 //	{
 //		a_public_Num = 1;
-//		a_protect_Num = 2; // ÀàÄÚ¿ÉÒÔ·ÃÎÊ
-//		// a_private_Num = 3 // ²»ÄÜ·ÃÎÊ
+//		a_protect_Num = 2; // ç±»å†…å¯ä»¥è®¿é—®
+//		// a_private_Num = 3 // ä¸èƒ½è®¿é—®
 //	}
 //}; 
 //
-//// ÀàproB Ê¹ÓÃprotectµÄ·½Ê½¼Ì³ĞA
+//// ç±»proB ä½¿ç”¨protectçš„æ–¹å¼ç»§æ‰¿A
 //class proB : protected A
 //{
 //public:
 //	proB()
 //	{
 //		a_public_Num = 4;
-//		a_protect_Num = 5; // ÀàÄÚ¿ÉÒÔ·ÃÎÊ
-//		// a_private_Num = 6 // ²»ÄÜ·ÃÎÊ
+//		a_protect_Num = 5; // ç±»å†…å¯ä»¥è®¿é—®
+//		// a_private_Num = 6 // ä¸èƒ½è®¿é—®
 //	}
 //}; 
 //
-//// ÀàproB Ê¹ÓÃprivateµÄ·½Ê½¼Ì³ĞA
+//// ç±»proB ä½¿ç”¨privateçš„æ–¹å¼ç»§æ‰¿A
 //class prvB : private A
 //{
 //public:
 //	prvB()
 //	{
 //		a_public_Num = 7;
-//		a_protect_Num = 8; // ÀàÄÚ¿ÉÒÔ·ÃÎÊ
-//		// a_private_Num = 9 // ²»ÄÜ·ÃÎÊ
+//		a_protect_Num = 8; // ç±»å†…å¯ä»¥è®¿é—®
+//		// a_private_Num = 9 // ä¸èƒ½è®¿é—®
 //	}
 //};
 //
 //int main()
 //{
 //	pubB b1;
-//	cout << b1.a_public_Num << endl; // ¿ÉÒÔ·ÃÎÊ
+//	cout << b1.a_public_Num << endl; // å¯ä»¥è®¿é—®
 //
 //	proB b2;
-//	// cout << b2.a_public_Num << endl;  // ²»¿É·ÃÎÊ
+//	// cout << b2.a_public_Num << endl;  // ä¸å¯è®¿é—®
 //	
 //	prvB b3;
-//	// cout << b3.a_public_Num << endl; // ²»¿É·ÃÎÊ
+//	// cout << b3.a_public_Num << endl; // ä¸å¯è®¿é—®
 //	
 //	
 //	return 0;
@@ -102,27 +102,27 @@ using namespace std;
 //		cout << "age:" << _age << endl;
 //	}
 //protected:
-//	string _name = "peter"; // ĞÕÃû
-//	int _age = 18; // ÄêÁä
+//	string _name = "peter"; // å§“å
+//	int _age = 18; // å¹´é¾„
 //};
 //
 //class Student : public Person
 //{
 //protected:
-//	int _stuid; // Ñ§ºÅ
-//	int _major; // ×¨Òµ
+//	int _stuid; // å­¦å·
+//	int _major; // ä¸“ä¸š
 //};
 //
 //class Teacher : public Person
 //{
 //protected:
-//	int _jobid; // ¹¤ºÅ
+//	int _jobid; // å·¥å·
 //};
 //
 //int main()
 //{
 //	Student s;
-//	Person p = s; // Ö»ÓĞ¹«ÓĞ¼Ì³Ğ²Å¿ÉÒÔ
+//	Person p = s; // åªæœ‰å…¬æœ‰ç»§æ‰¿æ‰å¯ä»¥
 //
 //	return 0;
 //}
@@ -131,57 +131,57 @@ using namespace std;
 //class Person
 //{
 //protected:
-//	string _name; // ĞÕÃû
-//	string _sex; // ĞÔ±ğ
-//	int _age; // ÄêÁä
+//	string _name; // å§“å
+//	string _sex; // æ€§åˆ«
+//	int _age; // å¹´é¾„
 //};
 //
 //class Student : public Person
 //{
 //public:
-//	int _No; // Ñ§ºÅ
+//	int _No; // å­¦å·
 //};
 //
 //void main()
 //{
 //	Student sobj;
-//	// 1.×ÓÀà¶ÔÏó¿ÉÒÔ¸³Öµ¸ø¸¸Àà¶ÔÏó/Ö¸Õë/ÒıÓÃ
+//	// 1.å­ç±»å¯¹è±¡å¯ä»¥èµ‹å€¼ç»™çˆ¶ç±»å¯¹è±¡/æŒ‡é’ˆ/å¼•ç”¨
 //	Person pobj = sobj;
 //	Person* pp = &sobj;
 //	Person& rp = sobj;
 //	
-//	//2.»ùÀà¶ÔÏó²»ÄÜ¸³Öµ¸øÅÉÉúÀà¶ÔÏó
+//	//2.åŸºç±»å¯¹è±¡ä¸èƒ½èµ‹å€¼ç»™æ´¾ç”Ÿç±»å¯¹è±¡
 //	//sobj = pobj;
 //
-//	// 3.»ùÀàµÄÖ¸Õë¿ÉÒÔÍ¨¹ıÇ¿ÖÆÀàĞÍ×ª»»¸³Öµ¸øÅÉÉúÀàµÄÖ¸Õë
+//	// 3.åŸºç±»çš„æŒ‡é’ˆå¯ä»¥é€šè¿‡å¼ºåˆ¶ç±»å‹è½¬æ¢èµ‹å€¼ç»™æ´¾ç”Ÿç±»çš„æŒ‡é’ˆ
 //	pp = &sobj;
-//	Student* ps1 = (Student*)pp; // ÕâÖÖÇé¿ö×ª»»Ê±¿ÉÒÔµÄ¡£
+//	Student* ps1 = (Student*)pp; // è¿™ç§æƒ…å†µè½¬æ¢æ—¶å¯ä»¥çš„ã€‚
 //	ps1->_No = 10;
 //	pp = &pobj;
 //
-//	Student* ps2 = (Student*)pp; // ÕâÖÖÇé¿ö×ª»»Ê±ËäÈ»¿ÉÒÔ£¬µ«ÊÇ»á´æÔÚÔ½½ç·ÃÎÊµÄÎÊÌâ
+//	Student* ps2 = (Student*)pp; // è¿™ç§æƒ…å†µè½¬æ¢æ—¶è™½ç„¶å¯ä»¥ï¼Œä½†æ˜¯ä¼šå­˜åœ¨è¶Šç•Œè®¿é—®çš„é—®é¢˜
 //	ps2->_No = 10;
 //}
 
 
-// StudentµÄ_numºÍPersonµÄ_num¹¹³ÉÒş²Ø¹ØÏµ£¬¿ÉÒÔ¿´³öÕâÑù´úÂëËäÈ»ÄÜÅÜ£¬µ«ÊÇ·Ç³£ÈİÒ×»ìÏı
+// Studentçš„_numå’ŒPersonçš„_numæ„æˆéšè—å…³ç³»ï¼Œå¯ä»¥çœ‹å‡ºè¿™æ ·ä»£ç è™½ç„¶èƒ½è·‘ï¼Œä½†æ˜¯éå¸¸å®¹æ˜“æ··æ·†
 //class Person
 //{
 //protected:
-//	string _name = "Ğ¡Àî×Ó"; // ĞÕÃû
-//	int _num = 111; // Éí·İÖ¤ºÅ
+//	string _name = "å°æå­"; // å§“å
+//	int _num = 111; // èº«ä»½è¯å·
 //};
 //class Student : public Person
 //{
 //public:
 //	void Print()
 //	{
-//		cout << "ĞÕÃû:" << _name << endl;
-//		cout << "Éí·İÖ¤ºÅ:" << Person::_num << endl;
-//		cout << "Ñ§ºÅ:" << _num << endl;
+//		cout << "å§“å:" << _name << endl;
+//		cout << "èº«ä»½è¯å·:" << Person::_num << endl;
+//		cout << "å­¦å·:" << _num << endl;
 //	}
 //protected:
-//	int _num = 999; // Ñ§ºÅ
+//	int _num = 999; // å­¦å·
 //};
 //
 //class A
@@ -215,81 +215,297 @@ using namespace std;
 //	return 0;
 //};
 
-class Person
+//class Person
+//{
+//public:
+//	Person(const char* name = "peter")
+//		: _name(name)
+//	{
+//		cout << "Person()" << endl;
+//	}
+//
+//	Person(const Person& p)
+//		: _name(p._name)
+//	{
+//		cout << "Person(const Person& p)" << endl;
+//	}
+//
+//	Person& operator=(const Person& p)
+//	{
+//		cout << "Person operator=(const Person& p)" << endl;
+//		if (this != &p)
+//			_name = p._name;
+//		return *this;
+//	}
+//
+//	~Person()
+//	{
+//		cout << "~Person()" << endl;
+//	}
+//protected:
+//	string _name; 
+//};
+//
+//class Student : public Person
+//{
+//public:
+//	Student(const char* name, int num)
+//		: Person(name)
+//		, _num(num)
+//	{
+//		cout << "Student()" << endl;
+//	}
+//
+//	Student(const Student& s)
+//		: Person(s)
+//		, _num(s._num)
+//	{
+//		cout << "Student(const Student& s)" << endl;
+//	}
+//
+//	Student& operator=(const Student& s)
+//	{
+//		cout << "Student& operator= (const Student& s)" << endl;
+//		if (this != &s)
+//		{
+//			// æŒ‡å®šä½œç”¨åŸŸæ˜¾ç¤ºè°ƒç”¨
+//			Person::operator=(s);
+//			_num = s._num;
+//		}
+//		return *this;
+//	}
+//
+//	~Student()
+//	{
+//		cout << "~Student()" << endl;
+//	}
+//protected:
+//	int _num;
+//	string _str;
+//};
+//
+//int main()
+//{
+//	Student s1("jack", 18);
+//	Student s2(s1);
+//	Student s3("rose", 17);
+//	s1 = s3;
+//
+//	return 0;
+//}
+//class Student;
+//class Person
+//{
+//public:
+//	friend void Display(const Person& p, const Student& s);
+//protected:
+//	string _name; // å§“å
+//};
+//
+//class Student : public Person
+//{
+//public:
+//	friend void Display(const Person& p, const Student& s);
+//protected:
+//	int _stuNum; // å­¦å·
+//};
+//
+//void Display(const Person& p, const Student& s)
+//{
+//	cout << p._name << endl;
+//	cout << s._stuNum << endl;
+//}
+//
+//void main()
+//{
+//	Person p;
+//	Student s;
+//	Display(p, s);
+//}
+
+//class Person
+//{
+//public:
+//	Person() { ++_count; }
+//protected:
+//	string _name; // å§“å
+//public:
+//	static int _count; // ç»Ÿè®¡äººçš„ä¸ªæ•°ã€‚
+//};
+//
+//int Person::_count = 0;
+//
+//class Student : public Person
+//{
+//protected:
+//	int _stuNum; // å­¦å·
+//};
+//
+//class Graduate : public Student
+//{
+//protected:
+//	string _seminarCourse; // ç ”ç©¶ç§‘ç›®
+//};
+//
+//int main()
+//{
+//	Student s1;
+//	Student s2;
+//	Student s3;
+//	Graduate s4;
+//
+//	cout << " &Person :" << &Person::_count << endl;
+//	cout << " &Student :" << &Student::_count << endl;
+//	cout << " &Graduate :" << &Graduate::_count << endl;
+//	cout << " äººæ•° :" << Person::_count << endl;
+//
+//	Student::_count = 0;
+//	cout << " äººæ•° :" << Person::_count << endl;
+//
+//	return 0;
+//}
+//
+//class Person
+//{
+//public:
+//	string _name; // å§“å
+//};
+//class Student : public Person
+//{
+//protected:
+//	int _num; //å­¦å·
+//};
+//class Teacher : public Person
+//{
+//protected:
+//	int _id; // èŒå·¥ç¼–å·
+//};
+//class Assistant : public Student, public Teacher
+//{
+//protected:
+//	string _majorCourse; // ä¸»ä¿®è¯¾ç¨‹
+//};
+//void Test()
+//{
+//	// è¿™æ ·ä¼šæœ‰äºŒä¹‰æ€§æ— æ³•æ˜ç¡®çŸ¥é“è®¿é—®çš„æ˜¯å“ªä¸€ä¸ª
+//	Assistant a;
+//	a._name = "peter";
+//
+//	// éœ€è¦æ˜¾ç¤ºæŒ‡å®šè®¿é—®å“ªä¸ªçˆ¶ç±»çš„æˆå‘˜å¯ä»¥è§£å†³äºŒä¹‰æ€§é—®é¢˜ï¼Œä½†æ˜¯æ•°æ®å†—ä½™é—®é¢˜æ— æ³•è§£å†³
+//	a.Student::_name = "xxx";
+//	a.Teacher::_name = "yyy";
+//}
+
+//class Person
+//{
+//public:
+//	string _name; // å§“å
+//};
+//class Student : virtual public Person
+//{
+//protected:
+//	int _num; //å­¦å·
+//};
+//class Teacher : virtual public Person
+//{
+//protected:
+//	int _id; // èŒå·¥ç¼–å·
+//};
+//class Assistant : public Student, public Teacher
+//{
+//protected:
+//	string _majorCourse; // ä¸»ä¿®è¯¾ç¨‹
+//};
+//int main()
+//{
+//	Assistant a;
+//	a._name = "peter";
+//
+//	return 0;
+//}
+
+//class A
+//{
+//public:
+//	int _a;
+//};
+//
+////class B : public A
+//class B : virtual public A
+//{
+//public:
+//	int _b;
+//	int _b1;
+//	int _b2;
+//
+//};
+//
+////class C : public A
+//class C : virtual public A
+//{
+//public:
+//	int _c;
+//};
+//class D : public C, public B
+//{
+//public:
+//	int _d;
+//};
+
+
+class A
 {
 public:
-	Person(const char* name = "peter")
-		: _name(name)
-	{
-		cout << "Person()" << endl;
-	}
-
-	Person(const Person& p)
-		: _name(p._name)
-	{
-		cout << "Person(const Person& p)" << endl;
-	}
-
-	Person& operator=(const Person& p)
-	{
-		cout << "Person operator=(const Person& p)" << endl;
-		if (this != &p)
-			_name = p._name;
-		return *this;
-	}
-
-	~Person()
-	{
-		cout << "~Person()" << endl;
-	}
-protected:
-	string _name; 
+	int _a;
 };
 
-class Student : public Person
+// class B : public A
+class B : virtual public A
 {
 public:
-	Student(const char* name, int num)
-		: Person(name)
-		, _num(num)
-	{
-		cout << "Student()" << endl;
-	}
+	int _b;
+	int _b1;
+	int _b2;
 
-	Student(const Student& s)
-		: Person(s)
-		, _num(s._num)
-	{
-		cout << "Student(const Student& s)" << endl;
-	}
-
-	Student& operator=(const Student& s)
-	{
-		cout << "Student& operator= (const Student& s)" << endl;
-		if (this != &s)
-		{
-			// Ö¸¶¨×÷ÓÃÓòÏÔÊ¾µ÷ÓÃ
-			Person::operator=(s);
-			_num = s._num;
-		}
-		return *this;
-	}
-
-	~Student()
-	{
-		cout << "~Student()" << endl;
-	}
-protected:
-	int _num;
-	string _str;
 };
+
+// class C : public A
+class C : virtual public A
+{
+public:
+	int _c;
+};
+class D : public C, public B
+{
+public:
+	int _d;
+};
+
 
 int main()
 {
-	Student s1("jack", 18);
-	Student s2(s1);
-	Student s3("rose", 17);
-	s1 = s3;
+	D d;
+	d.B::_a = 1;
+	d.C::_a = 2;
+
+	d._a = 0;
+	d._b = 3;
+	d._c = 4;
+	d._d = 5;
+
+	// -----------------------------------------
+	// åˆ‡ç‰‡æ—¶ï¼ŒæŒ‡é’ˆåç§»ï¼ŒæŒ‡å‘è‡ªå·±çš„å¯¹è±¡ä½ç½®
+	B* pb = &d;
+	C* pc = &d;
+	pb->_a++;
+	pc->_a++;
+
+	B bb;
+	bb._a = 1;
+	bb._b = 2;
+
+	pb = &bb;
+	pb->_a++;
 
 	return 0;
 }
