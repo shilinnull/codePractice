@@ -274,66 +274,121 @@ using namespace std;
 //}
 
 
-class Base1 {
-public:
-	virtual void func1() { cout << "Base1::func1" << endl; }
-	virtual void func2() { cout << "Base1::func2" << endl; }
-private:
-	int b1;
-};
-class Base2 {
-public:
-	virtual void func1() { cout << "Base2::func1" << endl; }
-	virtual void func2() { cout << "Base2::func2" << endl; }
-private:
-	int b2;
-};
-
-class Derive : public Base1, public Base2 {
-public:
-	virtual void func1() { cout << "Derive::func1" << endl; }
-	virtual void func3() { cout << "Derive::func3" << endl; }
-private:
-	int d1;
-};
-
-typedef void(*VFPTR) ();
-
-void PrintVTable(VFPTR vTable[])
+//class Base1 {
+//public:
+//	virtual void func1() { cout << "Base1::func1" << endl; }
+//	virtual void func2() { cout << "Base1::func2" << endl; }
+//private:
+//	int b1;
+//};
+//class Base2 {
+//public:
+//	virtual void func1() { cout << "Base2::func1" << endl; }
+//	virtual void func2() { cout << "Base2::func2" << endl; }
+//private:
+//	int b2;
+//};
+//
+//class Derive : public Base1, public Base2 {
+//public:
+//	virtual void func1() { cout << "Derive::func1" << endl; }
+//	virtual void func3() { cout << "Derive::func3" << endl; }
+//private:
+//	int d1;
+//};
+//
+//typedef void(*VFPTR) ();
+//
+//void PrintVTable(VFPTR vTable[])
+//{
+//	cout << " 虚表地址>" << vTable << endl;
+//	for (int i = 0; vTable[i] != nullptr; ++i)
+//	{
+//		printf(" 第%d个虚函数地址 :0X%x,->", i, vTable[i]);
+//		VFPTR f = vTable[i];
+//		f();
+//	}
+//	cout << endl;
+//}
+//
+//int main()
+//{
+//	Derive d;
+//	VFPTR* vTableb1 = (VFPTR*)(*(int*)&d);
+//	PrintVTable(vTableb1);
+//	VFPTR* vTableb2 = (VFPTR*)(*(int*)((char*)&d + sizeof(Base1)));
+//	
+//	PrintVTable(vTableb2);
+//	// 这样也可以
+//	Base2* ptr = &d;
+//	PrintVTable(((VFPTR*)*(int*)ptr));
+//	Derive d;
+//	Base1* p1 = &d;
+//	p1->func1();
+//
+//	Base2* p2 = &d;
+//	p2->func1();
+//
+//	return 0;
+//}
+//
+class A
 {
-	cout << " 虚表地址>" << vTable << endl;
-	for (int i = 0; vTable[i] != nullptr; ++i)
-	{
-		printf(" 第%d个虚函数地址 :0X%x,->", i, vTable[i]);
-		VFPTR f = vTable[i];
-		f();
-	}
-	cout << endl;
-}
+public:
+	virtual void func1() { cout << "A::func1" << endl; }
+	int _a;
+};
 
-int main()
+//class B : public A
+class B : virtual public A
 {
-	Derive d;
-	VFPTR* vTableb1 = (VFPTR*)(*(int*)&d);
-	PrintVTable(vTableb1);
-	VFPTR* vTableb2 = (VFPTR*)(*(int*)((char*)&d + sizeof(Base1)));
-	
-	PrintVTable(vTableb2);
-	// 这样也可以
-	Base2* ptr = &d;
-	PrintVTable(((VFPTR*)*(int*)ptr));
-	Derive d;
-	Base1* p1 = &d;
-	p1->func1();
+public:
+	virtual void func2() { cout << "B::func2" << endl; }
+	int _b;
+};
 
-	Base2* p2 = &d;
-	p2->func1();
+//class C : public A
+class C : virtual public A
+{
+public:
+	virtual void func3() { cout << "C::func3" << endl; }
 
-	return 0;
-}
+	int _c;
+};
 
+class D : public B, public C
+{
+public:
+	virtual void func4() { cout << "D::func4" << endl; }
 
+	int _d;
+};
 
+//int main()
+//{
+//	D d;
+//	cout << sizeof(d) << endl;
+//
+//	// 结论菱形继承的对象模型跟多继承类似
+//	d.B::_a = 1;
+//	d.C::_a = 2;
+//	d._b = 3;
+//	d._c = 4;
+//	d._d = 5;
+//
+//	return 0;
+//}
 
-
-
+//int main()
+//{
+//	D d;
+//	cout << sizeof(d) << endl;
+//
+//	d.B::_a = 1;
+//	d.C::_a = 2;
+//	d._b = 3;
+//	d._c = 4;
+//	d._d = 5;
+//
+//	return 0;
+//}
