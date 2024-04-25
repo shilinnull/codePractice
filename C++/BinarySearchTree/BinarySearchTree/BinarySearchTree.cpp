@@ -32,6 +32,7 @@
 
 #include<string>
 
+#if DEBUG
 void TestBSTree1()
 {
 	// 输入单词，查找单词对应的中文翻译
@@ -88,4 +89,6 @@ int main()
 
 	return 0;
 }
+
+#endif
 
