@@ -89,7 +89,7 @@ void test_set2()
 
 	auto ret = myset.equal_range(35);
 	std::cout << *ret.first << std::endl; // >=val
-	std::cout << *ret.second<< std::endl; // >val
+	std::cout << *ret.second << std::endl; // >val
 
 }
 
@@ -132,7 +132,7 @@ void test_set3()
 	// 删除所有的2
 	auto ret = s1.equal_range(2);
 	s1.erase(ret.first, ret.second);
-	
+
 	// 还能统计删除了多少个2
 	size_t n = s1.erase(2);  // 也可以这样直接删除
 	cout << n << endl;
@@ -148,13 +148,130 @@ void test_set3()
 
 }
 
+void test_map1()
+{
+	map<string, string> dict;
+	dict.insert(pair<string, string>("sort", "排序"));
+	dict.insert(pair<string, string>("inster", "插入"));
+	dict.insert(pair<const char*, const char*>("left", "左"));
+
+	dict.insert(make_pair("right", "右"));
+	
+	string s1("xxx"), s2("yyy");
+	dict.insert(make_pair(s1, s2));
+
+	// 1. 正向迭代器
+	map<string, string>::iterator it = dict.begin();
+	while (it != dict.end())
+	{
+		cout << (*it).first << " " << (*it).second << endl;
+		//cout << it->first << " " << it->second << endl;
+		//cout << it.operator->()->first << " " << it.operator->()->second << endl;
+		++it;
+	}
+	cout << endl;
+
+	// 2. 反向迭代器
+	map<string, string>::reverse_iterator rit = dict.rbegin();
+	while (rit != dict.rend())
+	{
+		cout << (*rit).first << " " << (*rit).second << endl;
+		++rit;
+	}
+	cout << endl;
+
+	// 3. auto
+	for (auto& e : dict)
+	{
+		// e.first += 'x';  // 不能修改
+		e.second += 'x'; // 可以修改
+		cout << e.first << " " << e.second << endl;
+	}
+	cout << endl;
+
+	for (auto& kv : dict)
+	{
+		cout << kv.first << ":" << kv.second << endl;
+	}
+}
+
+void test_map2()
+{
+	std::string arr[] = { "苹果", "西瓜", "苹果", "西瓜", "苹果", "苹果", "西瓜","苹果", "香蕉", "苹果", "香蕉" };
+	map<string,int> countMap;
+	for (auto& str : arr)
+	{
+		//auto ret = countMap.find(str);
+		//if (ret == countMap.end())
+		//{
+		//	countMap.insert(make_pair(str, 1));
+		//}
+		//else
+		//{
+		//	ret->second++;
+		//}
+
+		// 一行完成统计
+		countMap[str]++;
+	}
+}
+
+
+
+void test_map4()
+{
+	map<string, string> dict;
+	dict.insert(pair<string, string>("sort", "排序"));
+	dict.insert(pair<string, string>("inster", "插入"));
+	dict.insert(pair<const char*, const char*>("left", "左"));
+
+	dict.insert(make_pair("right", "右"));
+
+	string s1("xxx"), s2("yyy");
+	dict.insert(make_pair(s1, s2));
+
+	dict["erase"];  // 插入
+	cout << dict["erase"] << endl; // 查找
+	dict["erase"] = "删除"; // 修改
+	dict["test"] = "测试";  // 插入+修改
+	dict["left"] = "左边、剩余"; // 修改
+
+	map<string, string>::iterator it = dict.begin();
+	while (it != dict.end())
+	{
+		cout << (*it).first << " " << (*it).second << endl;
+		++it;
+	}
+}
+
+void test_map3()
+{
+	map<string, string> dict;
+	dict.insert(pair<string, string>("sort", "排序"));
+	dict.insert(pair<string, string>("inster", "插入"));
+	dict.insert(pair<const char*, const char*>("left", "左"));
+
+	dict.insert(make_pair("right", "右"));
+
+	string s1("xxx"), s2("yyy");
+	dict.insert(make_pair(s1, s2));
+
+	map<string, string>::iterator pos = dict.find("sort");
+	if (pos != dict.end())
+	{
+		cout << pos->second << endl;
+	}
+}
 
 int main()
 {
 	//test_set1();
 	//test_set2();
-	test_set3();
-
+	//test_set3();
+	//test_map1();
+	//test_map2();
+	//test_map4();
+	test_map3();
 
 	return 0;
 }
