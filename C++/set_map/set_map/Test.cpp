@@ -77,8 +77,8 @@ void test_set2()
 	cout << endl;
 
 	// [25,60)
-	auto itlow = myset.lower_bound(25);      	
-	auto itup = myset.upper_bound(60);
+	auto itlow = myset.lower_bound(25);      // >=val	
+	auto itup = myset.upper_bound(60);       // >val
 
 	myset.erase(itlow, itup);
 	for (auto e : myset)
@@ -86,6 +86,11 @@ void test_set2()
 		cout << e << " ";
 	}
 	cout << endl;
+
+	auto ret = myset.equal_range(35);
+	std::cout << *ret.first << std::endl; // >=val
+	std::cout << *ret.second<< std::endl; // >val
+
 }
 
 void test_set3()
@@ -101,7 +106,10 @@ void test_set3()
 	s1.insert(2);
 	s1.insert(4);
 	s1.insert(2);
+	s1.insert(2);
+	s1.insert(2);
 	s1.insert(1);
+	s1.insert(2);
 	s1.insert(2);
 	s1.insert(1);
 
@@ -114,12 +122,30 @@ void test_set3()
 	}
 	cout << endl;
 
-	auto pos = s1.find(2);
-	while (pos != s1.end() && *pos == 2)
+	//auto pos = s1.find(2);
+	//while (pos != s1.end() && *pos == 2)
+	//{
+	//	cout << *pos << " ";
+	//	++pos;
+	//}
+
+	// 删除所有的2
+	auto ret = s1.equal_range(2);
+	s1.erase(ret.first, ret.second);
+	
+	// 还能统计删除了多少个2
+	size_t n = s1.erase(2);  // 也可以这样直接删除
+	cout << n << endl;
+
+	for (auto e : s1)
 	{
-		cout << *pos << " ";
-		++pos;
+		cout << e << " ";
 	}
+	cout << endl;
+
+	// 统计有几个1
+	cout << s1.count(1) << endl;
+
 }
 
 
