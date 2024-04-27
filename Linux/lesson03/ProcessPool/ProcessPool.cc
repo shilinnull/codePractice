@@ -53,9 +53,8 @@ void CreateChannelAndSub(int num, std::vector<Channel> *channels, task_t task)
             {
                 for (auto &channel : *channels)
                 {
-                    // 关闭等待
+                    // 关闭
                     channel.CloseChannel();
-                    channel.Wait();
                 }
             }
 
@@ -142,7 +141,7 @@ void CleanUpChannel(std::vector<Channel> &channels)
     //     waitpid(channels[i].GetProcessId(), nullptr, 0);
     // }
 
-    // 方法三：
+    // 方法三：需要在CreateChannelAndSub()关闭多余的写端
     for (auto &ch : channels)
     {
         ch.CloseChannel();
