@@ -20,6 +20,12 @@ public:
         }
     }
 
+    // 关闭
+    void CloseChannel()
+    {
+        close(_wfd);
+    }
+
     ~Channel() {}
 
 private:
@@ -30,9 +36,6 @@ private:
 
 void CreateChannelAndSub(int num, std::vector<Channel> *channels, task_t task)
 {
-    // 第一条
-    std::vector<int> oldfds;
-
     for (int i = 0; i < num; i++)
     {
         // 1. 创建管道
@@ -45,11 +48,14 @@ void CreateChannelAndSub(int num, std::vector<Channel> *channels, task_t task)
         pid_t id = fork();
         if (id == 0)
         {
-            // 第二条(在创建一个子进程后关闭父继承下来的写)
-            for (auto fd : oldfds)
+            // 关闭多余的写端
+            if (!channels->empty())
             {
-                std::cout << fd << " ";
-                close(fd);
+                for (auto &channel : *channels)
+                {
+                    // 关闭
+                    channel.CloseChannel();
+                }
             }
 
             // child --- read
@@ -65,9 +71,6 @@ void CreateChannelAndSub(int num, std::vector<Channel> *channels, task_t task)
         // a. 子进程的pid b. 父进程关心的管道的w端
         channels->push_back(Channel(pipefd[1], id, channel_name));
         close(pipefd[0]); // 父进程关心的管道的w端
-
-        // 第三条
-        oldfds.push_back(pipefd[1]);
     }
 }
 
@@ -123,7 +126,7 @@ void CleanUpChannel(std::vector<Channel> &channels)
     // 方法一：
     // for (auto &ch : channels)
     // {
-    //     ch.GetProcessId();
+    //     ch.CloseChannel();
     // }
     // for (auto &ch : channels)
     // {
@@ -138,10 +141,10 @@ void CleanUpChannel(std::vector<Channel> &channels)
     //     waitpid(channels[i].GetProcessId(), nullptr, 0);
     // }
 
-    // 方法三：
-    for (auto &ch : channels) // 需要在CreateChannelAndSub()中创建oldfds
+    // 方法三：需要在CreateChannelAndSub()关闭多余的写端
+    for (auto &ch : channels)
     {
-        ch.GetProcessId();
+        ch.CloseChannel();
         ch.Wait();
     }
 }
