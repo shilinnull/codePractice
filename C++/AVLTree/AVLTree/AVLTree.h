@@ -8,13 +8,18 @@ using namespace std;
 template<class K, class V>
 struct AVLTreeNode
 {
+	//三叉链
 	AVLTreeNode<K, V>* _left;
 	AVLTreeNode<K, V>* _right;
 	AVLTreeNode<K, V>* _parent;
+
+	//存储的键值对
 	pair<K, V> _kv;
 
-	int _bf; // balance factor
+	//平衡因子(balance factor)
+	int _bf; //右子树高度-左子树高度
 
+	//构造函数
 	AVLTreeNode(const pair<K, V>& kv)
 		:_left(nullptr)
 		, _right(nullptr)
@@ -29,205 +34,193 @@ class AVLTree
 {
 	typedef AVLTreeNode<K, V> Node;
 public:
-	//bool Insert(const pair<K, V>& kv)
-	//{
-	//	if (_root == nullptr)
-	//	{
-	//		_root = new Node(kv);
-	//		return true;
-	//	}
 
-	//	Node* parent = nullptr;
-	//	Node* cur = _root;
+#if 0
+	//插入函数
+	bool Insert(const pair<K, V>& kv)
+	{
+		if (_root == nullptr) //若AVL树为空树，则插入结点直接作为根结点
+		{
+			_root = new Node(kv);
+			return true;
+		}
+		//1、按照二叉搜索树的插入方法，找到待插入位置
+		Node* cur = _root;
+		Node* parent = nullptr;
+		while (cur)
+		{
+			if (kv.first < cur->_kv.first) //待插入结点的key值小于当前结点的key值
+			{
+				//往该结点的左子树走
+				parent = cur;
+				cur = cur->_left;
+			}
+			else if (kv.first > cur->_kv.first) //待插入结点的key值大于当前结点的key值
+			{
+				//往该结点的右子树走
+				parent = cur;
+				cur = cur->_right;
+			}
+			else //待插入结点的key值等于当前结点的key值
+			{
+				//插入失败（不允许key值冗余）
+				return false;
+			}
+		}
 
-	//	while (cur)
-	//	{
-	//		if (cur->_kv.first < kv.first)
-	//		{
-	//			parent = cur;
-	//			cur = cur->_right;
-	//		}
-	//		else if (cur->_kv.first > kv.first)
-	//		{
-	//			parent = cur;
-	//			cur = cur->_left;
-	//		}
-	//		else
-	//		{
-	//			return false;
-	//		}
-	//	}
+		//2、将待插入结点插入到树中
+		cur = new Node(kv); //根据所给值构造一个新结点
+		if (kv.first < parent->_kv.first) //新结点的key值小于parent的key值
+		{
+			//插入到parent的左边
+			parent->_left = cur;
+			cur->_parent = parent;
+		}
+		else //新结点的key值大于parent的key值
+		{
+			//插入到parent的右边
+			parent->_right = cur;
+			cur->_parent = parent;
+		}
 
-	//	cur = new Node(kv);
-	//	if (parent->_kv.first < kv.first)
-	//	{
-	//		parent->_right = cur;
-	//		cur->_parent = parent;
-	//	}
-	//	else
-	//	{
-	//		parent->_left = cur;
-	//		cur->_parent = parent;
-	//	}
+		//3、更新平衡因子，如果出现不平衡，则需要进行旋转
+		while (cur != _root) //最坏一路更新到根结点
+		{
+			if (cur == parent->_left) //parent的左子树增高
+			{
+				parent->_bf--; //parent的平衡因子--
+			}
+			else if (cur == parent->_right) //parent的右子树增高
+			{
+				parent->_bf++; //parent的平衡因子++
+			}
+			//判断是否更新结束或需要进行旋转
+			if (parent->_bf == 0) //更新结束（新增结点把parent左右子树矮的那一边增高了，此时左右高度一致）
+			{
+				break; //parent树的高度没有发生变化，不会影响其父结点及以上结点的平衡因子
+			}
+			else if (parent->_bf == -1 || parent->_bf == 1) //需要继续往上更新平衡因子
+			{
+				//parent树的高度变化，会影响其父结点的平衡因子，需要继续往上更新平衡因子
+				cur = parent;
+				parent = parent->_parent;
+			}
+			else if (parent->_bf == -2 || parent->_bf == 2) //需要进行旋转（此时parent树已经不平衡了）
+			{
+				if (parent->_bf == -2)
+				{
+					if (cur->_bf == -1)
+					{
+						RotateR(parent); //右单旋
+					}
+					else //cur->_bf == 1
+					{
+						RotateLR(parent); //左右双旋
+					}
+				}
+				else //parent->_bf == 2
+				{
+					if (cur->_bf == -1)
+					{
+						RotateRL(parent); //右左双旋
+					}
+					else //cur->_bf == 1
+					{
+						RotateL(parent); //左单旋
+					}
+				}
+				break; //旋转后就一定平衡了，无需继续往上更新平衡因子(旋转后树高度变为插入之前了)
+			}
+			else
+			{
+				assert(false); //在插入前树的平衡因子就有问题
+			}
+		}
 
-	//	while (parent)
-	//	{
-	//		if (cur == parent->_left)
-	//		{
-	//			parent->_bf--;
-	//		}
-	//		else
-	//		{
-	//			parent->_bf++;
-	//		}
-
-	//		if (parent->_bf == 0)
-	//		{
-	//			break;
-	//		}
-	//		else if (parent->_bf == 1 || parent->_bf == -1)
-	//		{
-	//			cur = parent;
-	//			parent = parent->_parent;
-	//		}
-	//		else if (parent->_bf == 2 || parent->_bf == -2)
-	//		{
-	//			if (parent->_bf == 2 && cur->_bf == 1)
-	//			{
-	//				RotateL(parent);
-	//			}
-	//			else if (parent->_bf == -2 && cur->_bf == -1)
-	//			{
-	//				RotateR(parent);
-	//			}
-	//			else if (parent->_bf == 2 && cur->_bf == -1)
-	//			{
-	//				RotateRL(parent);
-	//			}
-	//			else if (parent->_bf == -2 && cur->_bf == 1)
-	//			{
-	//				RotateLR(parent);
-	//			}
-	//			break;
-	//		}
-	//		else
-	//		{
-	//			assert(false);
-	//		}
-	//	}
-
-	//	return true;
-	//}
-
+		return true; //插入成功
+	}
+#endif
+	//左单旋
 	void RotateL(Node* parent)
 	{
 		Node* subR = parent->_right;
 		Node* subRL = subR->_left;
-
-		parent->_right = subRL;
-		subR->_left = parent;
-
 		Node* parentParent = parent->_parent;
 
+		//1、建立subR和parent之间的关系
 		parent->_parent = subR;
+		subR->_left = parent;
+
+		//2、建立parent和subRL之间的关系
+		parent->_right = subRL;
 		if (subRL)
 			subRL->_parent = parent;
 
-		if (_root == parent)
+		//3、建立parentParent和subR之间的关系
+		if (parentParent == nullptr)
 		{
 			_root = subR;
-			subR->_parent = nullptr;
+			subR->_parent = nullptr; //subR的_parent指向需改变
 		}
 		else
 		{
-			if (parentParent->_left == parent)
+			if (parent == parentParent->_left)
 			{
 				parentParent->_left = subR;
 			}
-			else
+			else //parent == parentParent->_right
 			{
 				parentParent->_right = subR;
 			}
-
 			subR->_parent = parentParent;
 		}
 
-		parent->_bf = subR->_bf = 0;
+		//4、更新平衡因子
+		subR->_bf = parent->_bf = 0;
 	}
 
+	//右单旋
 	void RotateR(Node* parent)
 	{
 		Node* subL = parent->_left;
 		Node* subLR = subL->_right;
+		Node* parentParent = parent->_parent;
 
+		//1、建立subL和parent之间的关系
+		subL->_right = parent;
+		parent->_parent = subL;
+
+		//2、建立parent和subLR之间的关系
 		parent->_left = subLR;
 		if (subLR)
 			subLR->_parent = parent;
 
-		Node* parentParent = parent->_parent;
-
-		subL->_right = parent;
-		parent->_parent = subL;
-
-		if (_root == parent)
+		//3、建立parentParent和subL之间的关系
+		if (parentParent == nullptr)
 		{
 			_root = subL;
-			subL->_parent = nullptr;
+			_root->_parent = nullptr;
 		}
 		else
 		{
-			if (parentParent->_left == parent)
+			if (parent == parentParent->_left)
 			{
 				parentParent->_left = subL;
 			}
-			else
+			else //parent == parentParent->_right
 			{
 				parentParent->_right = subL;
 			}
-
 			subL->_parent = parentParent;
 		}
 
+		//4、更新平衡因子
 		subL->_bf = parent->_bf = 0;
 	}
 
-	void RotateRL(Node* parent)
-	{
-		Node* subR = parent->_right;
-		Node* subRL = subR->_left;
-		int bf = subRL->_bf;
-
-		RotateR(parent->_right);
-		RotateL(parent);
-
-		if (bf == 0)
-		{
-			// subRL自己就是新增
-			parent->_bf = subR->_bf = subRL->_bf = 0;
-		}
-		else if (bf == -1)
-		{
-			// subRL的左子树新增
-			parent->_bf = 0;
-			subRL->_bf = 0;
-			subR->_bf = 1;
-		}
-		else if (bf == 1)
-		{
-			// subRL的右子树新增
-			parent->_bf = -1;
-			subRL->_bf = 0;
-			subR->_bf = 0;
-		}
-		else
-		{
-			assert(false);
-		}
-	}
-
+	//左右双旋
 	void RotateLR(Node* parent)
 	{
-
 		Node* subL = parent->_left;
 		Node* subLR = subL->_right;
 		int bf = subLR->_bf; //subLR不可能为nullptr，因为subL的平衡因子是1
@@ -263,26 +256,42 @@ public:
 		}
 	}
 
-	//查找函数
-	Node* Find(const K& key)
+	//右左双旋
+	void RotateRL(Node* parent)
 	{
-		Node* cur = _root;
-		while (cur)
+		Node* subR = parent->_right;
+		Node* subRL = subR->_left;
+		int bf = subRL->_bf;
+
+		//1、以subR为轴进行右单旋
+		RotateR(subR);
+
+		//2、以parent为轴进行左单旋
+		RotateL(parent);
+
+		//3、更新平衡因子
+		if (bf == 1)
 		{
-			if (key < cur->_kv.first) //key值小于该结点的值
-			{
-				cur = cur->_left; //在该结点的左子树当中查找
-			}
-			else if (key > cur->_kv.first) //key值大于该结点的值
-			{
-				cur = cur->_right; //在该结点的右子树当中查找
-			}
-			else //找到了目标结点
-			{
-				return cur; //返回该结点
-			}
+			subRL->_bf = 0;
+			parent->_bf = -1;
+			subR->_bf = 0;
 		}
-		return nullptr; //查找失败
+		else if (bf == -1)
+		{
+			subRL->_bf = 0;
+			parent->_bf = 0;
+			subR->_bf = 1;
+		}
+		else if (bf == 0)
+		{
+			subRL->_bf = 0;
+			parent->_bf = 0;
+			subR->_bf = 0;
+		}
+		else
+		{
+			assert(false); //在旋转前树的平衡因子就有问题
+		}
 	}
 
 	//修改函数
@@ -619,11 +628,66 @@ public:
 		return true;
 	}
 
-
 	void InOrder()
 	{
 		_InOrder(_root);
 		cout << endl;
+	}
+
+	//查找函数
+	Node* Find(const K& key)
+	{
+		Node* cur = _root;
+		while (cur)
+		{
+			if (key < cur->_kv.first) //key值小于该结点的值
+			{
+				cur = cur->_left; //在该结点的左子树当中查找
+			}
+			else if (key > cur->_kv.first) //key值大于该结点的值
+			{
+				cur = cur->_right; //在该结点的右子树当中查找
+			}
+			else //找到了目标结点
+			{
+				return cur; //返回该结点
+			}
+		}
+		return nullptr; //查找失败
+	}
+	//判断是否为AVL树
+	bool IsAVLTree()
+	{
+		int hight = 0; //输出型参数
+		return _IsBalanced(_root, hight);
+	}
+
+private:
+
+	//检测二叉树是否平衡
+	bool _IsBalanced(Node* root, int& hight)
+	{
+		if (root == nullptr) //空树是平衡二叉树
+		{
+			hight = 0; //空树的高度为0
+			return true;
+		}
+		//先判断左子树
+		int leftHight = 0;
+		if (_IsBalanced(root->_left, leftHight) == false)
+			return false;
+		//再判断右子树
+		int rightHight = 0;
+		if (_IsBalanced(root->_right, rightHight) == false)
+			return false;
+		//检查该结点的平衡因子
+		if (rightHight - leftHight != root->_bf)
+		{
+			cout << "平衡因子设置异常：" << root->_kv.first << endl;
+		}
+		//把左右子树的高度中的较大值+1作为当前树的高度返回给上一层
+		hight = max(leftHight, rightHight) + 1;
+		return abs(rightHight - leftHight) < 2; //平衡二叉树的条件
 	}
 
 	void _InOrder(Node* root)
@@ -634,40 +698,6 @@ public:
 		_InOrder(root->_left);
 		cout << root->_kv.first << " ";
 		_InOrder(root->_right);
-	}
-
-	bool IsBalance()
-	{
-		return _IsBalance(_root);
-	}
-
-	int _Height(Node* root)
-	{
-		if (root == nullptr)
-			return 0;
-
-		int leftHeight = _Height(root->_left);
-		int rightHeight = _Height(root->_right);
-
-		return leftHeight > rightHeight ? leftHeight + 1 : rightHeight + 1;
-	}
-
-	bool _IsBalance(Node* root)
-	{
-		if (root == nullptr)
-			return true;
-
-		int leftHeight = _Height(root->_left);
-		int rightHeight = _Height(root->_right);
-		if (rightHeight - leftHeight != root->_bf)
-		{
-			cout << root->_kv.first << "平衡因子异常" << endl;
-			return false;
-		}
-
-		return abs(rightHeight - leftHeight) < 2
-			&& _IsBalance(root->_left)
-			&& _IsBalance(root->_right);
 	}
 
 private:
@@ -699,7 +729,7 @@ void TestAVLTree2()
 		t.Insert(std::make_pair(e, e));
 	}
 	t.InOrder();
-	std::cout << t.IsBalance() << std::endl;
+	std::cout << t.IsAVLTree() << std::endl;
 
 
 	const int N = 30;
@@ -721,10 +751,10 @@ void TestAVLTree2()
 		}
 
 		t.Insert(std::make_pair(e, e));
-		std::cout << "Insert:" << e << "->" << t.IsBalance() << std::endl;
+		std::cout << "Insert:" << e << "->" << t.IsAVLTree() << std::endl;
 	}
 
-	std::cout << t.IsBalance() << std::endl;
+	std::cout << t.IsAVLTree() << std::endl;
 
 }
 
