@@ -3,6 +3,7 @@
 #include<unordered_map>
 #include<unordered_set>
 
+#if 0
 int main()
 {
 	const size_t N = 100000;
@@ -76,7 +77,12 @@ int main()
 	return 0;
 }
 
+#endif
 
+int main()
+{
+	lsl::TestHT2();
 
-
+	return 0;
+}
 

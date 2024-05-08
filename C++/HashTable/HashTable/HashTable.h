@@ -7,8 +7,9 @@
 
 using namespace std;
 
-namespace lsl
+namespace hash_addres
 {
+	// 状态
 	enum Status
 	{
 		EMPTY, // 空
@@ -16,35 +17,86 @@ namespace lsl
 		DELETE // 删除
 	};
 
+	//哈希表每个位置存储的结构
 	template<class K, class V>
 	struct HashData
 	{
-		pair<K, V> _kv;
-		Status _status; // 状态
+		pair<K, V> _kv; // 键值对
+		Status _status = EMPTY; // 状态
+	};
+
+	template<class K>
+	struct HashFunc
+	{
+		size_t operator()(const K& key)
+		{
+			return (size_t)key;
+		}
 	};
 
 
-	template<class K, class V>
+	// 特化
+	template<>
+	struct HashFunc<string>
+	{
+		size_t operator()(const string& key)
+		{
+			size_t hash = 0;
+			for (auto e : key)
+			{
+				hash *= 31; // BKDR
+				hash += e;
+			}
+			cout << key << ":" << hash << endl;
+			return hash;
+		}
+	};
+
+	//struct HashFuncString
+	//{
+	//	size_t operator()(const string& key)
+	//	{
+	//		// BKDR
+	//		size_t hash = 0;
+	//		for (auto e : key)
+	//		{
+	//			hash *= 31;
+	//			hash += e;
+	//		}
+
+	//		cout << key << ":" << hash << endl;
+	//		return hash;
+	//	}
+	//};
+
+	template<class K, class V, class HashFun = HashFunc<K>>
 	class HashTable
 	{
 	public:
 		HashTable()
 		{
-			_tables.resize(10); 
+			_tables.resize(10);
 		}
-		
+
 		// 插入方法
 		bool Insert(const pair<K, V>& kv)
 		{
-			// 负载因子0.7就扩容
-			if (_n * 10 / _tables.size() == 7)
+			// 1、查看哈希表中是否存在该键值的键值对
+			if (Find(kv.first))// 哈希表中已经存在该键值的键值对（不允许数据冗余）
+				return false;
+
+			//2、判断是否需要调整哈希表的大小
+			if (_tables.size() == 0)
+				_tables.resize(10);
+			else if (_n * 10 / _tables.size() == 7)// 负载因子大于0.7需要增容
 			{
 				// 2倍扩容
 				size_t newSize = _tables.size() * 2;
-				HashTable<K, V> newHT;
+				//a、创建一个新的哈希表，新哈希表的大小设置为原哈希表的2倍
+				HashTable<K, V, HashFun> newHT;
 				newHT._tables.resize(newSize);
 
-				// 遍历旧表
+				//b、遍历旧表,将原哈希表当中的数据插入到新哈希表
 				for (size_t i = 0; i < _tables.size(); i++)
 				{
 					// 如果_tables[i]的位置有数据就进行再次映射
@@ -52,27 +104,163 @@ namespace lsl
 					{
 						newHT.Insert(_tables[i]._kv);
 					}
-					// 与旧表进行交换
+					// c、与旧表进行交换
 					_tables.swap(newHT._tables);
 				}
 			}// 扩容 end...
 
-			// 将键值对插入哈希表
-			// 通过哈希函数计算哈希地址
-			size_t hashi = kv.first % _tables.size(); // 除数不能是capacity
+			HashFun hf; // 对于int来说是直接用值来比较，对于string类型使用BKDR方法来比较
+
+			// 3、将键值对插入哈希表
+			// a、通过哈希函数计算哈希地址，线性探测
+			size_t hashi = hf(kv.first) % _tables.size(); // 除数不能是capacity
+
+			size_t index = hashi, i = 1;
+
+			//b、找到一个状态为EMPTY或DELETE的位置
 			while (_tables[hashi]._status == EXIST)
 			{
-				hashi++; // 线性探测
-				hashi %= _tables.size(); // 防止下标超出哈希表范围
+				index = hashi + i;					// 线性探测
+				index = hashi + i * i;				 // 二次探测
+				hashi %= _tables.size();			 // 防止下标超出哈希表范围
+				i++;
+			}
 
-				++_n;
+			//c、将数据插入该位置，并将该位置的状态设置为EXIST
+			_tables[hashi]._kv = kv;
+			_tables[hashi]._status = EXIST;
+			
+			//4、哈希表中的有效元素个数++
+			++_n;
+			return true;
+		}
+
+		// 查找方法
+		HashData<K, V>* Find(const K& key)
+		{
+			HashFun hf;
+
+			// 计算位置
+			size_t hashi = hf(key) % _tables.size();
+
+			while (_tables[hashi]._status != EMPTY)
+			{
+				//若该位置的状态为EXIST，并且key值匹配，则查找成功
+				if (_tables[hashi]._status == EXIST
+					&& _tables[hashi]._kv.first == key)
+				{
+					return &_tables[hashi];
+				}
+				++hashi;
+				hashi %= _tables.size();
+			}
+			// 找不到
+			return nullptr;
+		}
+
+		// 伪删除法
+		bool Erase(const K& key)
+		{
+			HashData<K, V>* res = Find(key);
+			if (res)
+			{
+				res->_status = DELETE;
+				--_n;
 				return true;
 			}
+			else
+			{
+				return false;
+			}
 		}
+
+		void Print()
+		{
+			for (size_t i = 0; i < _tables.size(); i++)
+			{
+				if (_tables[i]._status == EXIST)
+				{
+					// printf("[%d]->%d\n", i, _tables[i].first);
+					cout << "[" << i << "]->" << _tables[i]._kv.first << ":" << _tables[i]._kv.second << endl;
+				}
+				else if (_tables[i]._status == EMPTY)
+				{
+					printf("[%d]->\n", i);
+				}
+				else
+				{
+					printf("[%d]->E\n", i);
+				}
+			}
+			cout << endl;
+		}
+
 	private:
-		vector<HashTable> _tables;
+		vector<HashData<K, V>> _tables;
 		size_t _n = 0;// 存储的关键字的个数
 	};
 
+
+	void TestHT1()
+	{
+		HashTable<int, int> ht;
+		int a[] = { 4,14,24,34,5,7,1 };
+		for (auto e : a)
+		{
+			ht.Insert(make_pair(e, e));
+		}
+
+		ht.Insert(make_pair(3, 3));
+		ht.Insert(make_pair(3, 3));
+		ht.Insert(make_pair(-3, -3));
+		ht.Print();
+
+		ht.Erase(3);
+		ht.Print();
+
+		if (ht.Find(3))
+		{
+			cout << "3存在" << endl;
+		}
+		else
+		{
+			cout << "3不存在" << endl;
+		}
+
+		ht.Insert(make_pair(3, 3));
+		ht.Insert(make_pair(23, 3));
+		ht.Print();
+	}
+
+	void TestHT2()
+	{
+		string arr[] = { "香蕉", "甜瓜","苹果", "西瓜", "苹果", "西瓜", "苹果", "苹果", "西瓜", "苹果", "香蕉", "苹果", "香蕉" };
+		HashTable<string, int, HashFunc<string>> ht;
+		// HashTable<string, int> ht; // 使用特化
+		for (auto& e : arr)
+		{
+			//auto ret = ht.Find(e);
+			HashData<string, int>* ret = ht.Find(e);
+			if (ret)
+			{
+				ret->_kv.second++;
+			}
+			else
+			{
+				ht.Insert(make_pair(e, 1));
+			}
+		}
+
+		ht.Print();
+
+		ht.Insert(make_pair("apple", 1));
+		ht.Insert(make_pair("sort", 1));
+
+		ht.Insert(make_pair("abc", 1));
+		ht.Insert(make_pair("acb", 1));
+		ht.Insert(make_pair("aad", 1));
+
+		ht.Print();
+	}
 }
 
