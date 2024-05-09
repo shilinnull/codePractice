@@ -7,7 +7,7 @@
 
 using namespace std;
 
-namespace hash_addres
+namespace lsl_open_address
 {
 	// 状态
 	enum Status
@@ -138,11 +138,16 @@ namespace hash_addres
 		// 查找方法
 		HashData<K, V>* Find(const K& key)
 		{
+			if (_tables.size() == 0)
+				return nullptr;
+
 			HashFun hf;
 
 			// 计算位置
 			size_t hashi = hf(key) % _tables.size();
+			size_t index = hashi, i = 1;
 
+			// 不为空就一直找
 			while (_tables[hashi]._status != EMPTY)
 			{
 				//若该位置的状态为EXIST，并且key值匹配，则查找成功
@@ -151,27 +156,29 @@ namespace hash_addres
 				{
 					return &_tables[hashi];
 				}
-				++hashi;
-				hashi %= _tables.size();
+				index = hashi + i;			// 线性探测
+				// index = hashi + i * i;	// 二次探测
+				hashi %= _tables.size();    // //防止下标超出哈希表范围
+				++i;
 			}
-			// 找不到
+
+			// 找不到的情况
 			return nullptr;
 		}
 
 		// 伪删除法
 		bool Erase(const K& key)
 		{
+			//1、查看哈希表中是否存在该键值的键值对
 			HashData<K, V>* res = Find(key);
 			if (res)
 			{
+				//2、若存在，则将该键值对所在位置的状态改为DELETE即可
 				res->_status = DELETE;
-				--_n;
-				return true;
+				--_n; //3、哈希表中的有效元素个数减一
+				return true; // 删除成功
 			}
-			else
-			{
-				return false;
-			}
+			return false;    // 删除失败
 		}
 
 		void Print()
@@ -262,5 +269,83 @@ namespace hash_addres
 
 		ht.Print();
 	}
+}
+
+
+namespace lsl_hash_bucket
+{
+	template<class K,class V>
+	struct HashData
+	{
+		HashData<K, V>* _next;
+		pair<K, V> _kv;
+
+		// 构造
+		HashData(const pair<K,V> &kv)
+			:_kv(kv)
+			,_next(nullptr)
+		{}
+
+	};
+
+
+	template<class K, class V>
+	class HashTable
+	{
+		typedef HashData<K, V> Node;
+	public:
+		HashTable()
+		{
+			_tables.resize(10);
+		}
+		~HashTable()
+		{
+			for (int i = 0; i < _tables.size(); i++)
+			{
+				Node* cur = _tables[i];
+				while (cur)
+				{
+					Node* next = cur->_next;
+					delete cur;
+					cur = next;
+				}
+				_tables[i] = nullptr;
+			}
+		}
+
+		Node* Find()
+		{
+			// ...
+			return nullptr;
+		}
+
+		bool Insert(const pair<K, V>& kv)
+		{
+			if (Find(kv))
+				return false;
+			
+			// 负载
+			if (_n == _tables.size())
+			{
+
+			}
+
+			size_t hashi = kv.first % _tables.size();
+			Node* newnode = new Node(kv);
+
+			// 头插
+			newnode->_next = _tables[hashi];
+			_tables[hashi] = newnode;
+
+			++_n;
+			return true;
+		}
+
+
+	private:
+		vector<Node*> _tables;
+		size_t _n = 0;
+	};
+
 }
 
