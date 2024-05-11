@@ -7,6 +7,35 @@
 
 using namespace std;
 
+
+template<class K>
+struct HashFunc
+{
+	size_t operator()(const K& key)
+	{
+		return (size_t)key;
+	}
+};
+
+
+// 特化
+template<>
+struct HashFunc<string>
+{
+	size_t operator()(const string& key)
+	{
+		size_t hash = 0;
+		for (auto e : key)
+		{
+			hash *= 31; // BKDR
+			hash += e;
+		}
+		cout << key << ":" << hash << endl;
+		return hash;
+	}
+};
+
+
 namespace lsl_open_address
 {
 	// 状态
@@ -25,32 +54,6 @@ namespace lsl_open_address
 		Status _status = EMPTY; // 状态
 	};
 
-	template<class K>
-	struct HashFunc
-	{
-		size_t operator()(const K& key)
-		{
-			return (size_t)key;
-		}
-	};
-
-
-	// 特化
-	template<>
-	struct HashFunc<string>
-	{
-		size_t operator()(const string& key)
-		{
-			size_t hash = 0;
-			for (auto e : key)
-			{
-				hash *= 31; // BKDR
-				hash += e;
-			}
-			cout << key << ":" << hash << endl;
-			return hash;
-		}
-	};
 
 	//struct HashFuncString
 	//{
@@ -289,7 +292,7 @@ namespace lsl_hash_bucket
 	};
 
 
-	template<class K, class V>
+	template<class K, class V, class Hash = HashFunc<K>>
 	class HashTable
 	{
 		typedef HashData<K, V> Node;
@@ -313,24 +316,64 @@ namespace lsl_hash_bucket
 			}
 		}
 
-		Node* Find()
+
+		Node* Find(const K& key)
 		{
-			// ...
+			Hash hf; // 通过仿函数
+
+			if (_tables.size() == 0) // 哈希表大小为0，查找失败
+				return nullptr;
+			size_t hashi = hf(key) % _tables.size(); // 通过哈希函数计算出对应的哈希桶编号
+
+			// 遍历哈希桶
+			Node* cur = _tables[hashi];
+			while (cur)
+			{
+				if (cur->_kv.first == key) 
+					return cur;
+				cur = cur->_next;
+			}
+
 			return nullptr;
 		}
 
 		bool Insert(const pair<K, V>& kv)
 		{
+			// 1、查看哈希表中是否存在该键值的键值对
 			if (Find(kv))
 				return false;
-			
-			// 负载
-			if (_n == _tables.size())
+
+			Hash hf;
+
+			// 2、判断是否需要调整哈希表的大小
+			if (_n == _tables.size())// 哈希表的大小为0，或负载因子超过1
 			{
+				//增容
+				//a、创建一个新的哈希表，新哈希表的大小设置为原哈希表的2倍（若哈希表大小为0，则将哈希表的初始大小设置为10）
+				vector<Node*> newTables;
+				size_t newsize = _tables.size() == 0 ? 10 : _tables.size() * 2;
+				newTables.resize(newsize, nullptr);
+				// b、将原哈希表当中的结点插入到新哈希表
+				for (size_t i = 0; i < _tables.size(); i++)
+				{
+					if (_tables[i])// 桶不为空
+					{
+						Node* cur = _tables[i];  //将该桶的结点取完为止
+						while (cur)
+						{
+							Node* next = cur->_next; //记录cur的下一个结点
+							size_t index = hf(cur->_kv.first) % newTables.size(); // 通过哈希函数计算出对应的哈希桶编号index							cur->_next = newTables[index];
+							newTables[index] = cur; // 将该结点头插到新哈希表中编号为index的哈希桶中
+
+							cur = next; // 取原哈希表中该桶的下一个结点
+						}	
+						_tables[i] = nullptr; // 该桶取完后将该桶置空
+					}
+				}
 
 			}
 
-			size_t hashi = kv.first % _tables.size();
+			size_t hashi = hf(kv.first) % _tables.size();
 			Node* newnode = new Node(kv);
 
 			// 头插
@@ -340,8 +383,41 @@ namespace lsl_hash_bucket
 			++_n;
 			return true;
 		}
+		
+		bool Earse(const K& key)
+		{
+			Hash hf;
 
+			//1、通过哈希函数计算出对应的哈希桶编号index（除数不能是capacity）
+			size_t hashi = hf(key) % _tables.size();
 
+			//2、在编号为index的哈希桶中寻找待删除结点
+			Node* prev = nullptr;
+			Node* cur = _tables[hashi];
+			while (cur)
+			{
+				//3、若找到了待删除结点，则删除该结点
+				if (cur->_kv.first == key)
+				{
+					if (prev == nullptr) //待删除结点是哈希桶中的第一个结点
+					{
+						_tables[hashi] = cur->_next; // 将第一个结点从该哈希桶中移除
+					}
+					else // 待删除结点不是哈希桶的第一个结点
+					{
+						prev->_next = cur->_next; // 将该结点从哈希桶中移除
+					}
+					delete cur;
+
+					--_n; // 4、删除结点后，将哈希表中的有效元素个数减一
+					return true;
+				}
+				// 继续往后找
+				prev = cur;
+				cur = cur->_next;
+			}
+			return false;
+		}
 	private:
 		vector<Node*> _tables;
 		size_t _n = 0;
