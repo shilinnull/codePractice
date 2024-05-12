@@ -7,6 +7,27 @@
 
 using namespace std;
 
+// 使用素数
+size_t GetNextPrime(size_t prime)
+{
+	const int PRIMECOUNT = 28;
+	static const size_t primeList[PRIMECOUNT] =
+	{
+		53ul,         97ul,        193ul,       389ul,      769ul,
+		1543ul,       3079ul,      6151ul,      12289ul,    24593ul,
+		49157ul,      98317ul,     196613ul,    393241ul,   786433ul,
+		1572869ul,    3145739ul,   6291469ul,   12582917ul, 25165843ul,
+		50331653ul,   100663319ul, 201326611ul, 402653189ul,805306457ul,
+		1610612741ul, 3221225473ul, 4294967291ul
+	};
+	size_t i = 0;
+	for (; i < PRIMECOUNT; ++i)
+	{
+		if (primeList[i] > prime)
+			return primeList[i];
+	}
+	return primeList[i];
+}
 
 template<class K>
 struct Hash
@@ -242,17 +263,17 @@ namespace lsl_hash_bucket
 			//返回哈希结点中数据的引用
 			return _node->_data;
 		}
-		
+
 		Ptr operator->()
 		{
 			//返回哈希结点中数据的地址
-			return &_node->_data; 
+			return &_node->_data;
 		}
 
 		bool operator!=(const Self& s) const
 		{
 			return _node != s._node;
-		} 
+		}
 
 		bool operator==(const Self& s) const
 		{
@@ -331,7 +352,7 @@ namespace lsl_hash_bucket
 			}
 			return end();
 		}
-		
+
 		const_iterator end() const
 		{
 			return const_iterator(nullptr, this, -1);
@@ -339,7 +360,7 @@ namespace lsl_hash_bucket
 
 		HashTable()
 		{
-			_tables.resize(10);
+			_tables.resize(GetNextPrime(0));
 		}
 
 		~HashTable()
@@ -369,7 +390,7 @@ namespace lsl_hash_bucket
 			_tables.swap(ht._table);
 			swap(_n, ht._n);
 
-			return *this; 
+			return *this;
 		}
 
 
@@ -417,7 +438,7 @@ namespace lsl_hash_bucket
 
 						// 挪动到映射的新表
 						size_t hashi = hf(kot(cur->_data)) % newTables.size();
-						cur->_next = newTables[i];
+						cur->_next = newTables[hashi];
 						newTables[hashi] = cur;
 
 						cur = next;
