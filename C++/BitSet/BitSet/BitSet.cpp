@@ -2,7 +2,7 @@
 
 //int main()
 //{
-//	lsl::BitSet<100> bs;
+//	lsl::bitset<100> bs;
 //	bs.set(40);
 //	bs.set(39);
 //	cout << bs.test(40) << endl;
@@ -58,7 +58,8 @@
 
 int main()
 {
-	int a[] = { 1,4,7,9,44,88,1,4,88,99,78,5,7 ,7,7,7 };
+
+	int a[] = { 1, 4, 7, 9, 44, 88, 1, 4, 88, 99, 78, 5, 7, 7, 7, 7 };
 	lsl::twobitset<100> bs;
 	for (auto e : a)
 	{
