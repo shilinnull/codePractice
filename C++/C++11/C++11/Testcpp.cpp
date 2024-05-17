@@ -318,6 +318,107 @@ private:
 
 #include<assert.h>
 
+
+
+
+
+//
+//int main()
+//{
+//	// 在bit::string to_string(int value)函数中可以看到，这里
+//    // 只能使用传值返回，传值返回会导致至少1次拷贝构造(如果是一些旧一点的编译器可能是两次拷贝构造)。
+//	lsl::string ret = lsl::to_string(1234);
+//
+//	return 0;
+//}
+
+//
+//int main()
+//{
+//	lsl::string s1("hello world");
+//	lsl::string s2 = s1;
+//	lsl::string s3 = move(s1);
+//
+//	return 0;
+//}
+
+
+//void func1(lsl::string s)
+//{}
+//void func2(const lsl::string& s)
+//{}
+//int main()
+//{
+//	lsl::string s1("hello world");
+//	// func1和func2的调用我们可以看到左值引用做参数减少了拷贝，提高效率的使用场景和价值
+//	func1(s1);
+//	func2(s1);
+//
+//	s1 += '!';
+//	return 0;
+//}
+
+//int main()
+//{
+//	lsl::string s1("hello world");
+//	// 这里s1是左值，调用的是拷贝构造
+//	lsl::string s2(s1);
+//
+//	// 这里我们把s1 move处理以后, 会被当成右值，调用移动构造
+//	// 但是这里要注意，一般是不要这样用的，因为我们会发现s1的
+//	// 资源被转移给了s3，s1被置空了。
+//	lsl::string s3(std::move(s1));
+//	return 0;
+//}
+
+//int main()
+//{
+//	list<lsl::string> lt;
+//	lsl::string s1("1111");
+//	
+//	// 这里调用的是拷贝构造
+//	lt.push_back(s1);
+//
+//	// 下面调用都是移动构造
+//	lt.push_back("2222");
+//	lt.push_back(std::move(s1));
+//	return 0;
+//}
+//
+
+//void Fun(int& x) { cout << "左值引用" << endl; }
+//void Fun(const int& x) { cout << "const 左值引用" << endl; }
+//
+//void Fun(int&& x) { cout << "右值引用" << endl; }
+//void Fun(const int&& x) { cout << "const 右值引用" << endl; }
+//
+//// 函数模板：万能引用
+//template<typename T>
+//void PerfectForward(T&& t)
+//{
+//	// 期望保持实参的属性！
+//	// 完美转发
+//	Fun(forward<T>(t));
+//	// Fun(move(t));
+//	// Fun(t);
+//}
+//
+//int main()
+//{
+//	PerfectForward(10);           // 右值
+//
+//	int a;
+//	PerfectForward(a);            // 左值
+//	PerfectForward(std::move(a)); // 右值
+//
+//	const int b = 8;
+//	PerfectForward(b);		      // const 左值
+//	PerfectForward(std::move(b)); // const 右值
+//
+//	return 0;
+//}
+
+
 namespace lsl
 {
 	class string
@@ -438,84 +539,228 @@ namespace lsl
 		size_t _capacity;
 	};
 
-	lsl::string to_string(int x)
-	{
-		lsl::string ret;
-		while (x)
-		{
-			int val = x % 10;
-			x /= 10;
-			ret += ('0' + val);
-		}
-		reverse(ret.begin(), ret.end());
+	//lsl::string to_string(int x)
+	//{
+	//	lsl::string ret;
+	//	while (x)
+	//	{
+	//		int val = x % 10;
+	//		x /= 10;
+	//		ret += ('0' + val);
+	//	}
+	//	reverse(ret.begin(), ret.end());
 
-		return ret;
-	}
+	//	return ret;
+	//}
 }
 
 
 
-//
+template<class T>
+struct ListNode
+{
+	ListNode* _next = nullptr;
+	ListNode* _prev = nullptr;
+	T _data;
+};
+
+template<class T>
+class List
+{
+	typedef ListNode<T> Node;
+public:
+	List()
+	{
+		_head = new Node;
+		_head->_next = _head;
+		_head->_prev = _head;
+	}
+	void PushBack(T&& x)
+	{
+		//Insert(_head, x);
+		Insert(_head, std::forward<T>(x));
+	}
+	void PushFront(T&& x)
+	{
+		//Insert(_head->_next, x);
+		Insert(_head->_next, std::forward<T>(x));
+	}
+	void Insert(Node* pos, T&& x)
+	{
+		Node* prev = pos->_prev;
+		Node* newnode = new Node;
+		newnode->_data = std::forward<T>(x); // 关键位置
+		// prev newnode pos
+		prev->_next = newnode;
+		newnode->_prev = prev;
+		newnode->_next = pos;
+		pos->_prev = newnode;
+	}
+
+	void Insert(Node* pos, const T& x)
+	{
+		Node* prev = pos->_prev;
+		Node* newnode = new Node;
+		newnode->_data = x;                 // 关键位置
+		// prev newnode pos
+		prev->_next = newnode;
+		newnode->_prev = prev;
+		newnode->_next = pos;
+		pos->_prev = newnode;
+	}
+private:
+	Node* _head;
+};
+
+
 //int main()
 //{
-//	// 在bit::string to_string(int value)函数中可以看到，这里
-//    // 只能使用传值返回，传值返回会导致至少1次拷贝构造(如果是一些旧一点的编译器可能是两次拷贝构造)。
-//	lsl::string ret = lsl::to_string(1234);
+//	List<lsl::string> lt;
+//	lt.PushBack("1111");
+//	lt.PushFront("2222");
+//	return 0;
+//}
+// 以下代码在vs2013中不能体现，在vs2019下才能演示体现上面的特性。
+//class Person
+//{
+//public:
+//	Person(const char* name = "", int age = 0)
+//		:_name(name)
+//		, _age(age)
+//	{}
+//		Person(const Person& p)
+//			:_name(p._name)
+//			, _age(p._age)
+//	{}
+//
+//		Person& operator=(const Person& p)
+//		{
+//			if(this != &p)
+//			{
+//				_name = p._name;
+//				_age = p._age;
+//			}
+//			return *this;
+//		}
+//	
+//		// 强制生成
+//		// Person(Person&& p) = default;
+//
+//		// 禁止生成
+//		Person(const Person& p) = delete;
+//
+//
+//		//~Person()
+//		//{}
+//
+//private:
+//	lsl::string _name; 
+//	int _age;
+//};
+
+//int main()
+//{
+//	Person s1;
+//	Person s2 = s1;
+//	Person s3 = std::move(s1);
+//	Person s4;
+//	s4 = std::move(s2);
+//	return 0;
+//}
+
+
+//class Person
+//{
+//public:
+//	Person(const char* name = "", int age = 0)
+//		:_name(name)
+//		, _age(age)
+//	{}
+//	Person(const Person& p) = delete;
+//private:
+//	lsl::string _name;
+//	int _age;
+//};
+
+//int main()
+//{
+//	Person s1;
+//	Person s2 = s1;
+//	Person s3 = std::move(s1);
 //
 //	return 0;
 //}
 
-//
-//int main()
-//{
-//	lsl::string s1("hello world");
-//	lsl::string s2 = s1;
-//	lsl::string s3 = move(s1);
-//
-//	return 0;
-//}
 
-
-//void func1(lsl::string s)
+// Args是一个模板参数包，args是一个函数形参参数包
+// 声明一个参数包Args...args，这个参数包中可以包含0到任意个模板参数。
+//template <class ...Args>
+//void ShowList(Args... args)
 //{}
-//void func2(const lsl::string& s)
-//{}
+
+// 递归终止函数
+//template <class T>
+//void ShowList(const T& t)
+//{
+//	cout << t << endl;
+//}
+//// 展开函数
+//template <class T, class ...Args>
+//void ShowList(T value, Args... args)
+//{
+//	cout << value << " ";
+//	ShowList(args...);
+//}
 //int main()
 //{
-//	lsl::string s1("hello world");
-//	// func1和func2的调用我们可以看到左值引用做参数减少了拷贝，提高效率的使用场景和价值
-//	func1(s1);
-//	func2(s1);
-//
-//	s1 += '!';
+//	ShowList(1);
+//	ShowList(1, 'A');
+//	ShowList(1, 'A', std::string("sort"));
+//	return 0;
+//}
+
+//template <class T>
+//void PrintArg(T t)
+//{
+//	cout << t << " ";
+//}
+////展开函数
+//template <class ...Args>
+//void ShowList(Args... args)
+//{
+//	// 要初始化arr，强行让解析参数包，参数包有一个参数，PrintArg就依次推演生成几个
+//	int arr[] = { (PrintArg(args), 0)... };
+//	cout << endl;
+//}
+//int main()
+//{
+//	ShowList(1);
+//	ShowList(1, 'A');
+//	ShowList(1, 'A', std::string("sort"));
 //	return 0;
 //}
 
 //int main()
 //{
-//	lsl::string s1("hello world");
-//	// 这里s1是左值，调用的是拷贝构造
-//	lsl::string s2(s1);
+//	std::list< std::pair<int, char> > mylist;
 //
-//	// 这里我们把s1 move处理以后, 会被当成右值，调用移动构造
-//	// 但是这里要注意，一般是不要这样用的，因为我们会发现s1的
-//	// 资源被转移给了s3，s1被置空了。
-//	lsl::string s3(std::move(s1));
+//	mylist.emplace_back(10, 'a');
+//	mylist.emplace_back(20, 'b');
+//	mylist.emplace_back(make_pair(30, 'c'));
+//	mylist.push_back(make_pair(40, 'd'));
+//	mylist.push_back({ 50, 'e' });
+//	for (auto e : mylist)
+//		cout << e.first << ":" << e.second << endl;
 //	return 0;
 //}
+
 
 int main()
 {
-	list<lsl::string> lt;
-	lsl::string s1("1111");
-	
-	// 这里调用的是拷贝构造
-	lt.push_back(s1);
-
-	// 下面调用都是移动构造
-	lt.push_back("2222");
-	lt.push_back(std::move(s1));
+	std::list< std::pair<int, lsl::string> > mylist;
+	mylist.emplace_back(10, "sort");
+	mylist.emplace_back(make_pair(20, "sort"));
+	mylist.push_back(make_pair(30, "sort"));
+	mylist.push_back({ 40, "sort" });
 	return 0;
 }
-
-
