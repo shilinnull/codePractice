@@ -437,7 +437,7 @@ namespace lsl
 			:_size(strlen(str))
 			, _capacity(_size)
 		{
-			// cout << "string(char* str)" << endl;
+			cout << "string(char* str) -- 构造" << endl;
 			_str = new char[_capacity + 1];
 			strcpy(_str, str);
 		}
@@ -755,12 +755,418 @@ private:
 //}
 
 
+//int main()
+//{
+//	std::list< std::pair<int, lsl::string> > mylist;
+//	mylist.emplace_back(10, "sort");
+//	mylist.emplace_back(make_pair(20, "sort"));
+//	mylist.push_back(make_pair(30, "sort"));
+//	mylist.push_back({ 40, "sort" });
+//	return 0;
+//}
+
+
+
+//int main()
+//{
+//	std::list<lsl::string> lt;
+//	lsl::string s1("1111");
+//	lt.push_back(s1);
+//	lt.push_back(move(s1));
+//
+//	cout << endl;
+//	lsl::string s2("1111");
+//	lt.emplace_back(s2);
+//	lt.emplace_back(move(s2));
+//
+//	cout << endl;
+//	lt.push_back("xxxx");
+//	lt.emplace_back("xxxx");
+//
+//	return 0;
+//}
+
+
+//int main()
+//{
+//	std::list<pair<lsl::string, int>> lt;
+//	lt.push_back(make_pair("1111", 1));
+//	
+//	cout << endl;
+//	lt.emplace_back("2222", 2);
+//	lt.emplace_back(make_pair("1111", 1));
+//
+//	cout << endl;
+//	pair<lsl::string, int> kv("1111", 1);
+//	lt.emplace_back(kv);
+//
+//	return 0;
+//}
+
+#include<algorithm>
+
+//int main()
+//{
+//	int array[] = { 4,1,8,5,3,7,0,9,2,6 };
+//	// 默认按照小于比较，排出来结果是升序
+//	std::sort(array, array + sizeof(array) / sizeof(array[0]));
+//
+//	// 如果需要降序，需要改变元素的比较规则
+//	std::sort(array, array + sizeof(array) / sizeof(array[0]), greater<int>());
+//	return 0;
+//}
+
+
+struct Goods
+{
+	string _name;  // 名字
+	double _price; // 价格
+	int _evaluate; // 评价
+	Goods(const char* str, double price, int evaluate)
+		:_name(str)
+		, _price(price)
+		, _evaluate(evaluate)
+	{}
+};
+
+struct ComparePriceLess
+{
+	bool operator()(const Goods& gl, const Goods& gr)
+	{
+		return gl._price < gr._price;
+	}
+};
+
+struct ComparePriceGreater
+{
+	bool operator()(const Goods& gl, const Goods& gr)
+	{
+		return gl._price > gr._price;
+	}
+};
+
+
+//int main()
+//{
+//	vector<Goods> v = { { "苹果", 2.1, 5 }, { "香蕉", 3, 4 }, { "橙子", 2.2, 3 }, { "菠萝", 1.5, 4 } };
+//
+//	sort(v.begin(), v.end(), [](const Goods& g1, const Goods& g2)->bool {g1._price < g2._price; });
+//	sort(v.begin(), v.end(), [](const Goods& g1, const Goods& g2) {g1._price > g2._price; });
+//	sort(v.begin(), v.end(), [](const Goods& g1, const Goods& g2) {g1._evaluate < g2._evaluate; });
+//	sort(v.begin(), v.end(), [](const Goods& g1, const Goods& g2) {g1._evaluate > g2._evaluate; });
+//
+//
+//	// sort(v.begin(), v.end(), ComparePriceLess());
+//	// sort(v.begin(), v.end(), ComparePriceGreater());
+//}
+
+//int main()
+//{
+//	auto f1 = [](int x) {cout << x << endl; return 0; };
+//
+//	cout << typeid(f1).name() << endl;
+//
+//	f1(1);
+//	f1(2);
+//
+//	return 0;
+//}
+
+
+//int main()
+//{
+//	int x = 0, y = 1;
+//	cout << x << ":" << y << endl;
+//	
+//	auto f1 = [](int& r1, int& r2) {
+//		int tmp = r1;
+//		r1 = r2;
+//		r2 = tmp;
+//	};
+//	f1(x, y);
+//	cout << x << ":" << y << endl;
+//
+//	// 这里是传值，默认用加了const，加mutable就没有const
+//	auto f2 = [x, y]() mutable {
+//		int tmp = x;
+//		x = y;
+//		y = tmp;
+//	};
+//	f2();
+//	cout << x << ":" << y << endl;
+//
+//	
+//	// 引用捕捉
+//	auto f3 = [&x, &y]() mutable {
+//		int tmp = x;
+//		x = y;
+//		y = tmp;
+//	};
+//	f3();
+//	cout << x << ":" << y << endl;
+//
+//	// 可以不加mutable
+//	auto f4 = [&x, &y]() {
+//		int tmp = x;
+//		x = y;
+//		y = tmp;
+//	};
+//	f4();
+//	cout << x << ":" << y << endl;
+//
+//
+//	return 0;
+//}
+
+
+//int main()
+//{
+//	int x = 0, y = 1;
+//	cout << x << " " << y << endl;
+//
+//	auto f1 = [](int& r1, int& r2) {
+//		int tmp = r1;
+//		r1 = r2;
+//		r2 = tmp;
+//	};
+//
+//	f1(x, y);
+//	cout << x << " " << y << endl << endl;
+//
+//
+//	cout << x << " " << y << endl;
+//	cout << &x << ":" << &y << endl;
+//
+//	auto f2 = [x, y]() mutable {
+//		cout << &x << ":" << &y << endl;
+//
+//		int tmp = x;
+//		x = y;
+//		y = tmp;
+//	};
+//
+//	f2();
+//	cout << x << " " << y << endl << endl;
+//
+//	cout << x << " " << y << endl;
+//	cout << &x << ":" << &y << endl;
+//	auto f3 = [&x, &y]() {
+//		cout << &x << ":" << &y << endl;
+//
+//		int tmp = x;
+//		x = y;
+//		y = tmp;
+//	};
+//
+//	f3();
+//	cout << x << " " << y << endl << endl;
+//	return 0;
+//}
+
+//
+//class AA
+//{
+//public:
+//	void func()
+//	{
+//		// 捕捉this
+//		auto f1 = [this]() {
+//			cout << a1 << endl;
+//			cout << a2 << endl;
+//		};
+//
+//		// 全部捕捉
+//		auto f1 = [=]() {
+//			cout << a1 << endl;
+//			cout << a2 << endl;
+//		};
+//
+//		f1();
+//	}
+//private:
+//	int a1 = 1;
+//	int a2 = 1;
+//};
+//
+//
+//int main()
+//{
+//	int x = 0, y = 1, z = 2;
+//
+//	// = 为全部捕捉，z为引用捕捉
+//	auto f1 = [=, &z]() {
+//		z++;
+//
+//		cout << x << endl;
+//		cout << y << endl;
+//		cout << z << endl;
+//	};
+//
+//	f1();
+//
+//	return 0;
+//}
+
+#include<map>
+#include<functional>
+//
+//void swap_func(int& r1, int& r2)
+//{
+//	int tmp = r1;
+//	r1 = r2;
+//	r2 = tmp;
+//}
+//
+//struct Swap
+//{
+//	void operator()(int& r1, int& r2)
+//	{
+//		int tmp = r1;
+//		r1 = r2;
+//		r2 = tmp;
+//	}
+//};
+//
+//
+//int main()
+//{
+//	int x = 0, y = 1;
+//	cout << x << ":" << y << endl;
+//
+//	// lambda
+//	auto swaplambda = [](int& r1, int& r2) {int tmp = r1; r1 = r2; r2 = tmp; };
+//
+//	// 函数指针
+//	function<void(int&, int&)> f1 = swap_func;
+//	f1(x, y);
+//	cout << x << " " << y << endl << endl;
+//	// 类[匿名对象]
+//	function<void(int&, int&)> f2 = Swap();
+//	f2(x, y);
+//	cout << x << " " << y << endl << endl;
+//	// lambda
+//	function<void(int&, int&)> f3 = swaplambda;
+//	f3(x, y);
+//	cout << x << " " << y << endl << endl;
+//
+//	map<std::string, std::function<void(int&, int&)>> CmdOp{
+//		{"函数指针", swap_func},
+//		{"仿函数", Swap()},
+//		{"lambda", swaplambda},
+//
+//		//{"函数指针", f1},
+//		//{"仿函数", f2},
+//		//{"lambda", f3},
+//	};
+//
+//	// 使用
+//	CmdOp["函数指针"](x, y);
+//	cout << x << " " << y << endl << endl;
+//
+//	CmdOp["仿函数"](x, y);
+//	cout << x << " " << y << endl << endl;
+//
+//	CmdOp["lambda"](x, y);
+//	cout << x << " " << y << endl << endl;
+//
+//	return 0;
+//}
+
+
+//#include <functional>
+//template<class F, class T>
+//T useF(F f, T x)
+//{
+//	static int count = 0;
+//	cout << "count:" << ++count << endl;
+//	cout << "count:" << &count << endl;
+//	return f(x);
+//}
+//double f(double i)
+//{
+//	return i / 2;
+//}
+//int main()
+//{
+//	struct Functor
+//	{
+//		double operator()(double d)
+//		{
+//			return d / 3;
+//		}
+//	};
+//	// 函数名
+//	std::function<double(double)> func1 = f;
+//	cout << useF(func1, 11.11) << endl;
+//	// 函数对象
+//	std::function<double(double)> func2 = Functor();
+//	cout << useF(func2, 11.11) << endl;
+//	// lamber表达式
+//	std::function<double(double)> func3 = [](double d)->double { return d / 4; };
+//	cout << useF(func3, 11.11) << endl;
+//	return 0;
+//}
+
+class Plus
+{
+public:
+	static int plusi(int a, int b)
+	{
+		return a + b;
+	}
+
+	double plusd(double a, double b)
+	{
+		return a + b;
+	}
+};
+
+
 int main()
 {
-	std::list< std::pair<int, lsl::string> > mylist;
-	mylist.emplace_back(10, "sort");
-	mylist.emplace_back(make_pair(20, "sort"));
-	mylist.push_back(make_pair(30, "sort"));
-	mylist.push_back({ 40, "sort" });
+	// 静态成员可以不加，但是建议加上&
+	function<int(int, int)> f1 = Plus::plusi;
+	cout << f1(1, 2) << endl;
+
+	// 成员函数取地址，比较特殊，要加一个类域和&，还有一个this
+	function<double(Plus*, double, double)> f2 = &Plus::plusd;
+	Plus ps; 
+	cout << f2(&ps, 1.1, 2.2) << endl;
+
+	// 或者这样，也可以
+	function<double(Plus, double, double)> f3 = &Plus::plusd;
+	cout << f3(Plus(), 1.11, 2.22) << endl;
+
+	// 但是上面太麻烦，每次写都需要写
+	// 将参数固定bind，就可以省略不写
+	function<double(double, double)> f4 = bind(&Plus::plusd, Plus(), placeholders::_1, placeholders::_2);
+	cout << f4(1.11, 2.22) << endl;
+
 	return 0;
 }
+
+
+//int Sub(int a, int b)
+//{
+//	return a - b;
+//}
+//
+//int main()
+//{
+//	function<int(int, int)> f1 = Sub;
+//	cout << f1(10, 5) << endl;
+//
+//	// 调整参数顺序
+//	function<int(int, int)> f2 = bind(Sub, placeholders::_2, placeholders::_1);
+//	cout << f2(10, 5) << endl;
+//
+//	// 调整参数个数，有些参数可以bind时写死
+//	function<int(int)> f3 = bind(Sub, 20, placeholders::_1);
+//	cout << f3(5) << endl;
+//
+//	return 0;
+//}
+
+
+
+
