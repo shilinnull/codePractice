@@ -126,7 +126,6 @@ public:
         vsnprintf(rightbuffer, sizeof(rightbuffer), format, s);
         // 结束对参数列表的处理
         va_end(s);
-
         // 声明一个日志文本缓冲区，用于存储完整的日志信息
         char logtxt[SIZE * 2];
         // 合并左侧缓冲区和右侧缓冲区中的信息，存储到日志文本缓冲区
