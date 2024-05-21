@@ -334,56 +334,274 @@ void HttpServer()
 //}
 
 // 使用RAII思想设计的SmartPtr类
+//template<class T>
+//class SmartPtr
+//{
+//public:
+//	SmartPtr(T* ptr)
+//		:_ptr(ptr)
+//	{}
+//
+//	~SmartPtr()
+//	{
+//		delete[] ptr;
+//		cout << "delete[]" << _ptr << endl;
+//	}
+//
+//private:
+//	T* _ptr;
+//};
+//
+//double Division(int a, int b)
+//{
+//	if (b == 0)
+//	{
+//		throw invalid_argument("Division by zero condition!");
+//	}
+//	return (double)a / (double)b;
+//}
+//
+//void Func()
+//{
+//	// RAII
+//	SmartPtr<int> sp1(new int[10]);
+//	SmartPtr<double> sp1(new double[10]);
+//
+//	int len, time;
+//	cin >> len >> time;
+//	cout << Division(len, time) << endl; // 除零异常
+//}
+
+
+//int mian()
+//{
+//	try
+//	{
+//		Func();
+//	}
+//	catch (const exception& e)
+//	{
+//		cout << e.what() << endl;
+//	}
+//
+//	return 0;
+//}
+
 template<class T>
 class SmartPtr
 {
 public:
+	// RAII
 	SmartPtr(T* ptr)
 		:_ptr(ptr)
 	{}
 
 	~SmartPtr()
 	{
-		delete[] ptr;
-		cout << "delete[]" << _ptr << endl;
+		cout << "~SmartPtr()->" << _ptr << endl;
+
+		delete _ptr;
 	}
 
+	T& operator*()
+	{
+		return *_ptr;
+	}
+
+	T* operator->()
+	{
+		return _ptr;
+	}
 private:
 	T* _ptr;
 };
 
-double Division(int a, int b)
-{
-	if (b == 0)
+
+
+namespace lsl
+{ 
+	template<class T>
+	class auto_ptr
 	{
-		throw invalid_argument("Division by zero condition!");
-	}
-	return (double)a / (double)b;
+	public:
+		auto_ptr(T* ptr)
+			:_ptr(ptr)
+		{}
+
+		~auto_ptr()
+		{
+			if (_ptr)
+			{
+				cout << "~auto_ptr()" << endl;
+				delete _ptr;
+				_ptr = nullptr;
+			}
+		}
+		auto_ptr(auto_ptr<T>& ap)
+			:_ptr(ap._ptr)
+		{
+			_ptr = nullptr;
+		}
+
+		T& operator*()
+		{
+			return *_ptr;
+		}
+
+		T* operator->()
+		{
+			return _ptr;
+		}
+
+	private:
+		T* _ptr;
+	};
+
+
+	template<class T>
+	class unique_ptr
+	{
+	public:
+		unique_ptr()
+			:_ptr(nullptr)
+		{}
+
+		~unique_ptr()
+		{
+			if (_ptr)
+			{
+				cout << "~unique_ptr()" << endl;
+				delete _ptr;
+				_ptr = nullptr;
+			}
+		}
+
+		T& operator*()
+		{
+			return *_ptr;
+		}
+
+		T* operator->()
+		{
+			return _ptr;
+		}
+
+		// C++11
+		unique_ptr(const unique_ptr<T>& up) = delete;
+		unique_ptr<T>& operator=(const unique_ptr<T>& up) = delete;
+
+	private:
+		// C++98
+		// 1、只声明不实现
+		// 2、限定为私有
+		//unique_ptr(const unique_ptr<T>& up);
+		//unique_ptr<T>& operator=(const unique_ptr<T>& up);
+	private:
+		T* _ptr;
+	};
+
+
+	template<class T>
+	class shared_ptr
+	{
+	public:
+		shared_ptr()
+			:_ptr(nullptr)
+			,_pcount(new int(1))
+		{}
+
+		~shared_ptr()
+		{
+			if (_ptr)
+			{
+				cout << "~unique_ptr()" << endl;
+				delete _ptr;
+				delete _pcount;
+				_ptr = nullptr;
+			}
+		}
+
+		T& operator*()
+		{
+			return *_ptr;
+		}
+
+		T* operator->()
+		{
+			return _ptr;
+		}
+
+
+	private:
+		T* _ptr;
+		int* _pcount;
+	};
+
+
 }
 
-void Func()
-{
-	// RAII
-	SmartPtr<int> sp1(new int[10]);
-	SmartPtr<double> sp1(new double[10]);
 
-	int len, time;
-	cin >> len >> time;
-	cout << Division(len, time) << endl; // 除零异常
+void TestSmartPtr1()
+{
+	SmartPtr<int> sp1(new int);
+	*sp1 = 1;
+
+	SmartPtr<pair<string, int>> sp2(new pair<string, int>("xxxx", 1));
+	sp2->first += 'y';
+	sp2->second += 1;
+	sp2.operator->()->second += 1;
+	cout << sp2->first << endl;
+	cout << sp2->second << endl;
+}
+
+void test_auto_ptr1()
+{
+	lsl::auto_ptr<int> ap1(new int);
+	lsl::auto_ptr<int> ap2 = ap1;
+
+	// 管理权转移，导致对象悬空
+	(*ap1)++;
+	(*ap2)++;
+}
+
+void test_unique_ptr1()
+{
+	std::unique_ptr<int> up1(new int(1));
+	std::unique_ptr<int> up2 = up1;
+
+	std::unique_ptr<int> up3(new int(2));
+	up1 = up3;
 }
 
 
-int mian()
+
+void test_shared_ptr1()
 {
-	try
-	{
-		Func();
-	}
-	catch (const exception& e)
-	{
-		cout << e.what() << endl;
-	}
+	lsl::shared_ptr<string> sp1(new string("xxxxxxxxxxxxxxxxxx"));
+	lsl::shared_ptr<string> sp2(sp1);
+
+	lsl::shared_ptr<string> sp3(new string("yyyyyyyyy"));
+
+	sp1 = sp3;
+	sp3 = sp1;
+
+	sp3 = sp3;
+	cout << *sp3 << endl;
+
+	sp1 = sp2;
+}
+
+
+
+
+
+
+
+
+
+int main()
+{
+	test_auto_ptr1();
 
 	return 0;
 }
-
