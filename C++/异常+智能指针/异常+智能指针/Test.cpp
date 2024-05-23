@@ -505,20 +505,41 @@ namespace lsl
 	class shared_ptr
 	{
 	public:
-		shared_ptr()
-			:_ptr(nullptr)
+		shared_ptr(T* ptr = nullptr)
+			:_ptr(ptr)
 			,_pcount(new int(1))
 		{}
-
-		~shared_ptr()
+		void release()
 		{
-			if (_ptr)
+			if (--(*_pcount) == 0)
 			{
-				cout << "~unique_ptr()" << endl;
+				// cout << "~shared_ptr()" << endl;
 				delete _ptr;
 				delete _pcount;
 				_ptr = nullptr;
 			}
+		}
+
+		~shared_ptr()
+		{
+			release();
+		}
+		// sp1 = sp2
+		shared_ptr<T>& operator=(const shared_ptr<T>& sp)
+		{
+			// 防止自己给自己赋值
+			if (_ptr != sp._ptr)
+			{
+				// 先释放原来的
+				release();
+
+				_pcount = sp._pcount;
+				_ptr = sp._ptr;
+
+				// ++现在的
+				++(*_pcount);
+			}
+			return *this;
 		}
 
 		T& operator*()
@@ -530,14 +551,51 @@ namespace lsl
 		{
 			return _ptr;
 		}
-
-
+		T* get() const
+		{
+			return _ptr;
+		}
+		int use_count() const
+		{
+			return *_pcount;
+		}
 	private:
 		T* _ptr;
 		int* _pcount;
 	};
 
+	template<class T>
+	class weak_ptr
+	{
+	public:
+		weak_ptr()
+			:_ptr(nullptr)
+		{}
 
+		weak_ptr(const shared_ptr<T>& we)
+			:_ptr(we.get())
+		{}
+
+		weak_ptr<T>& operator=(const shared_ptr<T>& we)
+		{
+			_ptr = we.get();
+			return *this;
+		}
+
+
+		T& operator*()
+		{
+			return *_ptr;
+		}
+
+		T* operator->()
+		{
+			return _ptr;
+		}
+
+	private:
+		T* _ptr;
+	};
 }
 
 
@@ -567,10 +625,10 @@ void test_auto_ptr1()
 void test_unique_ptr1()
 {
 	std::unique_ptr<int> up1(new int(1));
-	std::unique_ptr<int> up2 = up1;
+	//std::unique_ptr<int> up2 = up1;
 
 	std::unique_ptr<int> up3(new int(2));
-	up1 = up3;
+	//up1 = up3;
 }
 
 
@@ -578,21 +636,50 @@ void test_unique_ptr1()
 void test_shared_ptr1()
 {
 	lsl::shared_ptr<string> sp1(new string("xxxxxxxxxxxxxxxxxx"));
-	lsl::shared_ptr<string> sp2(sp1);
 
 	lsl::shared_ptr<string> sp3(new string("yyyyyyyyy"));
 
 	sp1 = sp3;
 	sp3 = sp1;
 
+	// 自己给自己赋值
 	sp3 = sp3;
 	cout << *sp3 << endl;
-
-	sp1 = sp2;
+	lsl::shared_ptr<string> sp2(sp1);
+	sp1 = sp2; // 自己给自己赋值
 }
 
 
 
+struct ListNode
+{
+	lsl::weak_ptr<ListNode> _next;
+	lsl::weak_ptr<ListNode> _prev;
+	int val;
+
+	~ListNode()
+	{
+		cout << "~ListNode()" << endl;
+	}
+};
+
+void test_shared_ptr2()
+{
+	lsl::shared_ptr<ListNode> n1 = new ListNode;
+	lsl::shared_ptr<ListNode> n2 = new ListNode;
+
+	cout << "循环引用前：" << endl;
+	cout << n1.use_count() << endl;
+	cout << n2.use_count() << endl;
+
+	// 循环引用
+	n1->_next = n2;
+	n2->_prev = n1;
+
+	cout << "循环引用后：" << endl;
+	cout << n1.use_count() << endl;
+	cout << n2.use_count() << endl;
+}
 
 
 
@@ -601,7 +688,7 @@ void test_shared_ptr1()
 
 int main()
 {
-	test_auto_ptr1();
+	test_shared_ptr2();
 
 	return 0;
 }
