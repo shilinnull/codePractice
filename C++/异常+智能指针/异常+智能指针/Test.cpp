@@ -1,3 +1,4 @@
+#define _CRT_SECURE_NO_WARNINGS 1
 #include<iostream>
 
 using namespace std;
@@ -417,9 +418,9 @@ private:
 };
 
 
-
+#include <functional>
 namespace lsl
-{ 
+{
 	template<class T>
 	class auto_ptr
 	{
@@ -507,14 +508,24 @@ namespace lsl
 	public:
 		shared_ptr(T* ptr = nullptr)
 			:_ptr(ptr)
-			,_pcount(new int(1))
+			, _pcount(new int(1))
+		{}
+
+		// 删除器
+		template<class D>
+		shared_ptr(T* ptr, D del)
+			: _ptr(ptr)
+			, _pcount(new int(1))
+			, _del(del)
 		{}
 		void release()
 		{
 			if (--(*_pcount) == 0)
 			{
 				// cout << "~shared_ptr()" << endl;
-				delete _ptr;
+				// delete _ptr;
+
+				_del(_ptr);
 				delete _pcount;
 				_ptr = nullptr;
 			}
@@ -562,6 +573,7 @@ namespace lsl
 	private:
 		T* _ptr;
 		int* _pcount;
+		function<void(T*)> _del = [](T* ptr) { delete ptr; };
 	};
 
 	template<class T>
@@ -681,14 +693,31 @@ void test_shared_ptr2()
 	cout << n2.use_count() << endl;
 }
 
+template<class T>
+struct DelArray
+{
+	void operator()(T* ptr)
+	{
+		delete[] ptr;
+	}
+};
 
+void test_shared_ptr3()
+{
+	// 定制删除器
+	lsl::shared_ptr<ListNode> sp1(new ListNode[10], DelArray<ListNode>()); // 调用的仿函数
+	lsl::shared_ptr<ListNode> sp2(new ListNode[10], [](ListNode* ptr) { delete[] ptr; }); // 使用lambda
+	lsl::shared_ptr<FILE> sp3(fopen("Test.cpp", "r"), [](FILE* ptr) { fclose(ptr); });    // 使用lambda
 
-
-
+	lsl::shared_ptr<ListNode> sp4(new ListNode); // 使用缺省参数
+}
 
 int main()
 {
-	test_shared_ptr2();
+	// std::shared_ptr<ListNode> sp1;
 
+	//test_shared_ptr2();
+
+	test_shared_ptr3();
 	return 0;
 }
