@@ -326,26 +326,74 @@ B* B::_inst = nullptr;
 // 期望main函数结束后自动调用
 B::gc B::_gc;
 
+//int main()
+//{
+//	B::GetInstance()->Add("sort", "排序");
+//	B::GetInstance()->Add("left", "左边");
+//	B::GetInstance()->Add("right", "右边");
+//	B::GetInstance()->Print();
+//
+//	B::GetInstance()->Add("right", "xxx");
+//	B::GetInstance()->Print();
+//	
+//	// 显示的调用释放
+//	B::DelInstance();
+//	cout << "xxxxxxxxxxx" << endl;
+//
+//	return 0;
+//}
+
+#include<list>
+
+// 类型转换
+// 1、内置类型之间，相近类型可以转换 
+// 2、构造函数，其他类型转换成自定义类型，有构造函数就可以支持
+//    自定义类型 <- 内置类型  自定义类型 <- 自定义类型
+// 3、operator type()  内置类型 <- 自定义类型
+class C
+{
+public:
+	C(int x)
+	{}
+};
+
+class D
+{
+public:
+	D(const C& c)
+	{}
+};
+
+class E
+{
+public:
+	operator int()
+	{
+		// ...
+		return 0;
+	}
+};
+
 int main()
 {
-	B::GetInstance()->Add("sort", "排序");
-	B::GetInstance()->Add("left", "左边");
-	B::GetInstance()->Add("right", "右边");
-	B::GetInstance()->Print();
+	// 显示类型转换
+	int* p = nullptr;
+	int i = (int)p;
 
-	B::GetInstance()->Add("right", "xxx");
-	B::GetInstance()->Print();
-	
-	// 显示的调用释放
-	B::DelInstance();
-	cout << "xxxxxxxxxxx" << endl;
+	// 自定义类型 <- 内置类型
+	C c1 = 11;
+	string s1 = "xxxx";
+
+	// 自定义类型 <- 自定义类型
+	D d = c1;
+
+	// 内置类型 <- 自定义类型
+	E e;
+	int x = e;
+	cout << x << endl;
 
 	return 0;
 }
-
-
-
-
 
 
 
