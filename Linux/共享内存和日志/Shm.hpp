@@ -128,7 +128,7 @@ private:
         return k;
     }
 
-        int GetShmHelper(key_t key, int size, int flag)
+    int GetShmHelper(key_t key, int size, int flag)
     {
         int shmid = shmget(key, size, flag); // 获取key
         if (shmid < 0)
@@ -170,7 +170,7 @@ private:
         {
             log(Fatal, "shmat fail!");
         }
-        //std::cout << "who: " << RoleToString(_who) << " attach shm..." << std::endl;
+        // std::cout << "who: " << RoleToString(_who) << " attach shm..." << std::endl;
         log(Info, "who: %s attach shm...", RoleToString(_who).c_str());
 
         return shaddr;
