@@ -1,6 +1,6 @@
 #pragma once
 #include<iostream>
-
+#ifndef 1
 using namespace std;
 //枚举定义结点的颜色
 enum Colour
@@ -638,3 +638,4 @@ private:
 
 	Node* _root; //红黑树的根结点
 };
+#endif // !0

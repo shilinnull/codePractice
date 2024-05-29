@@ -1,6 +1,6 @@
 #include "RB.h"
 
-
+#ifndef 1
 int main()
 {
 	int a[] = { 16, 3, 7, 11, 9, 26, 18, 14, 15 };
@@ -24,3 +24,4 @@ int main()
 
 	return 0;
 }
+#endif

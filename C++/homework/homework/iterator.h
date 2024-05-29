@@ -3,6 +3,38 @@
 
 using namespace std;
 
+enum Colour
+{
+	RED,
+	BLACK
+};
+
+
+//红黑树结点的定义
+template<class T>
+struct RBTreeNode
+{
+	//三叉链
+	RBTreeNode<T>* _left;
+	RBTreeNode<T>* _right;
+	RBTreeNode<T>* _parent;
+
+	T data;
+
+	//结点的颜色
+	Colour _col; //红/黑
+
+	//构造函数
+	RBTreeNode(const T& data)
+		:_left(nullptr)
+		, _right(nullptr)
+		, _parent(nullptr)
+		, _pHead(data)
+		, _col(RED)
+	{}
+};
+
+
 template<class T>
 struct RBTreeIterator
 {
@@ -14,7 +46,10 @@ struct RBTreeIterator
 	{}
 
 	// 让迭代器具有类似指针的行为
-	T& operator*();
+	T& operator*()
+	{
+		return ;
+	}
 	T* operator->();
 
 	// 然迭代器可以移动：前置/后置++  
@@ -50,8 +85,8 @@ public:
 		: _size(0)
 	{
 		_pHead = new Node;
-		_pHead->_pLeft = _pHead;
-		_pHead->_pRight = _pHead;
+		_pHead->_left = _pHead;
+		_pHead->_right = _pHead;
 	}
 
 	// 插入值为data的节点
