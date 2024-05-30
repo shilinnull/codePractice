@@ -1,6 +1,6 @@
 #include "RB.h"
 
-#ifndef 1
+#if 0
 int main()
 {
 	int a[] = { 16, 3, 7, 11, 9, 26, 18, 14, 15 };
@@ -9,11 +9,6 @@ int main()
 	RBTree<int, int> t;
 	for (auto e : a)
 	{
-		if (e == 702)
-		{
-			int i = 0;
-		}
-
 		cout << "Insert:" << e << "->";
 		t.Insert(make_pair(e, e));
 		cout << t.IsBalance() << endl;
@@ -25,3 +20,5 @@ int main()
 	return 0;
 }
 #endif
+
+

@@ -1,6 +1,7 @@
 #pragma once
 #include<iostream>
-#ifndef 1
+
+#if 0
 using namespace std;
 //枚举定义结点的颜色
 enum Colour
