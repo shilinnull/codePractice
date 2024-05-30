@@ -1,8 +1,6 @@
 #pragma once
 #include<iostream>
-
 using namespace std;
-
 
 namespace lsl {
 	enum Colour
@@ -21,7 +19,7 @@ namespace lsl {
 		RBTreeNode<T>* _right;
 		RBTreeNode<T>* _parent;
 
-		T data;
+		T _data;
 
 		//结点的颜色
 		Colour _col; //红/黑
@@ -31,6 +29,7 @@ namespace lsl {
 			:_left(nullptr)
 			, _right(nullptr)
 			, _parent(nullptr)
+			, _data(data)
 			, _col(RED)
 		{}
 	};
@@ -41,7 +40,7 @@ namespace lsl {
 	{
 		typedef RBTreeNode<T> Node;
 		typedef RBTreeIterator<T, Ref, Ptr> Self;
-
+	public:
 		RBTreeIterator(Node* pNode)
 			: _pNode(pNode)
 		{}
@@ -49,64 +48,30 @@ namespace lsl {
 		// 让迭代器具有类似指针的行为
 		Ref operator*()
 		{
-			return _pNode->data;
+			return _pNode->_data;
 		}
 		Ptr operator->()
 		{
-			return &_pNode->data;
-		}
-		// 然迭代器可以移动：前置/后置++  
-		Self& operator++()
-		{
-			Increament();
-			return *this;
-		}
-		Self operator++(int)
-		{
-			Self temp(*this);
-			Increament();
-			return temp;
+			return &_pNode->_data;
 		}
 
-		// 然迭代器可以移动：前置/后置-- 
-		Self& operator--()
-		{
-			DeIncreament();
-			return *this;
-		}
-		Self operator--(int)
-		{
-			Self temp(*this);
-			DeIncreament();
-			return temp;
-		}
 
-		// 让迭代器可以比较
-		bool operator!=(const Self& s)const
+		//前置++
+		Self operator++()
 		{
-			return s._pNode != _pNode;
-		}
-		bool operator==(const Self& s)const
-		{
-			return s._pNode == _pNode;
-		}
-
-	private:
-		void Increament()
-		{
-			// 1. it指向的节点，右子树不为空，下一个就是右子树的最左节点
-			if (_pNode->_right)
+			if (_pNode->_right) //结点的右子树不为空
 			{
-				// 找右子树的最左节点
+				//寻找该结点右子树当中的最左结点
 				Node* left = _pNode->_right;
 				while (left->_left)
 				{
 					left = left->_left;
 				}
-				_pNode->_left;
+				_pNode = left; //++后变为该结点
 			}
-			else // 2. it指向的节点，右子树为空，it中的节点所在的子树访问完了，往上找孩子是父亲的那个祖先
+			else //结点的右子树为空
 			{
+				//寻找孩子不在父亲右的祖先
 				Node* cur = _pNode;
 				Node* parent = cur->_parent;
 				while (parent && cur == parent->_right)
@@ -114,11 +79,13 @@ namespace lsl {
 					cur = parent;
 					parent = parent->_parent;
 				}
-				_pNode = parent;
+				_pNode = parent; //++后变为该结点
 			}
 			return *this;
 		}
-		void DeIncreament()
+
+		//前置--
+		Self operator--()
 		{
 			if (_pNode->_left) //结点的左子树不为空
 			{
@@ -144,6 +111,18 @@ namespace lsl {
 			}
 			return *this;
 		}
+
+		// 让迭代器可以比较
+		bool operator!=(const Self& s)const
+		{
+			return s._pNode != _pNode;
+		}
+		bool operator==(const Self& s)const
+		{
+			return s._pNode == _pNode;
+		}
+
+	private:
 		Node* _pNode;
 	};
 
@@ -158,18 +137,43 @@ namespace lsl {
 		typedef RBTreeNode<T> Node;
 	public:
 		typedef RBTreeIterator<T, T&, T*> iterator;
+		typedef RBTreeIterator<T, const T&, const T*> const_iterator;
 	public:
 		RBTree()
 			: _size(0)
+			,_pHead(nullptr)
+		{}
+
+		//拷贝构造
+		RBTree(const RBTree<K, T, KeyOfT>& t)
 		{
-			_pHead = new Node;
-			_pHead->_left = _pHead;
-			_pHead->_right = _pHead;
+			_pHead = _Copy(t._pHead, nullptr);
+		}
+
+		//拷贝树
+		Node* _Copy(Node* root, Node* parent)
+		{
+			if (root == nullptr)
+			{
+				return nullptr;
+			}
+			Node* copyNode = new Node(root->_data);
+			copyNode->_parent = parent;
+			copyNode->_left = _Copy(root->_left, copyNode);
+			copyNode->_right = _Copy(root->_right, copyNode);
+			return copyNode;
+		}
+
+		//赋值运算符重载（现代写法）
+		RBTree<K, T, KeyOfT>& operator=(RBTree<K, T, KeyOfT> t)
+		{
+			std::swap(_pHead, t._pHead);
+			return *this; //支持连续赋值
 		}
 
 		// 插入值为data的节点
 		// 返回值含义：iterator代表新插入节点   bool：代表是否插入成功
-		pair<iterator, bool> Insert(const T& data)
+		pair<Node*, bool> Insert(const T& data)
 		{
 			if (_pHead == nullptr) //若红黑树为空树，则插入结点直接作为根结点
 			{
@@ -300,7 +304,7 @@ namespace lsl {
 		iterator Begin()
 		{
 			Node* left = _pHead;
-			while (left)
+			while (left && left->_left) // 这里要注意
 			{
 				left = left->_left;
 			}
@@ -309,6 +313,20 @@ namespace lsl {
 		iterator End()
 		{
 			return iterator(nullptr);
+		}
+		// Begin和End迭代器
+		const_iterator Begin() const
+		{
+			Node* left = _pHead;
+			while (left && left->_left)
+			{
+				left = left->_left;
+			}
+			return const_iterator(left);
+		}
+		const_iterator End() const
+		{
+			return const_iterator(nullptr);
 		}
 
 		// 红黑树是否为空，是返回true，否则返回false
@@ -495,7 +513,7 @@ namespace lsl {
 			RotateL(parent);
 		}
 
-		public:
+	public:
 
 		// 根节点->当前节点这条路径的黑色节点的数量
 		bool Check(Node* root, int blacknum, const int refVal)
