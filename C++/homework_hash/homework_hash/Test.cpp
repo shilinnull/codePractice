@@ -34,8 +34,31 @@
 //}
 
 
+void Test_unordered_set()
+{
+	int a[] = { 10001,11,55,24,19,12,31 };
+	lsl::unordered_set<int> s1;
+	for (auto& e : a)
+	{
+		s1.insert(e);
+	}
+	for (auto& e : s1)
+	{
+		cout << e << endl;
+	}
+
+	s1.erase(11);
+
+	for (auto& e : s1)
+	{
+		cout << e << endl;
+	}
+}
+
 int main()
 {
+
+	Test_unordered_set();
 	// TestHT1();
 	return 0;
 }

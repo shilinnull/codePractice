@@ -1,9 +1,8 @@
 #pragma once
-#include <iostream>
-#include <vector>
-
+#include<iostream>
+#include<string>
+#include<vector>
 using namespace std;
-
 
 // 使用素数
 size_t GetNextPrime(size_t prime)
@@ -55,6 +54,164 @@ struct Hash<string>
 };
 
 
+namespace lsl_open_address
+{
+	// 状态
+	enum Status
+	{
+		EMPTY, // 空
+		EXIST, // 存在
+		DELETE // 删除
+	};
+
+	//哈希表每个位置存储的结构
+	template<class K, class V>
+	struct HashData
+	{
+		pair<K, V> _kv; // 键值对
+		Status _status = EMPTY; // 状态
+	};
+
+
+	template<class K, class V, class HashFun = Hash<K>>
+	class HashTable
+	{
+	public:
+		HashTable()
+		{
+			_tables.resize(10);
+		}
+
+		// 插入方法
+		bool Insert(const pair<K, V>& kv)
+		{
+			// 1、查看哈希表中是否存在该键值的键值对
+			if (Find(kv.first))// 哈希表中已经存在该键值的键值对（不允许数据冗余）
+				return false;
+
+			//2、判断是否需要调整哈希表的大小
+			if (_tables.size() == 0)
+				_tables.resize(10);
+			else if (_n * 10 / _tables.size() == 7)// 负载因子大于0.7需要增容
+			{
+				// 2倍扩容
+				size_t newSize = _tables.size() * 2;
+				//a、创建一个新的哈希表，新哈希表的大小设置为原哈希表的2倍
+				HashTable<K, V, HashFun> newHT;
+				newHT._tables.resize(newSize);
+
+				//b、遍历旧表,将原哈希表当中的数据插入到新哈希表
+				for (size_t i = 0; i < _tables.size(); i++)
+				{
+					// 如果_tables[i]的位置有数据就进行再次映射
+					if (_tables[i]._status == EXIST)
+					{
+						newHT.Insert(_tables[i]._kv);
+					}
+					// c、与旧表进行交换
+					_tables.swap(newHT._tables);
+				}
+			}// 扩容 end...
+
+			HashFun hf; // 对于int来说是直接用值来比较，对于string类型使用BKDR方法来比较
+
+			// 3、将键值对插入哈希表
+			// a、通过哈希函数计算哈希地址，线性探测
+			size_t hashi = hf(kv.first) % _tables.size(); // 除数不能是capacity
+
+			size_t index = hashi, i = 1;
+
+			//b、找到一个状态为EMPTY或DELETE的位置
+			while (_tables[hashi]._status == EXIST)
+			{
+				index = hashi + i;					// 线性探测
+				index = hashi + i * i;				 // 二次探测
+				hashi %= _tables.size();			 // 防止下标超出哈希表范围
+				i++;
+			}
+
+			//c、将数据插入该位置，并将该位置的状态设置为EXIST
+			_tables[hashi]._kv = kv;
+			_tables[hashi]._status = EXIST;
+
+			//4、哈希表中的有效元素个数++
+			++_n;
+			return true;
+		}
+
+		// 查找方法
+		HashData<K, V>* Find(const K& key)
+		{
+			if (_tables.size() == 0)
+				return nullptr;
+
+			HashFun hf;
+
+			// 计算位置
+			size_t hashi = hf(key) % _tables.size();
+			size_t index = hashi, i = 1;
+
+			// 不为空就一直找
+			while (_tables[hashi]._status != EMPTY)
+			{
+				//若该位置的状态为EXIST，并且key值匹配，则查找成功
+				if (_tables[hashi]._status == EXIST
+					&& _tables[hashi]._kv.first == key)
+				{
+					return &_tables[hashi];
+				}
+				index = hashi + i;			// 线性探测
+				// index = hashi + i * i;	// 二次探测
+				hashi %= _tables.size();    // //防止下标超出哈希表范围
+				++i;
+			}
+
+			// 找不到的情况
+			return nullptr;
+		}
+
+		// 伪删除法
+		bool Erase(const K& key)
+		{
+			//1、查看哈希表中是否存在该键值的键值对
+			HashData<K, V>* res = Find(key);
+			if (res)
+			{
+				//2、若存在，则将该键值对所在位置的状态改为DELETE即可
+				res->_status = DELETE;
+				--_n; //3、哈希表中的有效元素个数减一
+				return true; // 删除成功
+			}
+			return false;    // 删除失败
+		}
+
+		void Print()
+		{
+			for (size_t i = 0; i < _tables.size(); i++)
+			{
+				if (_tables[i]._status == EXIST)
+				{
+					// printf("[%d]->%d\n", i, _tables[i].first);
+					cout << "[" << i << "]->" << _tables[i]._kv.first << ":" << _tables[i]._kv.second << endl;
+				}
+				else if (_tables[i]._status == EMPTY)
+				{
+					printf("[%d]->\n", i);
+				}
+				else
+				{
+					printf("[%d]->E\n", i);
+				}
+			}
+			cout << endl;
+		}
+
+	private:
+		vector<HashData<K, V>> _tables;
+		size_t _n = 0;// 存储的关键字的个数
+	};
+}
+
 namespace lsl_hash_bucket
 {
 	template<class T>
@@ -83,6 +240,7 @@ namespace lsl_hash_bucket
 		Node* _node;									     // 节点指针
 
 		size_t _hashi;
+
 
 		// 构造
 		__HTIterator(Node* node, HashTable<K, T, KeyOfT, Hash>* pht, size_t hashi)
@@ -301,8 +459,8 @@ namespace lsl_hash_bucket
 		}
 		bool Erase(const K& key)
 		{
-			Hash hf;
-			KeyOfT kot;
+			Hash hf; // hf是要算的hash值，这里采用BKDR
+			KeyOfT kot; // kot是要怎么取值，比如set是直接就是key，map是要取pair的first
 
 			//1、通过哈希函数计算出对应的哈希桶编号index（除数不能是capacity）
 			size_t hashi = hf(kot(key)) % _tables.size();
@@ -338,380 +496,4 @@ namespace lsl_hash_bucket
 		vector<Node*> _tables;
 		size_t _n = 0;
 	};
-
 }
-
-
-
-#if 0
-// 注意：假如实现的哈希表中元素唯一，即key相同的元素不再进行插入
-// 为了实现简单，此哈希表中我们将比较直接与元素绑定在一起
-namespace Close_Hash
-{
-	enum State { EMPTY, EXIST, DELETE };
-
-	template<class K, class V>
-	class HashTable
-	{
-	public:
-		struct Elem
-		{
-			pair<K, V> _val;
-			State _state = EMPTY;
-		};
-
-	public:
-		HashTable()
-		{
-			_ht.resize(3);
-		}
-
-		// 插入
-		bool Insert(const pair<K, V>& val)
-		{
-			if (Find(val.first))
-				return false;
-
-			// 判断是否需要调整哈希表的大小
-			if (_ht.size() == 0)
-			{
-				_ht.resize(10);
-			}
-
-			if (_n * 10 >= _ht.capacity()) // 注意这里
-			{
-				// 创建新的哈希表
-				HashTable<K, V> newHT;
-				// 2倍扩容
-				newHT._ht.resize(_ht.size() * 2);
-				// 插入
-				for (size_t i = 0; i < _ht.size(); i++)
-				{
-					if (_ht[i]._state == EXIST)
-					{
-						newHT.Insert(_ht[i]._val);
-					}
-				}
-				// 交换
-				_ht.swap(newHT._ht);
-			}
-			size_t hashi = val.first % _ht.size();
-			while (_ht[hashi]._state == EXIST)
-			{
-				++hashi;
-				hashi %= _ht.size();
-			}
-
-			// 将数据插入该位置，并将该位置的状态设置为EXIST
-			_ht[hashi]._val = val;
-			_ht[hashi]._state = EXIST;
-
-			++_n;
-			return true;
-		}
-
-		// 查找
-		Elem* Find(const K& key)
-		{
-			size_t hashi = key % _ht.size();
-			while (_ht[hashi]._state != EMPTY)
-			{
-				if (_ht[hashi]._state == EXIST && _ht[hashi]._val.first == key)
-				{
-					return &_ht[hashi];
-				}
-				++hashi;
-				hashi %= _ht.size();
-			}
-			return nullptr;
-		}
-
-		// 删除
-		bool Erase(const K& key)
-		{
-			Elem* ret = Find(key);
-			if (ret == nullptr)
-				return false;
-			else
-			{
-				ret->_state = DELETE;
-				--_n;
-
-				return true;
-			}
-		}
-
-		size_t Size()const
-		{
-			return _n;
-		}
-
-		bool Empty() const
-		{
-			return _n == 0;
-		}
-
-		void Swap(HashTable<K, V>& ht)
-		{
-			swap(_n, ht._n);
-			_ht.swap(ht._ht);
-		}
-
-	private:
-		size_t HashFunc(const K& key)
-		{
-			return key % _ht.capacity();
-		}
-	private:
-		vector<Elem> _ht;
-		size_t _n = 0;
-	};
-}
-
-
-namespace OpenHash
-{
-	// 使用素数
-	size_t GetNextPrime(size_t prime)
-	{
-		const int PRIMECOUNT = 28;
-		static const size_t primeList[PRIMECOUNT] =
-		{
-			53ul,         97ul,        193ul,       389ul,      769ul,
-			1543ul,       3079ul,      6151ul,      12289ul,    24593ul,
-			49157ul,      98317ul,     196613ul,    393241ul,   786433ul,
-			1572869ul,    3145739ul,   6291469ul,   12582917ul, 25165843ul,
-			50331653ul,   100663319ul, 201326611ul, 402653189ul,805306457ul,
-			1610612741ul, 3221225473ul, 4294967291ul
-		};
-		size_t i = 0;
-		for (; i < PRIMECOUNT; ++i)
-		{
-			if (primeList[i] > prime)
-				return primeList[i];
-		}
-		return primeList[i];
-	}
-
-
-	template<class T>
-	class HashFunc
-	{
-	public:
-		size_t operator()(const T& val)
-		{
-			return val;
-		}
-	};
-
-
-	template<>
-	class HashFunc<string>
-	{
-	public:
-		size_t operator()(const string& s)
-		{
-			const char* str = s.c_str();
-			unsigned int seed = 131; // 31 131 1313 13131 131313
-			unsigned int hash = 0;
-			while (*str)
-			{
-				hash = hash * seed + (*str++);
-			}
-
-
-			return hash;
-		}
-	};
-
-
-	template<class V>
-	struct HashBucketNode
-	{
-		HashBucketNode(const V& data)
-			: _pNext(nullptr), _data(data)
-		{}
-		HashBucketNode<V>* _pNext;
-		V _data;
-	};
-
-
-	// 本文所实现的哈希桶中key是唯一的
-	template<class V, class HF = HashFunc<V>>
-	class HashBucket
-	{
-		typedef HashBucketNode<V> Node;
-		typedef Node* PNode;
-
-
-		typedef HashBucket<V, HF> Self;
-
-
-	public:
-		HashBucket(size_t capacity)
-			: _table(GetNextPrime(capacity))
-			, _size(0)
-		{}
-
-
-		~HashBucket()
-		{
-			Clear();
-		}
-
-
-		// 哈希桶中的元素不能重复
-		Node* Insert(const V& data)
-		{
-			CheckCapacity();
-
-
-			// 计算位置
-			size_t hashi = HashFunc(data) % _table.size();
-
-
-			// 检测是否在其中
-			if (Find(data))
-				return nullptr;
-
-
-			Node* cur = _table[hashi];
-			// 插入节点
-			cur = new Node(data);
-			cur->_pNext = _table[hashi];
-			// 让hashi的位置成为新的hashi
-			_table[hashi] = cur;
-			++_size;
-			return cur;
-		}
-
-
-		// 删除哈希桶中为data的元素(data不会重复)
-		bool Erase(const V& data)
-		{
-			size_t hashi = HashFunc(data) % _table.size();
-
-			Node* cur = _table[hashi];
-			Node* prev = nullptr;
-			while (cur)
-			{
-				if (cur->_data == data)
-				{
-					// 删除的是第一个节点
-					if (cur == _table[hashi])
-					{
-						_table[hashi] = cur->_pNext;
-					}
-					else // 删除的不是第一个节点
-					{
-						prev->_pNext = cur->_pNext;
-					}
-					delete cur;
-					--size;
-					return true;
-				}
-				prev = cur;
-				cur = cur->_pNext;
-			}
-			return false;
-		}
-
-
-		Node* Find(const V& data)
-		{
-			size_t hashi = HashFunc(data) % _table.size();
-			Node* cur = _table[i];
-			while (cur)
-			{
-				if (data == cur->_data)
-					return cur;
-				cur = cur->_pNext;
-			}
-			return nullptr;
-		}
-
-
-		size_t Size()const
-		{
-			return _size;
-		}
-
-
-		bool Empty()const
-		{
-			return 0 == _size;
-		}
-
-
-		void Clear()
-		{
-			for (size_t i = 0; i < _table.capacity(); i++)
-			{
-				Node* cur = _table[i];
-
-
-				while (cur)
-				{
-					_table[i] = cur->_pNext;
-					delete cur;
-
-
-					cur = _table[i];
-				}
-			}
-			_size = 0;
-		}
-
-
-		size_t BucketCount()const
-		{
-			return _table.capacity();
-		}
-
-
-		void Swap(Self& ht)
-		{
-			_table.swap(ht._table);
-			swap(_size, ht._size);
-		}
-
-
-	private:
-		size_t HashFunc(const V& data)
-		{
-			return HF()(data) % _table.capacity();
-		}
-
-
-		void CheckCapacity()
-		{
-			if (_size == _table.capacity())
-			{
-				Self ht(GetNextPrime(_size));
-				for (int i = 0; i < _table.capacity(); i++)
-				{
-					Node* cur = _table[i];
-
-					while (cur)
-					{
-						// 将cur从旧表中删除
-						// 先将旧表的下一个节点保存下来
-						_table[i] = cur->_pNext;
-						// 计算新的位置，将cur节点插入到新的链表
-						size_t hashi = ht.HashFunc(cur->_data);
-						// 头插
-						cur->_pNext = ht._table[i];
-						ht._table[hashi] = cur;
-					}
-				}
-				this->Swap(ht);
-			}
-		}
-
-
-	private:
-		vector<Node*> _table;
-		size_t _size;      // 哈希表中有效元素的个数
-	};
-}
-#endif

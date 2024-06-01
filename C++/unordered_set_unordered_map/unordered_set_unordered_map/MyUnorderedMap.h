@@ -1,6 +1,8 @@
-#pragma once
+﻿#pragma once
 
-#include"Hash.h"
+#include"HashTable.h"
+
+
 namespace lsl
 {
 	template<class K, class V, class Hash = Hash<K>>
@@ -56,5 +58,34 @@ namespace lsl
 	private:
 		lsl_hash_bucket::HashTable<K, pair<const K, V>, MapKeyOfT, Hash> _ht;
 	};
-}
 
+	void test_map()
+	{
+		unordered_map<string, string> dict;
+		dict.insert(make_pair("sort", "排序"));
+		dict.insert(make_pair("string", "字符串"));
+		dict.insert(make_pair("insert", "插入"));
+
+		for (auto& kv : dict)
+		{
+			//kv.first += 'x';
+			kv.second += 'x';
+
+			cout << kv.first << ":" << kv.second << endl;
+		}
+		cout << endl;
+
+		string arr[] = { "香蕉", "甜瓜","苹果", "西瓜", "苹果", "西瓜", "苹果", "苹果", "西瓜", "苹果", "香蕉", "苹果", "香蕉" };
+		unordered_map<string, int> count_map;
+		for (auto& e : arr)
+		{
+			count_map[e]++;
+		}
+
+		for (auto& kv : count_map)
+		{
+			cout << kv.first << ":" << kv.second << endl;
+		}
+		cout << endl;
+	}
+}

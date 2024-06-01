@@ -1,6 +1,7 @@
 #pragma once
 
-#include"Hash.h"
+#include"HashTable.h"
+
 namespace lsl
 {
 	template<class K, class Hash = Hash<K>>
@@ -48,4 +49,27 @@ namespace lsl
 	private:
 		lsl_hash_bucket::HashTable<K, K, SetKeyOfT, Hash> _ht;
 	};
+	void test_set()
+	{
+		unordered_set<int> us;
+		us.insert(5);
+		us.insert(15);
+		us.insert(52);
+		us.insert(3);
+
+		unordered_set<int>::iterator it = us.begin();
+		while (it != us.end())
+		{
+			// *it += 5;
+			cout << *it << " ";
+			++it;
+		}
+		cout << endl;
+
+		for (auto e : us)
+		{
+			cout << e << " ";
+		}
+		cout << endl;
+	}
 }
