@@ -317,39 +317,62 @@ private:
 //}
 
 
+//
+//struct ChatInfo
+//{
+//	string _name; // 名字
+//	int _id;      // id
+//	Date _date;   // 时间
+//	string _msg;  // 聊天信息
+//};
+//
+//int main()
+//{
+//	ChatInfo winfo = { "张三", 135246, { 2022, 4, 10 }, "晚上一起看电影吧" };
+//	stringstream oss;
+//	oss << winfo._name << endl;
+//	oss << winfo._id << endl;
+//	oss << winfo._date << endl;
+//	oss << winfo._msg << endl;
+//	cout << oss.str() << endl;
+//
+//	// 网络输出
+//	ChatInfo rinfo;
+//	string str = oss.str();
+//	stringstream iss(str);
+//	iss >> rinfo._name;
+//	iss >> rinfo._id;
+//	iss >> rinfo._date;
+//	iss >> rinfo._msg;
+//
+//	cout << "-------------------------------------------------------" << endl;
+//	cout << "姓名：" << rinfo._name << "(" << rinfo._id << ") ";
+//	cout << rinfo._date << endl;
+//	cout << rinfo._name << ":>" << rinfo._msg << endl;
+//	cout << "-------------------------------------------------------" << endl;
+//
+//	return 0;
+//}
 
-struct ChatInfo
-{
-	string _name; // 名字
-	int _id;      // id
-	Date _date;   // 时间
-	string _msg;  // 聊天信息
-};
 
-int main()
-{
-	ChatInfo winfo = { "张三", 135246, { 2022, 4, 10 }, "晚上一起看电影吧" };
-	stringstream oss;
-	oss << winfo._name << endl;
-	oss << winfo._id << endl;
-	oss << winfo._date << endl;
-	oss << winfo._msg << endl;
-	cout << oss.str() << endl;
-
-	// 网络输出
-	ChatInfo rinfo;
-	string str = oss.str();
-	stringstream iss(str);
-	iss >> rinfo._name;
-	iss >> rinfo._id;
-	iss >> rinfo._date;
-	iss >> rinfo._msg;
-
-	cout << "-------------------------------------------------------" << endl;
-	cout << "姓名：" << rinfo._name << "(" << rinfo._id << ") ";
-	cout << rinfo._date << endl;
-	cout << rinfo._name << ":>" << rinfo._msg << endl;
-	cout << "-------------------------------------------------------" << endl;
-
-	return 0;
-}
+//int main()
+//{
+//	int a = 12345678;
+//	// 将一个整形变量转化为字符串，存储到string类对象中
+//	stringstream s;
+//	s << a;
+//	string sa;
+//	s >> sa;
+//	cout << sa << endl;
+//
+//	s.str("");
+//	s.clear(); // 清空s, 不清空会转化失败
+//
+//	double d = 12.34;
+//	s << d;
+//	s >> sa;
+//	string sValue;
+//	sValue = s.str(); // str()方法：返回stringsteam中管理的string类型
+//	cout << sValue << endl;
+//	return 0;
+//}
