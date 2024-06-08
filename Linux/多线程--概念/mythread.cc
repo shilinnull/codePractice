@@ -8,100 +8,189 @@
 #include <stdlib.h>
 using namespace std;
 
-#define NUM 3
+#define NUM 4
 
-// int *p = NULL;
-
-// 加上__thread就变成了每一个线程
-// 线程的局部存储
-// __thread int g_val = 100;
-// int g_val = 100;
-__thread unsigned int number = 0;
-__thread int pid = 0;
-
-struct threadData
+// 线程名字
+class ThreadData
 {
+public:
+    ThreadData(int num)
+    {
+        threadname = "thread-" + to_string(num);
+    }
+
+public:
     string threadname;
 };
 
-string toHex(pthread_t tid)
+int tickets = 1000;
+
+// 买票操作
+void *getTicket(void *args)
 {
-    char buffer[128];
-    snprintf(buffer, sizeof(buffer), "%#lx", tid);
-    return buffer;
-}
-
-void InitThreadData(threadData *td, int number)
-{
-    td->threadname = "thread-" + to_string(number); // thread-0
-}
-
-// 所有的线程，执行的都是这个函数
-void *threadRoutine(void *args)
-{
-    // 自己把自己分离
-    pthread_detach(pthread_self());
-
-    // 每个线程的test_i都是独立的，互不干扰的
-    // int test_i = 0;
-    threadData *td = static_cast<threadData *>(args);
-    // if (td->threadname == "thread-2")
-    //     p = &test_i;
-    string tid = toHex(pthread_self());
-    int pid = getpid();
-
-    int i = 0;
-    while (i < 10)
+    ThreadData *td = static_cast<ThreadData *>(args);
+    const char *name = td->threadname.c_str();
+    while (true)
     {
-        cout << "tid: " << tid << ", pid: " << pid << endl;
-
-        // printf("pid: %d, tid:%s, threadname: %s, g_val: %d, &g_val: %p\n", getpid(), toHex(pthread_self()).c_str(), td->threadname.c_str(), g_val, &g_val);
-
-        // printf("pid: %d, tid:%s, threadname: %s, test_i: %d, &test_i: %p\n", getpid(), toHex(pthread_self()).c_str(), td->threadname.c_str(), test_i, &test_i);
-        // test_i++;
-        // g_val++;
-        sleep(1);
-        i++;
+        if (tickets > 0)
+        {
+            usleep(1000);
+            printf("who=%s, get a ticket: %d\n", name, tickets); // ?
+            tickets--;
+        }
+        else
+            break;
     }
-
-    delete td;
+    printf("%s ... quit\n", name);
     return nullptr;
 }
+
 int main()
 {
-    // 创建多线程
     vector<pthread_t> tids;
-    for (int i = 0; i < NUM; i++)
+    vector<ThreadData *> thread_datas;
+
+    for (int i = 1; i <= NUM; i++)
     {
         pthread_t tid;
-        // 线程名字
-        threadData *td = new threadData; // 这里使用new，在堆上开空间，每个线程独享
-        // 初始化线程id
-        InitThreadData(td, i);
-
-        // 创建
-        pthread_create(&tid, nullptr, threadRoutine, td);
-        tids.push_back(tid); // 将每个线程使用vector管理起来
-        sleep(1);
+        ThreadData *td = new ThreadData(i);
+        thread_datas.push_back(td);
+        pthread_create(&tid, nullptr, getTicket, thread_datas[i - 1]);
+        tids.push_back(tid);
     }
-    sleep(1); // 确保复制成功
 
-    // 分离线程
-    // for (auto i : tids)
-    // {
-    //     pthread_detach(i);
-    // }
-    // cout << "main thread get a thread local value, val: " << *p << ", &val: " << p << endl;
-
-    // pthread_detach后再pthread_join会出错
-    for (int i = 0; i < tids.size(); i++)
+    // 等待
+    for (auto e : tids)
     {
-        int n = pthread_join(tids[i], nullptr);
-        printf("n = %d, who = 0x%lx, why: %s\n", n, tids[i], strerror(n));
+        pthread_join(e, nullptr);
+    }
+    // 释放
+    for (auto e : thread_datas)
+    {
+        delete e;
     }
 
     return 0;
 }
+
+// void *PthreadRun(void *args)
+// {
+//     int cnt = 0;
+//     while (true)
+//     {
+//         cout << "new Thread, cnt = " << cnt << endl;
+//         cnt++;
+//         sleep(1);
+//     }
+//     return nullptr;
+// }
+
+// int main()
+// {
+//     // 住现场调用pthreadexit
+//     // vector<pthread_t> tids;
+//     pthread_t tid;
+//     pthread_create(&tid, nullptr, PthreadRun, nullptr);
+
+//     sleep(5);
+//     pthread_exit(nullptr);
+//     return 0;
+// }
+
+// #define NUM 3
+
+// // int *p = NULL;
+
+// // 加上__thread就变成了每一个线程
+// // 线程的局部存储
+// // __thread int g_val = 100;
+// // int g_val = 100;
+// __thread unsigned int number = 0;
+// __thread int pid = 0;
+
+// struct threadData
+// {
+//     string threadname;
+// };
+
+// string toHex(pthread_t tid)
+// {
+//     char buffer[128];
+//     snprintf(buffer, sizeof(buffer), "%#lx", tid);
+//     return buffer;
+// }
+
+// void InitThreadData(threadData *td, int number)
+// {
+//     td->threadname = "thread-" + to_string(number); // thread-0
+// }
+
+// // 所有的线程，执行的都是这个函数
+// void *threadRoutine(void *args)
+// {
+//     // 自己把自己分离
+//     pthread_detach(pthread_self());
+
+//     // 每个线程的test_i都是独立的，互不干扰的
+//     // int test_i = 0;
+//     threadData *td = static_cast<threadData *>(args);
+//     // if (td->threadname == "thread-2")
+//     //     p = &test_i;
+//     string tid = toHex(pthread_self());
+//     int pid = getpid();
+
+//     int i = 0;
+//     while (i < 10)
+//     {
+//         cout << "tid: " << tid << ", pid: " << pid << endl;
+
+//         // printf("pid: %d, tid:%s, threadname: %s, g_val: %d, &g_val: %p\n", getpid(), toHex(pthread_self()).c_str(), td->threadname.c_str(), g_val, &g_val);
+
+//         // printf("pid: %d, tid:%s, threadname: %s, test_i: %d, &test_i: %p\n", getpid(), toHex(pthread_self()).c_str(), td->threadname.c_str(), test_i, &test_i);
+//         // test_i++;
+//         // g_val++;
+//         sleep(1);
+//         i++;
+//     }
+
+//     delete td;
+//     return nullptr;
+// }
+// int main()
+// {
+//     // 创建多线程
+//     vector<pthread_t> tids;
+//     for (int i = 0; i < NUM; i++)
+//     {
+//         pthread_t tid;
+//         // 线程名字
+//         threadData *td = new threadData; // 这里使用new，在堆上开空间，每个线程独享
+//         // 初始化线程id
+//         InitThreadData(td, i);
+
+//         // 创建
+//         pthread_create(&tid, nullptr, threadRoutine, td);
+//         tids.push_back(tid); // 将每个线程使用vector管理起来
+//         sleep(1);
+//     }
+//     sleep(1); // 确保复制成功
+
+//     // 分离线程
+//     // for (auto i : tids)
+//     // {
+//     //     pthread_detach(i);
+//     // }
+//     // cout << "main thread get a thread local value, val: " << *p << ", &val: " << p << endl;
+
+//     // pthread_detach后再pthread_join会出错
+//     for (int i = 0; i < tids.size(); i++)
+//     {
+//         int n = pthread_join(tids[i], nullptr);
+//         printf("n = %d, who = 0x%lx, why: %s\n", n, tids[i], strerror(n));
+//     }
+
+//     return 0;
+// }
 
 // // 转换成十六进制
 // string toHex(pthread_t tid)
