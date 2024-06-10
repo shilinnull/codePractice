@@ -23,7 +23,7 @@ void *Consumer(void *args)
 
         std::cout << "处理任务: " << t.GetTask() << " 运算结果是： " << t.GetResult() << " thread id: " << TOHEX(pthread_self()) << std::endl;
 
-        // sleep(1);
+        sleep(1);
     }
 }
 
@@ -42,7 +42,7 @@ void *Productor(void *args)
         bq->Push(t); // 入队
         std::cout << "生产了一个任务: " << t.GetTask() << " thread id: " << TOHEX(pthread_self()) << std::endl;
         
-        sleep(1);
+        sleep(5);
     }
 }
 
