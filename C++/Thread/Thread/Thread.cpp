@@ -332,41 +332,200 @@ using namespace std;
 //	return 0;
 //}
 
+//int main()
+//{
+//	size_t n1 = 10000;
+//	size_t n2 = 10000;
+//	mutex mtx;
+//
+//	atomic<size_t> x = 0;
+//	thread t1([&]() {
+//			for (size_t i = 0; i < n1; i++)
+//			{
+//				size_t old, newval;
+//				do
+//				{
+//					old = x;
+//					newval = old + 2;
+//				} while (!atomic_compare_exchange_weak(&x, &old, newval));
+//			}
+//		});
+//
+//	thread t2([&]() {
+//			for (size_t i = 0; i < n2; i++)
+//			{
+//				size_t old, newval;
+//				do
+//				{
+//					old = x;
+//					newval = old + 2;
+//				} while (!atomic_compare_exchange_weak(&x, &old, newval));
+//			}
+//		});
+//
+//	t1.join();
+//	t2.join();
+//
+//	cout << x << endl;
+//
+//	return 0;
+//}
+
+#include <functional>
+
+namespace lsl
+{
+	template<class T>
+	class shared_ptr
+	{
+	public:
+		shared_ptr(T* ptr = nullptr)
+			:_ptr(ptr)
+			, _pcount(new atomic<int>(1)) // 这里也要改成atomic
+		{}
+
+		template<class D>
+		shared_ptr(T* ptr, D del)
+			: _ptr(ptr)
+			, _pcount(new atomic<int>(1)) // 这里也要改成atomic
+			, _del(del)
+		{}
+
+		void release()
+		{
+			if (--(*_pcount) == 0)
+			{
+				_del(_ptr);
+				delete _pcount;
+			}
+		}
+
+		~shared_ptr()
+		{
+			release();
+		}
+
+		shared_ptr(const shared_ptr<T>& sp)
+			:_ptr(sp._ptr)
+			, _pcount(sp._pcount)
+		{
+			++(*_pcount);
+		}
+
+		// sp1 = sp3
+		shared_ptr<T>& operator=(const shared_ptr<T>& sp)
+		{
+			if (_ptr != sp._ptr)
+			{
+				release();
+
+				_ptr = sp._ptr;
+				_pcount = sp._pcount;
+
+				++(*_pcount);
+			}
+
+			return *this;
+		}
+
+		// 像指针一样
+		T& operator*()
+		{
+			return *_ptr;
+		}
+
+		T* operator->()
+		{
+			return _ptr;
+		}
+
+		int use_count() const
+		{
+			return *_pcount;
+		}
+
+		T* get() const
+		{
+			return _ptr;
+		}
+
+	private:
+		T* _ptr;
+		atomic<int>* _pcount;          // 原子操作
+
+		function<void(T*)> _del = [](T* ptr) { delete ptr; };
+	};
+}
+
+// shared_ptr本身是线程安全的
+//int main()
+//{
+//	size_t n1 = 100000;
+//	size_t n2 = 100000;
+//	mutex mtx; // 定义锁
+//	shared_ptr<double> sp(new double(1.1));
+//
+//	thread t1([&]() {
+//		for (size_t i = 0; i < n1; i++)
+//		{
+//			// 指向的资源不是线程安全的，所以要加锁
+//			shared_ptr<double> copy1(sp);
+//			{
+//				// 在域内加锁解锁
+//				unique_lock<mutex> lock(mtx);
+//				++(*copy1);
+//			}
+//		}
+//		});
+//
+//	thread t2([&]() {
+//		for (size_t i = 0; i < n2; i++)
+//		{
+//			shared_ptr<double> copy1(sp);
+//			{	
+//				// 在域内加锁解锁
+//				unique_lock<mutex> lock(mtx);
+//				++(*copy1);
+//			}
+//		}
+//		});
+//
+//	t1.join();
+//	t2.join();
+//
+//	// 当前的引用计数
+//	cout << sp.use_count() << endl;
+//	cout << *sp << endl;
+//}
+
+// 懒汉
+class Singleton
+{
+public:
+	// 提供获取单例对象的接口函数
+	static Singleton& GetInstance()
+	{
+		// 局部的静态对象，是在第一次调用时初始化
+		// C++11之前，他不是，也就说, C++11之前的编译器，那么这个代码不安全的
+		// C++11之后可以保证局部静态对象的初始化是线程安全的，只初始化一次
+		static Singleton inst;
+
+		return inst;
+	}
+
+private:
+	// 构造函数私有
+	Singleton()
+	{
+		cout << "Singleton()" << endl;
+	}
+	// 防拷贝
+	Singleton(const Singleton& s) = delete;
+	Singleton& operator=(const Singleton& s) = delete;
+};
+
 int main()
 {
-	size_t n1 = 10000;
-	size_t n2 = 10000;
-	mutex mtx;
-
-	atomic<size_t> x = 0;
-	thread t1([&]() {
-			for (size_t i = 0; i < n1; i++)
-			{
-				size_t old, newval;
-				do
-				{
-					old = x;
-					newval = old + 2;
-				} while (!atomic_compare_exchange_weak(&x, &old, newval));
-			}
-		});
-
-	thread t2([&]() {
-			for (size_t i = 0; i < n2; i++)
-			{
-				size_t old, newval;
-				do
-				{
-					old = x;
-					newval = old + 2;
-				} while (!atomic_compare_exchange_weak(&x, &old, newval));
-			}
-		});
-
-	t1.join();
-	t2.join();
-
-	cout << x << endl;
-
+	Singleton::GetInstance();
 	return 0;
 }
