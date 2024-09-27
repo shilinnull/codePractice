@@ -285,56 +285,147 @@ int main()
 
 	return 0;
 }
-#endif
 
+#include <math.h>
 int main()
 {
-	int n = 0;
-	scanf("%d", &n);
-	
+	//int a = 0;
+	//char ch = 'A';
+	//ch+++a;
+	//printf("%c\n", ch++);
+	//printf("%d\n", a);
+	//int a = 6, b = 4;
+	//int c = ++a+b%a+++b;
+	//printf("%d", c);
+
+	float a = 0.1;
+	float b = 0.2;
+	float c = 0.3;
+	if (a + b == c)
+		printf("yes\n");
+	else
+		printf("NO\n");
 	return 0;
 }
 
 
 
 
+typedef struct stu
+{
+	int data;
+	struct stu* next;
+}Stu;
+
+int main()
+{
+	auto i = 1;
+	printf("%d", i);
+
+	return 0;
+}
+
+
+int main()
+{
+	int a = 6, b;
+	b = a << 2;
+	//00011000
+	printf("%d\n", b);
+	return 0;
+}
+
+
+
+int main()
+{
+	int a = 1;
+	if ((char)a == 0)
+		printf("大端\n");
+	else
+		printf("小端\n");
+
+	return 0;
+}
 
 
 
 
+int main()
+{
+	int a[10] = { 10 * 2,10 };
+
+	printf("%d", &a[9] - a + 1);
+	return 0;
+}
 
 
 
+#include <stdio.h>
+#include <windows.h>
+int main()
+{
+	FILE* pf = fopen("data.txt", "w");
+	fputs("abcdef", pf);
+	Sleep(10000);
+
+	//fflush(pf);
+
+	//fclose(pf);
+	pf = NULL;
+
+	return 0;
+}
+
+
+/*写一个二分查找函数
+
+功能：在一个升序数组中查找指定的数值，找到了就返回下标，找不到就返回 - 1.
+
+int bin_search(int arr[], int left, int right, int key)
+// arr 是查找的数组
+//left 数组的左下标
+//right 数组的右下标
+//key 要查找的数字
+*/
+
+int bin_search(int arr[], int left, int right, int key)
+{
+	while (left < right)
+	{
+		int mid = left + (right + left) / 2;
+		if (arr[mid] < key)
+		{
+			left = mid + 1;
+		}
+		else if (arr[mid] > key)
+		{
+			right = mid - 1;
+		}
+		else
+			return mid;
+	}
+	return -1;
+}
 
 
 
+int main()
+{
+	int arr[10] = { 1,2,3,4,5,6,7,8,9,10 };
+	int n = bin_search(arr, 0, sizeof(arr) / sizeof(arr[0]), 3);
+	if (-1 == n)
+	{
+		printf("找不到\n");
+	}
+	else
+	{
+		printf("下标为%d", n);
+	}
+	return 0;
+}
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+#endif
 
 
 
