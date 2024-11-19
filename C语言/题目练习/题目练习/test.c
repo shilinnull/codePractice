@@ -109,13 +109,13 @@ int main()
 	int n, m;
 	scanf("%d %d", &m, &n);
 	int k = n < m ? m : n;
-	
+
 	while (k = m % n)
 	{
 		m = n;
 		n = k;
 	}
-	printf("%d\n",k);
+	printf("%d\n", k);
 
 	return 0;
 }
@@ -140,7 +140,7 @@ int main()
 int main()
 {
 	int n = 16;
-	
+
 	if ((n & (n - 1)) == 0)
 	{
 		printf("yes\n");
@@ -154,7 +154,7 @@ int main()
 int main()
 {
 	int n = 13;
-	int m = 5; 
+	int m = 5;
 
 	n |= (1 << (m - 1)); // 将第m位置为1
 	printf("%d\n", n);
@@ -270,7 +270,7 @@ int main()
 			count++;
 			tmp /= 10;
 		}
-		
+
 		tmp = i;
 		int sum = 0;
 		while (tmp)
@@ -425,69 +425,338 @@ int main()
 	return 0;
 }
 
+
+
+#include<string.h>
+
+int main()
+{
+	char a[7] = "abcdef";
+	char b[4] = "ABC";
+	strcpy(a, b);
+	printf("%s ", a);
+	return 0;
+
+}
+
+
+
+void fun(char* s[], int n)
+{
+	char* t;
+	int i, j;
+	for (i = 0; i < n - 1; i++)
+	{
+		for (j = i + 1; j < n; j++)
+		{
+			if (strlen(s[i]) > strlen(s[j]))
+			{
+				t = s[i];
+				s[i] = s[j];
+				s[j] = t;
+
+			}
+		}
+	}
+}
+
+int main()
+{
+	char* ss[] = { "bcc","bbcc", "xy", "aaaacc" ,"aabcc" };
+	fun(ss, 5);
+	printf("%s,%s\n", ss[0], ss[4]);
+
+	return 0;
+}
+
+
+
+int main()
+{
+	// 斐波那契数列
+	int a, b, c, n;
+	a = b = c = 1;
+
+	// 求第n个斐波那契数
+	scanf("%d", &n); // 7
+	while (n)
+	{
+		if (n <= 2)
+			break;
+		else
+		{
+			a = b;
+			b = c;
+			c = a + b;
+		}
+		n--;
+	}
+	printf("%d", c);
+
+	return 0;
+}
+
+
+
+
+#include <math.h>
+
+int main()
+{
+	//int i = 2.0;
+	////printf("%d", -++i);
+	//printf("%f", i);
+
+	//int a = 289;
+	//char b = 'a';
+	//b = a;
+	//int a = 10;
+	//int b = 0;
+	//b = a---a;
+
+
+	//printf("%d", b);
+	//printf("%d", a);
+	return 0;
+}
+
+
+
+int main()
+{
+	int i, j, n = 0;
+	scanf("%d", &n);
+	for (i = 1; i <= n; i++)
+	{
+		for (j = 1; j <= n - i; j++) {
+			printf(" ");
+		}
+		for (j = 1; j < i * 2; j++) {
+			printf("*");
+		}
+		printf("\n");
+	}
+
+	return 0;
+}
+
+
+
+
+int main()
+{
+	int n;
+	scanf("%d", &n);
+	for (int i = 1; i <= n; i++)
+	{
+		for (int j = 1; j <= n - i; j++) {
+			printf("  ");
+		}
+		for (int j = 1; j <= i; j++) {
+			printf("%d ", j);
+		}
+		for (int j = i - 1; j >= 1; j--) {
+			printf("%d ", j);
+		}
+		printf("\n");
+	}
+}
+
+
+int main()
+{
+	//int m, n, i;
+	//for (n = 1; n < 10; n++)
+	//{
+	//	for (i = 1; i <= 4 * n - 4; i++)
+	//		printf(" ");
+	//	for (m = n; m < 10; m++)
+	//		printf("%4d", m * n);
+	//	printf("\n");
+	//}
+
+	return 0;
+}
+
+
+
+int main()
+{
+	int a[5][5] = { 0 };
+	int i, j, k = 1;
+	for (i = 0; i < 5; i++)
+	{
+		for (j = 0; j < 5; j++)
+		{
+			a[i][j] = k++;
+		}
+	}
+
+	for (i = 0; i < 5; i++)
+	{
+		for (j = 0; j <= i; j++)
+		{
+			printf("%d ", a[i][j]);
+		}
+		printf("\n");
+	}
+	return 0;
+}
+
+
+int main()
+{
+	int a[10] = { 1,2,3,4,5,6,7,8,9,10 };
+	int i, b[10] = { 0 };
+	for (i = 1; i < 10; i++)
+	{
+		b[i] = a[i] / a[i - 1];
+	}
+
+	for (i = 1; i < 10; i++) {
+
+		printf("%d ", b[i]);
+		if (i % 3 == 0) printf("\n");
+	}
+	return 0;
+}
+
+
+int main()
+{
+	int a[10][10], i, j, k = 0, m, n;
+	scanf("%d", &n);
+	if (n % 2 == 0) 
+		m = n / 2; // 偶数
+	else 
+		m = n / 2 + 1; // 奇数
+
+	for (i = 0; i < m; i++)
+	{
+		for (j = i; j < n - i; j++) {
+			k++;
+			a[i][j] = k;
+		}
+		for (j = i + 1; j < n - i; j++) {
+			k++;
+			a[j][n - i - 1] = k;
+		}
+		for (j = n - i - 2; j >= i; j--) {
+			k++;
+			a[n - i - 1][j] = k;
+		}
+
+		for (j = n - i - 2; j >= i + 1; j--) {
+			k++;
+			a[j][i] = k;
+		}
+	}
+	for (i = 0; i < n; i++)
+	{
+		for (j = 0; j < n; j++)
+			printf("%5d", a[i][j]);
+		printf("\n");
+	}
+	return 0;
+}
+
+
+
+int main()
+{
+	int i = 0,j;
+	char a[30], b[30];
+	gets(a);
+	gets(b);
+	while (a[i++] != '\0');
+	for (j = 0, i--; j < 5 && b[j] != 0; j++)
+		a[i++] = b[j];
+	a[i] = '\0';
+	puts(a);
+
+	return 0;
+}
+
+
+
+int main()
+{
+	int x = 0,i;
+	int a[5] = { 0 };
+	while (x != -1)
+	{
+		scanf("%d", &x);
+		if (x >= 0 && x <= 4)
+			a[x]++;
+	}
+	for (i = 0; i < 5; i++)
+		printf("%d ", a[i]);
+
+	return 0;
+}
+
+
+float fun(int m,int n)
+{
+	float p = 1.0;
+	int i;
+	for (i = 1; i <= m; i++)
+	{
+		p *= i;
+	}
+	for (i = 1; i <= n; i++)
+	{
+		p /= i;
+	}
+	for (i = 1; i <= m-n; i++)
+	{
+		p /= i;
+	}
+
+	return p;
+}
+
+int main()
+{
+	int m, n;
+	float p = 1.0;
+
+	scanf("%d", &m);
+	scanf("%d", &n);
+	p = fun(m, n);
+	printf("%lf", p);
+
+	return 0;
+}
+
 #endif
 
 
+int main()
+{
+	int bitNumber(int);
 
+	int n;
+	scanf("%d", &n);
+	
+	printf("%d", bitNumber(n));
 
+	return 0;
+}
 
+int bitNumber(int n)
+{
+	int sum = 0;
+	if (n < 9)
+		return 1;
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+	while (n > 0)
+	{
+		sum++;
+		n /= 10;
+	}
+	return sum;
+}
 
 
 
