@@ -729,7 +729,6 @@ int main()
 	return 0;
 }
 
-#endif
 
 
 int main()
@@ -758,10 +757,7 @@ int bitNumber(int n)
 	return sum;
 }
 
-
-
-
-
+#endif
 
 
 
