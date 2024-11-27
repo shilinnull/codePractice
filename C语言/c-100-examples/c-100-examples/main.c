@@ -320,7 +320,7 @@ int main()
     return 0;
 }
 
-#endif
+
 
 /*
 14
@@ -348,8 +348,22 @@ int main()
     }
     return 0;
 }
-
+#endif
 /*
 15
+题目：利用条件运算符的嵌套来完成此题：
+学习成绩>=90分的同学用A表示，60-89分之间的用B表示，60分以下的用C表示。
 
+程序分析：(a>b)?a:b这是条件运算符的基本例子。
 */
+
+#define GRAND(x) (x >= 90) ? 'A' : (x > 60 ? 'B' : 'C')
+
+int main()
+{
+    int score;
+    while (~scanf("%d", &score)) {
+        printf("学习成绩为：%c\n", GRAND(score));
+    }
+    return 0;
+}
