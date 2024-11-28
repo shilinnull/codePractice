@@ -1,5 +1,7 @@
 ﻿#define _CRT_SECURE_NO_WARNINGS 1
 #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
 // 使用C语言写⼀个程序打印 1~100之间的奇数，要求输出的数字中间加上空格
 #if 0
@@ -899,16 +901,57 @@ bool is_year(int y)
 }
 
 
+
+int main()
+{
+	//int a = -5;
+	//int b = 3;
+	//printf("%d", a % b);
+	char a[30] = { "Beijing" };
+	char b[30] = "Beijing";
+	return 0;
+}
+
+
+
+
+
+int main()
+{
+	FILE* fp; int i;
+	int a[10];
+	if ((fp = fopen("f2.dat", "w+")) == NULL) return 0;
+	for (i = 0; i < 10; i++) {
+		a[i] = i;
+		fprintf(fp, "%d ", a[i]);
+	}
+
+
+	fclose(fp);
+
+	return 0;
+}
 #endif
+int main()
+{
+	FILE* fp;
+	int a[10] = { 0 };
+	/*if ((fp = fopen("f2.dat", "r")) == NULL) return 0;
+	for (i = 0; i < 10; i++) {
+		fscanf(fp, "%d ", &a[i]);
+		printf("%d ", a[i]);
+	}
+	fclose(fp);*/
+	fp = fopen("f2.dat", "r");
 
+	//char ch = fgetc(fp);
+	//fputc(ch,stdout);
+	
+	//fgets(stdout,5, fp);
 
-
-
-
-
-
-
-
+	fclose(fp);
+	return 0;
+}
 
 
 
