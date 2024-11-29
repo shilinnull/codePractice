@@ -1,5 +1,7 @@
 #define _CRT_SECURE_NO_WARNINGS 1
 #include<stdio.h>
+#include<stdlib.h>
+#include<string.h>
 
 #if 0
 
@@ -410,7 +412,6 @@ int main()
 	return 0;
 }
 
-#endif
 
 
 /*
@@ -420,10 +421,34 @@ int main()
 程序分析：利用while语句,条件为输入的字符不为'\n'。
 */
 
+int main()
+{
+
+    int letter = 0;
+    int space = 0;
+    int figure = 0;
+    int other = 0;
+    char ch;
+    while ((ch = getchar()) != '\n') {
+        if (ch >= 'a' && ch <= 'z' || ch >= 'A' && ch <= 'Z')
+            letter++;
+        else if (ch == ' ')
+            space++;
+        else if (ch >= '1' && ch <= '9')
+            figure++;
+        else
+            other++;
+    }
+    printf("字母 = %d, 数字 = %d, 空格 = %d, 其他 = %d\n", letter, figure, space, other);
+    return 0;
+}
+#endif
 
 
+/*
+* 18
 
-
+*/
 
 
 
