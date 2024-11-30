@@ -931,7 +931,6 @@ int main()
 
 	return 0;
 }
-#endif
 int main()
 {
 	FILE* fp;
@@ -942,23 +941,60 @@ int main()
 		printf("%d ", a[i]);
 	}
 	fclose(fp);*/
-	fp = fopen("f2.dat", "r");
+	//fp = fopen("f2.dat", "r");
 
 	//char ch = fgetc(fp);
 	//fputc(ch,stdout);
 	
 	//fgets(stdout,5, fp);
 
-	fclose(fp);
+	//fclose(fp);
+	int x = 020, y = 3;
+
 	return 0;
 }
 
 
+int main()
+{
+	int a[10], * p1, * p2;
+	p1 = a;
+	p2 = &a[5];
+	printf("%d", p2 - p1);
 
+	return 0;
+}
 
+int main()
+{
+	int n = 0;
+	scanf("%d", &n);
+	int ge, shi, qian, wan;
+	if ((n % 10 == n / 10000) && (n / 10 % 10 == n / 1000 % 10))
+		printf("是");
+	else
+		printf("不是");
 
+	return 0;
+}
 
+#endif
 
+int main() {
+	int n; int count = 0;
+	int a[5] = { 0 };
+	scanf("%d", &n);
+	while (n != -1) {
+		if (n >= 0 && n <= 4) {
+			a[n]++;
+		}
+		scanf("%d", &n);
+	}
+	for(int i = 0;i < 5;i++)
+		printf("%d:%d\n", i, a[i]);
+	return 0;
+}
+// 1 2 3 4 2 3 2 3 3 6 4564 2 525 24 3243 535 353464 64 635 2 42 525 36 365 754 754 - 1
 
 
 

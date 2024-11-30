@@ -447,9 +447,25 @@ int main()
 
 /*
 * 18
+题目：求 s=a+aa+aaa+aaaa+aa...a 的值，其中 a 是一个数字，例如 2+22+222+2222+22222 (此时共有5个数相加)，几个数相加有键盘控制。
 
+程序分析：关键是计算出每一项的值。
 */
 
+int main()
+{
+    int a, n;
+    scanf("%d %d", &a, &n);
+    int s = 0;
+    int tmp = a;
+    for (int i = 0; i < n; i++)
+    {
+        s += tmp;
+        tmp = tmp * 10 + a;
+    }
+    printf("a+aa+...=%d", s);
 
+    return 0;
+}
 
 
