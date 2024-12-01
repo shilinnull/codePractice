@@ -442,7 +442,6 @@ int main()
     printf("字母 = %d, 数字 = %d, 空格 = %d, 其他 = %d\n", letter, figure, space, other);
     return 0;
 }
-#endif
 
 
 /*
@@ -469,3 +468,60 @@ int main()
 }
 
 
+/*
+ 19
+题目：一个数如果恰好等于它的因子之和，这个数就称为"完数"，例如 6 = 1＋2＋3 ，请编程找出 1000 以内的所有完数。
+*/
+
+int main()
+{
+    for (int i = 1; i <= 1000; i++) {
+        int sum = 0;
+        for (int j = 1; j <= i / 2; j++) {
+            if (i % j == 0) {
+                sum += j;
+            }
+        }
+        if (i == sum)
+            printf("完数有：%d ", sum);
+    }
+
+    return 0;
+}
+
+#include<stdio.h>
+
+int main()
+{
+    int a[1000];
+    for (int i = 1; i < 1000; ++i)
+    {
+        int sum = 0, k = 0;
+        for (int j = 1; j <= i / 2; ++j)
+        {
+            if (i % j == 0)
+            {
+                sum += j;
+                a[k++] = j;
+            }
+        }
+        if (i == sum)
+        {
+            printf("%d = %d", i, a[0]);
+            for (int m = 1; m < k; ++m)
+            {
+                printf(" + %d", a[m]);
+            }
+            printf("\n");
+        }
+    }
+
+    return 0;
+}
+#endif
+
+/*
+ 20
+
+
+*/

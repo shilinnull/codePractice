@@ -978,7 +978,6 @@ int main()
 	return 0;
 }
 
-#endif
 
 int main() {
 	int n; int count = 0;
@@ -997,13 +996,44 @@ int main() {
 // 1 2 3 4 2 3 2 3 3 6 4564 2 525 24 3243 535 353464 64 635 2 42 525 36 365 754 754 - 1
 
 
+int main() {
+	int i, j, k, num = 0;
+	for (i = 0; i <= 3; i++) {
+		for (j = 0; j <= 3; j++) {
+			k = 8 - i - j;
+			if (0 <= k && k <= 6)
+				printf("red:%d white:%d black:%d\n", i, j, k);
+		}
+	}
+
+	return 0;
+}
 
 
+int main() {
+	int red, white, black;
 
+	for (red = 0; red <= 3; red++) {
+		for (white = 0; white <= 3; white++) {
+			for (black = 0; black <= 6; black++) {
+				if (red + white + black == 8) {
+					printf("red:%d white:%d black:%d\n", red,white,black);
+				}
+			}
+		}
+	}
+	return 0;
+}
 
+#endif
 
+int main() {
+	printf("%d", 'a' * 'b');
+	do {
 
-
+	} while (1);
+	return 0;
+}
 
 
 
