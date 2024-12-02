@@ -1025,7 +1025,6 @@ int main() {
 	return 0;
 }
 
-#endif
 
 int main() {
 	printf("%d", 'a' * 'b');
@@ -1035,8 +1034,24 @@ int main() {
 	return 0;
 }
 
+#endif
 
+int main() {
+	int k = 100311;
+	int a[10] = {-1,-1,-1,-1,-1,-1,-1,-1,-1,-1};
+	int tmp = 0;
+	while (k) {
+		tmp = k % 10;
+		a[tmp]++;
+		k /= 10;
+	}
 
+	for (int i = 0; i < 10; i++) {
+		if(a[i] >= 0)
+			printf("%d:%d\n", i, ++a[i]);
+	}
+	return 0;
+}
 
 
 
