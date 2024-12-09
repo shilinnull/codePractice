@@ -743,20 +743,52 @@ int main() {
     return 0;
 }
 
-#endif
 
-
+// 题目：有一个已经排好序的数组。现输入一个数，要求按原来的规律将它插入数组中。（二分查找）
 int main() {
 
-
-    return 0;
+	int arr[11] = { 1,2,3,4,5,6,7,8,9,10 };
+	int i, j, len, n;
+	len = sizeof(arr) / sizeof(arr[0]) - 1;
+	scanf("%d", &n);
+	int left = 0, right = len, mid;
+	for (i = 0;i < len;i++) {
+		mid = left + (right - left) / 2;
+		if (arr[mid] < n)
+			left = mid + 1;
+		else if (arr[mid] > n)
+			right = mid - 1;
+		else {
+			// 找到了
+			for (j = len;j >= mid;j--) {
+				arr[j] = arr[j - 1];
+			}
+			break;
+		}
+	}
+	for (i = 0;i < sizeof(arr) / sizeof(arr[0]);i++)
+		printf("%d ", arr[i]);
+	return 0;
 }
 
 
+// 题目：将一个数组逆序输出。
+int main() {
+	int arr[] = { 1,2,3,4,5,6,7,8,9 ,10 };
+    int len = sizeof(arr) / sizeof(arr[0]);
+	int i, j = len - 1, tmp;
+	for (i = 0;i < len / 2;i++, j--) {
+		tmp = arr[i];
+		arr[i] = arr[j];
+		arr[j] = tmp;
+	}
+	for (i = 0;i < len;i++) {
+		printf("%d ", arr[i]);
+	}
+	return 0;
+}
 
-
-
-
+#endif
 
 
 
