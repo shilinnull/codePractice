@@ -788,26 +788,131 @@ int main() {
 	return 0;
 }
 
+
+
+
+// 题目：输入3个数a, b, c，按大小顺序输出。
+
+
+
+int main() {
+    int a, b, c;
+    scanf("%d %d %d", &a, &b, &c);
+    if (a < b) {
+        b = a ^ b;
+        a = a ^ b;
+        b = a ^ b;
+    }
+
+    if (a < c) {
+        c = a ^ c;
+        a = a ^ c;
+        c = a ^ c;
+        
+    }
+
+    if (b < c) {
+        c = b ^ c;
+        b = b ^ c;
+        c = b ^ c;
+    }
+    printf("%d %d %d\n", a, b, c);
+    return 0;
+}
+
+
+#define SWAP(x,y) (x)^=(y);(y)^=(x);(x)^=(y);
+int main() {
+	int a, b, c;
+	scanf("%d %d %d", &a, &b, &c);
+	if (a < b)
+		SWAP(a, b);
+	if (a < c)
+		SWAP(a, c);
+	if (b < c)
+		SWAP(b, c);
+	printf("%d %d %d\n", a, b, c);
+	return 0;
+}
+
+
+// 题目：输入数组，最大的与第一个元素交换，最小的与最后一个元素交换，输出数组。
+
+int main() {
+
+	int arr[10] = { 7,2,8,1,5,10,4,3,9,6 };
+	int i = 0, min = arr[0], max = arr[0], tmp, len = sizeof(arr) / sizeof(arr[0]);
+
+	// 记录最大的与最小的下标
+	int maxi, mini;
+	for (i = 0; i < len;i++) {
+		if (arr[i] > max) {
+			max = arr[i];
+			maxi = i;
+		}
+		if (arr[i] < min) {
+			min = arr[i];
+			mini = i;
+		}
+	}
+	// 交换
+	// 最大的与第一个交换
+	tmp = arr[maxi];
+	arr[maxi] = arr[0];
+	arr[0] = tmp;
+
+	// 最小的与最后一个元素交换
+	tmp = arr[mini];
+	arr[mini] = arr[len - 1];
+	arr[len - 1] = tmp;
+
+	for (i = 0; i < 10;i++) {
+		printf("%d ", arr[i]);
+	}
+
+	return 0;
+}
+
 #endif
 
+// 题目：有n个整数，使其前面各数顺序向后移m个位置，最后m个数变成最前面的m个数。
+#include <stdio.h>
 
+int main()
+{
+	int n, m;
+	int a[100], tmp[100];
 
+	printf("n是：");
+	scanf("%d", &n);
 
+	printf("数组是：");
+	for (int i = 0; i < n; ++i)
+		scanf("%d", &a[i]);
 
+	printf("m是：");
+	scanf("%d", &m);
 
+	m = m % n;
 
+	//后m位暂保存到tmp数组
+	int cnt = 0;
+	for (int i = n - m; i < n; ++i)
+		tmp[cnt++] = a[i];
 
+	//移动前m位
+	for (int i = n - m; i >= 0; --i)
+		a[i + m] = a[i];
 
+	//后m位移到前面
+	for (int i = 0; i < m; ++i)
+		a[i] = tmp[i];
 
+	for (int i = 0; i < n; ++i)
+		printf("%d ", a[i]);
 
-
-
-
-
-
-
-
-
+	return 0;
+}
 
 
 
