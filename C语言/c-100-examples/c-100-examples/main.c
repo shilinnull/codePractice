@@ -873,50 +873,81 @@ int main() {
 	return 0;
 }
 
-#endif
 
 // 题目：有n个整数，使其前面各数顺序向后移m个位置，最后m个数变成最前面的m个数。
 #include <stdio.h>
-
+void reverse(int* nums, int begin, int end) {
+	while (begin < end) {
+		int tmp = nums[begin];
+		nums[begin] = nums[end];
+		nums[end] = tmp;
+		begin++;
+		end--;
+	}
+}
 int main()
 {
-	int n, m;
-	int a[100], tmp[100];
-
-	printf("n是：");
+	int i, n, m;
+	printf("要输入的数字个数：");
 	scanf("%d", &n);
 
-	printf("数组是：");
-	for (int i = 0; i < n; ++i)
-		scanf("%d", &a[i]);
+	int* num = (int*)malloc(sizeof(int) * n);
+	if (num == NULL)return 0;
 
-	printf("m是：");
+	printf("输入数字：");
+	for (i = 0;i < n;i++)
+		scanf("%d", &num[i]);
+	printf("再输入要旋转几次：");
 	scanf("%d", &m);
+	m %= n;
+	reverse(num, 0, n - m - 1);
+	reverse(num, n - m, n - 1);
+	reverse(num, 0, n - 1);
 
-	m = m % n;
-
-	//后m位暂保存到tmp数组
-	int cnt = 0;
-	for (int i = n - m; i < n; ++i)
-		tmp[cnt++] = a[i];
-
-	//移动前m位
-	for (int i = n - m; i >= 0; --i)
-		a[i + m] = a[i];
-
-	//后m位移到前面
-	for (int i = 0; i < m; ++i)
-		a[i] = tmp[i];
-
-	for (int i = 0; i < n; ++i)
-		printf("%d ", a[i]);
-
+	for (i = 0;i < n;i++)
+		printf("%d ", num[i]);
+    free(num);
 	return 0;
 }
+#endif
 
 
+/*
+题目：有n个人围成一圈，顺序排号。从第一个人开始报数（从1到3报数），
+凡报到3的人退出圈子，问最后留下的是原来第几号的那位。
+*/
+int main() {
+	int n, i = 0;
+	printf("输入n个人：");
+	scanf("%d", &n);
+	int* a = (int*)malloc(sizeof(int) * n);
+	//编号
+	for (int i = 0; i < n; ++i)
+		a[i] = i + 1;
 
-
+	int cut = 0; // 报数
+	i = 0;
+	int num = n;  // 未挂人数
+	while (num > 1) {
+		if (a[i]) {
+			cut++;
+			if (cut == 3) {
+				a[i] = 0;
+				cut = 0;
+				num--;
+			}
+		}
+		i++;
+		if (i == n)
+			i = 0;
+	}
+	for (i = 0;i < n;i++)
+		if (a[i])
+			printf("最后留下来的是%d\n", a[i]);
+	free(a);
+	a = NULL;
+	return 0;
+}
 
 
 
