@@ -909,7 +909,6 @@ int main()
     free(num);
 	return 0;
 }
-#endif
 
 
 /*
@@ -949,18 +948,64 @@ int main() {
 	return 0;
 }
 
+// 题目：写一个函数，求一个字符串的长度，在main函数中输入字符串，并输出其长度。
 
+#include <assert.h>
+int main() {
+    int my_strlen(char*);
+    char* str = (char*)malloc(sizeof(char) * 100);
+    scanf("%s", str);
 
+    printf("字符串长度为：%d\n", my_strlen(str));
 
+    free(str);
+    str = NULL;
+    return 0;
+}
 
+int my_strlen(const char* s) {
+    assert(s);
+    int count = 0;
+    while (*s++ != '\0') count++;
+    return count;
+}
 
+// 题目：编写input()和output()函数输入，输出5个学生的数据记录。
 
+struct Stu {
+	char name[20];
+	char sex[3];
+	int age;
+};
 
+void input(struct Stu** s, int* n) {
+	printf("请输入学生姓名、性别、年龄：\n");
+	for (int i = 0; i < *n;i++)
+		scanf("%s %s %d", (*s + i)->name, &(*s + i)->sex, &(*s + i)->age);
+}
+void output(struct Stu** s, int* n) {
+	printf("打印学生姓名、性别、年龄：\n");
+	for (int i = 0; i < *n;i++)
+		printf("%s %s %d\n", (*s + i)->name, (*s + i)->sex, (*s + i)->age);
+}
+int main() {
+	int n;
+	printf("请输入要几输入的几位：");
+	scanf("%d", &n);
+	struct Stu* s = (struct Stu*)malloc(sizeof(struct Stu) * n);
 
+	input(&s, &n);
+	output(&s, &n);
 
+	free(s);
+	s = NULL;
+	return 0;
+}
 
-
-
+#endif
+#include <stdio.h>
+#include <stdlib.h>
+// 题目：创建一个链表。
 
 
 
