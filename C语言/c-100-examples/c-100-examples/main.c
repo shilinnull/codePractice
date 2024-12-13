@@ -1001,24 +1001,137 @@ int main() {
 	s = NULL;
 	return 0;
 }
-
-#endif
 #include <stdio.h>
 #include <stdlib.h>
+#include <assert.h>
 // 题目：创建一个链表。
 
 
+#include <stdio.h>
+#include <malloc.h>
+
+typedef struct LNode
+{
+    int data;
+    struct LNode* next;
+}LNode;
+
+LNode* createList(int n)
+{
+    LNode* list, * p, * q;
+    list = (LNode*)malloc(sizeof(LNode));
+    list->next = NULL;
+    q = list;
+    for (int i = 0; i < n; ++i)
+    {
+        p = (LNode*)malloc(sizeof(LNode));
+        printf("请输入第%d个元素的值：", i + 1);
+        scanf("%d", &(p->data));
+        p->next = NULL;
+        q->next = p;
+        q = p;
+    }
+    return list;
+}
+
+void print(LNode* list)
+{
+    printf("链表各值为:\n");
+
+    LNode* p = list->next;
+    while (p != NULL)
+    {
+        printf("%d\n", p->data);
+        p = p->next;
+    }
+}
+
+int main()
+{
+    LNode* list = NULL;
+    int n;
+    scanf("%d", &n);
+    list = createList(n);
+    print(list);
+
+    return 0;
+}
 
 
+// 题目：输入一个整数，并将其反转后输出。
+
+int main() {
+	int n, newn = 0, x;
+	scanf("%d", &n);
+	while (n) {
+		x = n % 10;
+		newn = newn * 10 + x;
+		n /= 10;
+	}
+	printf("反转的数为：%d", newn);
+	return 0;
+}
+
+// 题目：编写一个函数，输入n为偶数时，调用函数求1/2+1/4+...+1/n,当输入n为奇数时，
+// 调用函数1/1+1/3+...+1/n(利用指针函数)。
+
+double sumup(int n, int flag) {
+    double sum = 0;
+    if (flag == 2) {
+        for (int i = flag;i <= n;i += 2) {
+            sum += (double)1 / i;
+        }
+    } 
+    else {
+        for (int i = flag;i <= n;i += 2) {
+            sum += (double)1 / i;
+        }
+    }
+    return sum;
+}
+
+int main() {
+	int n, flag = 0;
+	double (*psum)(int, int);
+	scanf("%d", &n);
+	if (n % 2 == 0) { // n为偶数
+		psum = sumup;
+		flag = 2;
+	}
+	else { // n为奇数
+		psum = sumup;
+		flag = 1;
+	}
+	printf("%lf", (*psum)(n, flag));
+	return 0;
+}
 
 
+// 题目：找到年龄最大的人，并输出。
 
+#include<stdio.h>
+#include<stdlib.h>
+typedef struct man {
+	char name[20];
+	int  age;
+}man;
 
-
-
-
-
-
+int main() {
+	man person[] = { {"zhanagsan",18},{"lisi",30},{"wangwu",25} };
+	man* p = person, * q = NULL;
+	int max = person[0].age;
+	int count = sizeof(person) / sizeof(person[0]);
+	while (count--) {
+		if (max < p->age) {
+			max = p->age;
+			q = p;
+		}
+		p++;
+	}
+	printf("年龄最大的人是%s，%d", q->name, q->age);
+	return 0;
+}
+#endif
 
 
 
