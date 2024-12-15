@@ -1002,6 +1002,41 @@ int main() {
 	return 0;
 }
 
+#endif
+#include <stdio.h>
+#include <stdlib.h>
+// 题目：创建一个链表。
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
