@@ -1239,21 +1239,69 @@ int main()
     return 0;
 }
 
-// 题目：一个偶数总能表示为两个素数之和。
+
+int main()
+{
+    int i, n, m;
+    printf("要输入的数字个数：");
+    scanf("%d", &n);
+
+    int* num = (int*)malloc(sizeof(int) * n);
+    if (num == NULL)return 0;
+
+    printf("输入数字：");
+    for (i = 0;i < n;i++)
+        scanf("%d", &num[i]);
+    printf("再输入要旋转几次：");
+    scanf("%d", &m);
+    m %= n;
+
+    for (i = 0; i < m;i++) {
+        int* p = num + n - 1;
+        int tmp = *p;   // 保存最后一位
+        while (p > num) { // 移动数据
+            *p = *(p - 1);
+            p--;
+        }
+        *p = tmp;
+    }
+
+    for (i = 0;i < n;i++)
+        printf("%d ", num[i]);
+    free(num);
+    return 0;
+}
+
+
+int main()
+{
+    int arr[10] = { 1,2,3,4,5,6,7,8 };
+    int i = 0;
+    int j = 0;
+    int count = 0;
+    int len = sizeof(arr) / sizeof(int);
+    for (j = 0; j < 5; j++)
+    {
+        printf("第%d回结束之后：", j + 1);
+        for (i = 0; i < len; i++)
+        {
+            if (arr[i] != 0)
+            {
+                count++;
+                if (count % 3 == 0)
+                {
+                    arr[i] = 0;
+                    continue;
+                }
+                printf("%-4d", arr[i]);
+            }
+        }
+        printf("\n");
+    }
+    return 0;
+}
+
 #endif
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
