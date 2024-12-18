@@ -1392,7 +1392,7 @@ int main() {
     int n, count, j;
     printf("请输入7个数（1—50）的整数值：");
     count = 0;
-    while(count < 7){
+    while (count < 7) {
         scanf("%d", &n);
         if (n < 1 || n > 50) {
             printf("请输入7个数（1—50）的整数值：");
@@ -1407,7 +1407,6 @@ int main() {
     }
     return 0;
 }
-
 
 
 
