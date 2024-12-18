@@ -1388,6 +1388,8 @@ int main() {
 
 // 题目：读取7个数（1—50）的整数值，每读取一个值，程序打印出该值个数的*。
 
+#include<stdio.h>
+
 int main() {
     int n, count, j;
     printf("请输入7个数（1—50）的整数值：");
