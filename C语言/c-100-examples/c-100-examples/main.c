@@ -1383,7 +1383,6 @@ int main() {
     printf("%s", my_strcat(str1, str2));
     return 0;
 }
-#endif
 
 
 // 题目：读取7个数（1—50）的整数值，每读取一个值，程序打印出该值个数的*。
@@ -1411,25 +1410,196 @@ int main() {
 }
 
 
+/*
+题目：某个公司采用公用电话传递数据，数据是四位的整数，在传递过程中是加密的，
+加密规则如下： 每位数字都加上5,然后用和除以10的余数代替该数字，
+再将第一位和第四位交换，第二位和第三位交换。
+*/
+
+void swap(int *a, int *b)
+{
+    int tmp = *a;
+    *a = *b;
+    *b = tmp;
+}
+
+int main() {
+	int n, i = 0, a[4];
+	scanf("%d", &n);
+
+	for (i = 0;i < 4;i++) {
+		a[3 - i] = n % 10;
+		n /= 10;
+        a[3 - i] += 5; // 每位数字都加上5
+        a[3 - i] %= 10; // 然后用和除以10的余数代替该数字
+	}
+    swap(&a[0], &a[3]); // 再将第一位和第四位交换
+    swap(&a[1], &a[2]); // 第二位和第三位交换
+
+	for (i = 0;i < 4;i++) {
+		printf("%d", a[i]); /* 1234
+                               9876*/
+	}
+    return 0;
+}
+
+
+#include <stdlib.h>
+#include <stdio.h>
+#include <time.h>
+
+//设置猜的数字次数多少
+#define NUM 10 
+
+void menu()
+{
+    printf("**********************\n");
+    printf("******  1.play *******\n");
+    printf("******  0.exit *******\n");
+    printf("**********************\n");
+}
+
+void game()
+{
+    int guess = 0;
+    int ret = rand() % 100 + 1;
+    int count = NUM;
+    while (1)
+    {
+        printf("你还有%d次机会！\n", count);
+        printf("请猜数字(1~100):>");
+        scanf("%d", &guess);
+        if(guess < 1 || guess > 100)
+        {
+            printf("输入错误，请重新猜数字！\n");
+            continue;
+        }
+        else if (guess > ret)
+        {
+            printf("猜大了！\n");
+        }
+        else if (guess < ret)
+        {
+            printf("猜小了！\n");
+        }
+        else
+        {
+            printf("恭喜你，猜对了！\n");
+            break;
+        }
+        count--;
+        if (count == 0)
+        {
+            printf("次数用完，正确的数字是%d\n", ret);
+            break;
+        }
+    }
+}
+int main()
+{
+    int input = 0;
+    srand((unsigned int)time(NULL));//生成随机数
+    do
+    {
+        menu();
+        printf("请选择：>");
+        scanf("%d", &input);
+        switch (input)
+        {
+        case 1:
+            game();
+            break;
+        case 0:
+            printf("退出游戏！\n");
+            break;
+        default:
+            printf("选择错误，请重新选择！\n");
+            break;
+        }
+    } while (input);
+
+    return 0;
+}
+
+
+int main() {
+	int i = 0, j = 0, count = 0;
+	char* str1 = "789123412356";
+	char* str2 = "12";
+	int len1 = strlen(str1), len2 = strlen(str2);
+	while (i < len1 && j < len2) {
+		if (str1[i] == str2[j]) {
+			i++;
+			j++;
+			if (j == len2)
+			{
+				j = 0;
+				count++; // 次数++
+			}
+			continue;    // 如果想等就继续运行，不加这个i就会加两次
+		}
+		i++;
+	}
+	printf("%s出现的次数有%d\n", str2, count);
+	return 0;
+}
+
+
+// 题目：从键盘输入一些字符，逐个把它们送到磁盘上去，直到输入一个#为止。
+
+
+int main() {
+	char c;
+    
+    // 打开文件
+	FILE* pf = fopen("data.txt", "w+");
+	if (pf == NULL) {
+		perror("Open File fail!"); 
+        exit(-1);
+	}
+
+    // 输入文件内容
+    c = getchar();
+    while (c != '#') {
+        fputc(c, pf);
+		c = getchar();
+	}
+
+    // 关闭文件
+    fclose(pf);
+    pf = NULL;
+	return 0;
+}
 
 
 
+#endif
 
+// 杨辉三角
 
+int main() {
+    int a[10][10], i, j;
+    for (i = 0;i < 10;i++) {
+        a[i][0] = 1;
+        a[i][i] = 1;
+    }
 
+    for (i = 2;i < 10;i++) {
+        for (j = 1;j < i;j++) {
+            a[i][j] = a[i - 1][j] + a[i - 1][j - 1];
+        }
+    }
 
+    for (i = 0;i < 10;i++) {
+        for (j = 0;j <= i;j++) {
+           
+            printf("%5d", a[i][j]);
+        }
+        printf("\n");
+    }
 
-
-
-
-
-
-
-
-
-
-
-
+    return 0;
+}
 
 
 
