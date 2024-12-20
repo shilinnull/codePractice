@@ -1573,7 +1573,6 @@ int main() {
 
 
 
-#endif
 
 // 杨辉三角
 
@@ -1602,24 +1601,160 @@ int main() {
 }
 
 
+// 题目：从键盘输入一个字符串，将小写字母全部转换成大写字母，然后输出到一个磁盘文件"test"中保存。
 
 
+int main() {
+    int i;
+    FILE* pf = fopen("test", "w+");
+    if (pf == NULL) {
+        perror("Open File fail!");
+        exit(-1);
+    }
+
+    char str[255] = "";
+    scanf("%s", str);
+    int len = strlen(str);
+
+    // 将小写字母全部转换成大写字母
+    for (i = 0;i < len;i++) {
+        if (str[i] >= 'a' && str[i] <= 'z') {
+            str[i] -= 32;
+        }
+    }
+
+    fprintf(pf, "%s", str);
+
+    // 关闭文件
+    fclose(pf);
+    pf = NULL;
+    return 0;
+}
 
 
+/*
+题目：有两个磁盘文件A和B,各存放一行字母，
+要求把这两个文件中的信息合并（按字母顺序排列），
+输出到一个新文件C中。
+先创建a.txt写入xyz
+再创建b.txt写入abc
+*/
 
 
+FILE* open(char* s, char* mode) {
+	FILE* p = fopen(s, mode);
+	if (p == NULL) {
+		perror("Open File fail!");
+		exit(-1);
+	}
+	return p;
+}
+
+void close(FILE* p) {
+	fclose(p);
+	p = NULL;
+}
+
+void read(FILE* p, char* s) {
+	fgets(s, 50, p);
+}
+
+int cmp_char(const void* e1, const void* e2)
+{
+	return strcmp(e1, e2);
+}
+
+void merge(char* s, int len) {
+	qsort(s, len, sizeof(s[0]), cmp_char);
+}
+
+int main() {
+	// 有两个磁盘文件A和B 先创建a.txt写入xyz, 再创建b.txt写入abc
+	FILE* pA = open("a.txt", "w+");
+	fprintf(pA, "xyz");
+	FILE* pB = open("b.txt", "w+");
+	fprintf(pB, "abc");
+
+	// 确保文件指针在开头
+	rewind(pA);
+	rewind(pB);
+
+	// 读取取这两个文件中的数据到数组
+	char strA[100], strB[50];
+	read(pA, strA);
+	read(pB, strB);
+
+	// 要求把这两个文件中的信息合并（按字母顺序排列)
+	strcat(strA, strB);
+	int len = strlen(strA);
+	merge(strA, len);
+
+	// 打开文件c
+	FILE* pC = open("c.txt", "w+");
+	fprintf(pC, "%s", strA);
+	// fputs(strA, pC);
+
+	// 关闭文件
+	close(pA);
+	close(pB);
+	close(pC);
+	return 0;
+}
 
 
+/*
+题目：有五个学生，每个学生有3门课的成绩，
+键盘输入以上数据（包括学生号，姓名，三门课成绩），
+计算出平均成绩，况原有的数据和计算出的平均分数存放在磁盘文件"stud"中。
+*/
 
+typedef struct Student
+{
+    int id;
+    char name[20];
+    int grade1;
+    int grade2;
+    int grade3;
+    int averageGrade;
+}Student;
 
+int main()
+{
+    Student stu[5];
+    for (int i = 0; i < 5; ++i)
+    {
+        scanf("%d %s %d %d %d", &stu[i].id, &stu[i].name, &stu[i].grade1, &stu[i].grade2, &stu[i].grade3);
+        stu[i].averageGrade = (stu[i].grade1 + stu[i].grade2 + stu[i].grade3) / 3;
+    }
+    /* 输入
+    1 a 10 20 30
+    2 b 20 30 40
+    3 c 30 40 50
+    4 d 40 50 60
+    5 e 50 60 70
+    */
+    FILE* fp = fopen("stud.txt", "w");
+    if (fp == NULL)
+    {
+        perror("Open File fail!");
+        exit(-1);
+    }
 
+    for (int i = 0; i < 5; ++i)
+        fprintf(fp, "%d %s %d %d %d %d\n", stu[i].id, stu[i].name, stu[i].grade1, stu[i].grade2, stu[i].grade3, stu[i].averageGrade);
+    /* 文件中输出
+    1 a 10 20 30 20
+    2 b 20 30 40 30
+    3 c 30 40 50 40
+    4 d 40 50 60 50
+    5 e 50 60 70 60
+    */
+    fclose(fp);
+    fp = NULL;
+    return 0;
+}
 
-
-
-
-
-
-
+#endif
 
 
 
