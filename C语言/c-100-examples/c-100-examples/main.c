@@ -1754,26 +1754,130 @@ int main()
     return 0;
 }
 
+
+int main() {
+    int a[10][10], i, j;
+    for (i = 0;i < 10;i++) {
+        a[i][0] = 1;
+        a[i][i] = 1;
+    }
+
+    for (i = 2;i < 10;i++) {
+        for (j = 1;j < i;j++) {
+            a[i][j] = a[i - 1][j] + a[i - 1][j - 1];
+        }
+    }
+    for (i = 0;i < 10;i++) {
+        for (j = 0;j <= i;j++) {
+            printf("%5d", a[i][j]);
+        }
+        printf("\n");
+    }
+
+    return 0;
+}
+/*
+    1
+    1    1
+    1    2    1
+    1    3    3    1
+    1    4    6    4    1
+    1    5   10   10    5    1
+    1    6   15   20   15    6    1
+    1    7   21   35   35   21    7    1
+    1    8   28   56   70   56   28    8    1
+    1    9   36   84  126  126   84   36    9    1
+*/
+
+
+// 喝汽水，1瓶汽水1元，2个空瓶可以换一瓶汽水，给20元，可以喝多少汽水（编程实现）。
+
+int main() {
+    int money = 20;
+    int total = money;
+    int empty = money;
+
+    while (empty >= 2) {
+        total += empty / 2;
+        empty = empty / 2 + empty % 2;
+    }
+
+    printf("总共可以喝 %d 瓶汽水\n", total);
+    return 0;
+}
+
+// 其实就是个等差数列：money * 2 - 1
+int main() {
+    int money = 20;
+    printf("总共可以喝 %d 瓶汽水\n", money * 2 - 1);
+    return 0;
+}
+
+
+// 打印菱形
+
+int main() {
+    int n = 6,i,j;
+    //scanf("%d", &n);
+    for (i = 0;i < n + 1;i++) {
+        // 打印空格
+        for (j = 0;j < n - i - 1;j++) {
+            printf(" ");
+        }
+
+        // 打印星号
+        for (j = 0;j < i * 2 + 1;j++) {
+            printf("*");
+        }
+        printf("\n");
+    }
+    return 0;
+}
+
+
+/*
+递归和非递归分别实现求第n个斐波那契数
+例如：
+输入：5  输出：5
+输入：10， 输出：55
+输入：2， 输出：1
+*/
+
+int f(int i) {
+    if (i == 1 || i == 2)
+        return 1;
+    else
+        return f(i - 1) + f(i - 2);
+}
+
+int main() {
+    int n;
+    scanf("%d", &n);
+    printf("%d ", f(n));
+    return 0;
+}
+
+
+int main() {
+
+	int n, i, a = 1, b = 1,c = 1;
+    scanf("%d", &n);
+
+    if (n <= 2) {
+        c = 1;
+    }
+    else {
+        for (i = 2; i <= n;i++) {
+            c = a + b;
+            a = b;
+            b = c;
+        }
+    }
+    printf("%d ", a);
+
+    return 0;
+}
 #endif
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
