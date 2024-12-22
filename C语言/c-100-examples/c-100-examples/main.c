@@ -1877,30 +1877,90 @@ int main() {
 
     return 0;
 }
+
+// 编写一个函数实现n的k次方，使用递归实现。
+
+int f(int n, int k) {
+	if (k == 0)
+		return 1;
+	else if (k == 1)
+		return n;
+	else
+		return n * f(n, k - 1);
+}
+
+int main() {
+	int n = 10, k = 2;
+	printf("%d", f(n, k));
+	return 0;
+}
+
+// 写一个递归函数DigitSum(n)，输入一个非负整数，返回组成它的数字之和
+//例如，调用DigitSum(1729)，则应该返回1 + 7 + 2 + 9，它的和是19
+//输入：1729，输出：19
+
+int DigitSum(int n) {
+    if (n < 10)
+        return n;
+    else
+        return n % 10 + DigitSum(n / 10);
+}
+
+int main() {
+    int n = 1729;
+    printf("%d", DigitSum(n));
+    return 0;
+}
+
+
+// 递归和非递归分别实现求n的阶乘（不考虑溢出的问题）
+
+// 递归
+int f(int n) {
+    if (n == 1 || n == 0)
+        return 1;
+    else
+        return n * f(n - 1);
+}
+
+int main() {
+    int n = 5;
+    printf("%d", f(n));
+    return 0;
+}
+
+// 非递归
+int main() {
+    int n = 5;
+    int sum = 1;
+    for (int i = 1;i <= 5;i++)
+    {
+        sum *= i;
+    }
+    printf("%d", sum);
+    return 0;
+}
+
+
+// 递归方式实现打印一个整数的每一位
+
+int f(int n) {
+    //if (n == 0)
+    //    return 0;
+    //else
+    //    return f(n / 10), printf("%d ", n % 10);
+    if (n > 9)
+        f(n / 10);
+    printf("%d ", n % 10);
+}
+
+int main() {
+    int n = 12345;
+    f(n);
+    return 0;
+}
+
 #endif
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
