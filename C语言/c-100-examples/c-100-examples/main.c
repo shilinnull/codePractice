@@ -2079,11 +2079,68 @@ int main()
 
 #endif
 
+/*
+实现一个函数，可以左旋字符串中的k个字符。
+例如：
+ABCD左旋一个字符得到BCDA
+ABCD左旋两个字符得到CDAB
+*/
 
+void reverse_1(char* s, int k) {
+	int len = strlen(s);
+	k %= len;
+	int i, j, t;
+	for (j = 1;j <= k;j++) {
+		t = s[0];
+		for (i = 0;i < len - 1;i++) {
+			s[i] = s[i + 1];
+		}
+		s[i] = t;
+	}
+}
 
+void reverse_2(char* s, int k) {
+	int len = strlen(s);
+	int pos = k % len;
+	char* t = (char*)malloc(sizeof(s) * len + 1);
 
+	strcpy(t, s + pos);
+	strncat(t, s, pos);
+	strcpy(s, t);
 
+	free(t);
+	t = NULL;
+}
 
+void reverse_3(char* s, int begin, int end) {
+	char tmp;
+	while (begin < end) {
+		tmp = s[begin];
+		s[begin] = s[end];
+		s[end] = tmp;
+		begin++;
+		end--;
+	}
+}
+int main() {
+	char str[] = "abcde";
+	int k = 4;
+	// 方法一：
+	// reverse_1(str, k);
+
+	// 方法二：
+	// reverse_2(str, k);
+
+	// 方法三：
+	int len = strlen(str);
+	int pos = k % len;
+	reverse_3(str, 0, pos - 1);// 逆序前段
+	reverse_3(str, pos, len - 1);// 逆序后段
+	reverse_3(str, 0, len - 1); // 整体逆序
+
+	printf("%s", str);
+	return 0;
+}
 
 
 
