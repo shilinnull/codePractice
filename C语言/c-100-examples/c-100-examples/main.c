@@ -2077,7 +2077,6 @@ int main()
     return 0;
 }
 
-#endif
 
 /*
 实现一个函数，可以左旋字符串中的k个字符。
@@ -2142,11 +2141,66 @@ int main() {
 	return 0;
 }
 
+unsigned int my_strlen_1(const char* s) {
+    assert(s);
+    unsigned int count = 0;
+    const char* p = s;
+    while (*p) {
+        count++;
+        p++;
+    }
+    return count;
+}
 
+unsigned int my_strlen_2(const char* s) {
+    assert(s);
+    const char* end = s;
+    while (*end++);
+    return end - s - 1;
+}
 
+int main() {
+    char* s = "abcedf";
+    //方法一：
+    // int len = my_strlen_1(s);
 
+    // 方法二：
+    unsigned int len = my_strlen_2(s);
+    printf("%d\n", len);
+    return 0;
+}
+#endif
 
+/*
+题目：调整数组使奇数全部都位于偶数前面。
+输入一个整数数组，实现一个函数，
+来调整该数组中数字的顺序使得数组中所有的奇数位于数组的前半部分，
+所有偶数位于数组的后半部分。
+*/
 
+int main() {
+    int a[10] = { 1,2,3,4,5,6,7,8,9,10 };
+    int len = sizeof(a) / sizeof(a[0]);
+    int begin = 0, end = len - 1,tmp;
+    while (begin < end) {
+        // 找偶数
+        while (begin < end && a[begin] % 2 == 1) begin++;
+        // 找奇数
+        while (begin < end && a[end] % 2 == 0) end--;
+        
+        // 找到了，交换
+        if (begin < end) {
+            tmp = a[begin];
+            a[begin] = a[end];
+            a[end] = tmp;
+        }
+    }
+
+    for (begin = 0;begin < len;begin++) {
+        printf("%d ", a[begin]);
+    }
+    return 0;
+}
 
 
 
