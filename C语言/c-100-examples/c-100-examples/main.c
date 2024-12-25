@@ -2169,7 +2169,6 @@ int main() {
     printf("%d\n", len);
     return 0;
 }
-#endif
 
 /*
 题目：调整数组使奇数全部都位于偶数前面。
@@ -2203,26 +2202,197 @@ int main() {
 }
 
 
+// 写一个函数打印arr数组的内容，不使用数组下标，使用指针。
+// arr是一个整形一维数组。
+
+int main() {
+	int arr[10] = { 1,2,3,4,5,6,7,8,9,10 };
+	int* p = arr;
+	for (int i = 0;i < sizeof(arr) / sizeof(arr[0]);i++, p++) {
+		printf("%d ", *p);
+	}
+	return 0;
+}
+
+
+// 实现一个对整形数组的冒泡排序
+
+enum SORT {
+    RISE,
+    FALL
+};
+
+void bbuble_sort(int arr[], int len, int sort) {
+    int i, j,tmp, flag = 1;
+    for (i = 0;i < len - 1;i++) {
+        flag = 0;
+        for (j = 0;j < len - 1 - i;j++) {
+            if (sort == RISE && arr[j] > arr[j + 1]) {
+                tmp = arr[j];
+                arr[j] = arr[j + 1];
+                arr[j + 1] = tmp;
+                flag = 1; 
+            }
+            else if (sort == FALL && arr[j] < arr[j + 1])
+            {
+                tmp = arr[j];
+                arr[j] = arr[j + 1];
+                arr[j + 1] = tmp;
+                flag = 1;
+            }
+        }
+        if (!flag) return;
+    }
+}
+
+int main() {
+    int arr[10] = { 2,4,6,8,10,1,3,5,7,9 };
+    int len = sizeof(arr) / sizeof(arr[0]);
+
+    bbuble_sort(arr,len, RISE); // 升序
+    bbuble_sort(arr,len, FALL); // 降序
+
+    for (int i = 0;i < len;i++) {
+        printf("%d ", arr[i]);
+    }
+    return 0;
+}
 
 
 
+/*
+写一个函数，判断一个字符串是否为另外一个字符串旋转之后的字符串。
+例如：给定s1 = AABCD和s2 = BCDAA，返回1
+给定s1 = abcd和s2 = ACBD，返回0.
+AABCD左旋一个字符得到ABCDA
+AABCD左旋两个字符得到BCDAA
+AABCD右旋一个字符得到DAABC
+*/
 
 
 
+int find_substr(const char* s1, const char* s2, char* s3) {
+	assert(s1 && s2 && s3);
+	strcpy(s3, s1);
+	strcat(s3, s1); // 总共连接两次
+	int len_2 = strlen(s2);
+	int len_3 = strlen(s3);
+
+	int i = 0, j = 0;
+	while (i < len_3 && j < len_2)
+	{
+		if (s3[i] == s2[j])
+		{
+			i++;
+			j++;
+			if (j == len_2)
+				return 1;
+			if (s3[i] != s2[j])  // 如果不等于就让j保持到一个位置
+				j = 0;
+			continue;    // 如果想等就继续运行，不加这个i就会加两次
+		}
+		i++;
+	}
+	return 0;
+}
+
+int main() {
+	char s1[] = "AABCD";
+	char s2[] = "BCDAA";
+	char* s3 = (char*)malloc(sizeof(char) * (sizeof(s1) * 2));
+	if (s3 == NULL) return;
+
+	int flag = find_substr(s1, s2, s3);
+	printf("%d\n", flag);
+
+	free(s3);
+	s3 = NULL;
+	return 0;
+}
+
+// 有一个数字矩阵，矩阵的每行从左到右是递增的，矩阵从上到下是递增的，请编写程序在这样的矩阵中查找某个数字是否存在。
+// 要求：时间复杂度小于O(N);
+
+
+int main() {
+    int i = 0, j = 3 - 1;   //从右上角开始遍历 
+	int a[][3] = { {1, 2, 3},
+					{3, 4, 7},
+					{7, 8, 9}
+	};
+    int x = 4; // 要找的数字
+
+    while (i < 3 && j >= 0) {
+        if (a[i][j] < x)
+            i++;
+        else if (a[i][j] > x)
+            j--;
+        else
+            break;
+    }
+
+    if (a[i][j] == x)
+        printf("找到了\n");
+    else
+        printf("找不到\n");
+	return 0;
+}
+
+
+/*
+日本某地发生了一件谋杀案，警察通过排查确定杀人凶手必为4个嫌疑犯的一个。
+以下为4个嫌疑犯的供词:
+A说：不是我。
+B说：是C。
+C说：是D。
+D说：C在胡说
+已知3个人说了真话，1个人说的是假话。
+现在请根据这些信息，写一个程序来确定到底谁是凶手。
+*/
 
 
 
+int main()
+{
+    int killer = 0;
+    // 分别假设凶手是a,b,c,d,看谁是凶手时满足3个人说了真话，一个人说了假话
+    for (killer = 'a'; killer <= 'd'; killer++)
+    {
+        if ((killer != 'a') + (killer == 'c') + (killer == 'd') + (killer != 'd') == 3)
+            printf("凶手是：%c", killer);
+    }
+    return 0;
+}
 
 
 
+int main() {
+	int arr[10][10] = { 0 };
+	int i, j;
+	for (i = 0;i < 10;i++) {
+		for (j = 0;j <= i;j++) {
+			arr[i][0] = 1;
+			if (i == j)
+				arr[i][j] = 1;
+		}
+	}
 
+	for (i = 2;i < 10;i++) {
+		for (j = 1;j < i;j++) {
+			arr[i][j] = arr[i - 1][j] + arr[i - 1][j - 1];
+		}
+	}
 
+	for (i = 0;i < 10;i++) {
+		for (j = 0;j <= i;j++) {
+			printf("%-5d", arr[i][j]);
+		}
+		printf("\n");
+	}
+	return 0;
+}
 
-
-
-
-
-
+#endif
 
 
 
