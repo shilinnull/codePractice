@@ -2577,32 +2577,130 @@ int main()
     return 0;
 }
 
+
+int main()
+{
+    int a[5] = { 5, 4, 3, 2, 1 };
+    int* ptr = (int*)(&a + 1);
+
+    printf("%d,%d", *(a + 1), *(ptr - 1));
+    return 0;
+}
+
+int main()
+{
+    int aa[2][5] = { 10,9,8,7,6,5,4,3,2,1 };
+    int* ptr1 = (int*)(&aa + 1);
+    int* ptr2 = (int*)(*(aa + 1));
+    printf("%d,%d", *(ptr1 - 1), *(ptr2 - 1));
+    return 0;
+}
+
+const char* my_strcpy(char* dest, const char* src) {
+    assert(dest && src);
+    char* ret = dest;
+    while (*dest++ = *src++);
+
+    return ret;
+}
+
+int main() {
+    char a[20];
+    char b[10] = "abcdef";
+    my_strcpy(a, b);
+    puts(a);
+    return 0;
+}
+
+
+// 模拟实现strcat
+
+const char* my_strcat(char* dest, const char* src) {
+    assert(dest && src);
+    char* ret = dest;
+    size_t len = strlen(dest);
+    dest += len;
+    while (*dest++ = *src++);
+
+    return ret;
+}
+
+int main() {
+    char a[20] = "abc";
+    char b[10] = "abcdef";
+    my_strcat(a, b);
+    puts(a);
+    return 0;
+}
+
+// 模拟实现strcmp
+
+
+int my_strcmp(const char* dest, const char* src) {
+    assert(dest && src);
+    while (*dest && *src) {
+        if (*dest == *src)
+        {
+            dest++;
+            src++;
+        }
+        else 
+        {
+            break;
+        }
+    }
+    if (*dest == *src)
+        return 0;
+    else if (*dest > *src)
+        return 1;
+    else
+        return -1;
+}
+
+int main() {
+    char a[20] = "d";
+    char b[10] = "abcdef";
+    if (my_strcmp(a, b) == 0)
+        printf("a == b\n");
+    else if (my_strcmp(a, b) > 0)
+        printf("a > b\n");
+    else
+        printf("a < b\n");
+    return 0;
+}
+
+
+// 模拟实现strstr
+
+const char* my_strstr(const char* str, const char* substr) {
+    assert(str && substr);
+    const char* cnt = str;
+    if (!*substr) // 字串等于空串直接返回
+        return str;
+    char* cp = (char*)str;
+    char* s1, * s2;
+    while (*cp)
+    {
+        s1 = cp;
+        s2 = (char*)substr;
+        while (*s1 && *s2 && !(*s1 - *s2))
+            s1++, s2++;
+
+        if (!*s2)
+            return(cp);
+        cp++;
+    }
+    return NULL;
+}
+
+int main() {
+    char a[20] = "acdcaccdef";
+    char b[10] = "cd";
+    printf("%s",my_strstr(a, b));
+    return 0;
+}
+
 #endif
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
