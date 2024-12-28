@@ -2700,27 +2700,130 @@ int main() {
     return 0;
 }
 
+
+
+// strncpy
+
+
+
+#include <stdio.h>
+#include <assert.h>
+
+
+char* my_strncpy(char* dest, const char* src, size_t count) {
+    assert(dest && src);
+    char* ret = dest;
+    if (count > strlen(src)) {
+        while (*dest++ = *src++);
+    }
+    else
+    {
+        size_t n = count;
+        while (n--) {
+            *dest++ = *src++;
+        }
+    }
+    *dest = '\0';
+    return ret;
+}
+
+int main() {
+    char a[20];
+    char b[10] = "abcdef";
+    my_strncpy(a, b,0);
+    puts(a);
+    return 0;
+}
+
+
+// 模拟实现strncat
+
+#include <stdio.h>
+#include <assert.h>
+
+
+
+char* my_strncat(char* dest, const char* src, size_t count) {
+    assert(dest && src);
+    char* ret = dest;
+    size_t len_dest = strlen(dest);
+    dest += len_dest;
+    if (count > strlen(src)) 
+    {
+        while (*dest++ = *src++);
+    }
+    else
+    {
+        size_t len = count;
+        while (len--)
+            *dest++ = *src++;
+    }
+    *dest = '\0';
+    return ret;
+}
+
+
+
+int main() {
+    char a[20] = "abc";
+    char b[10] = "abcdef";
+    my_strncat(a, b,0);
+    puts(a);
+    return 0;
+}
+
+
+
+void* my_memcpy(void* dest, const void* src, size_t count) {
+    assert(dest && src);
+    void* ret = dest;
+    while (count--) {
+        *(char*)dest = *(char*)src;
+        ((char*)dest)++;
+        ((char*)src)++;
+    }
+    return ret;
+}
+
+int main() {
+    int arr1[10];
+    int arr2[] = { 1,2,3,4,5,6,7,8,9,10 };
+    my_memcpy(arr1, arr2, 10 * sizeof(int));
+    for (int i = 0;i < 10;i++) {
+        printf("%d ", arr1[i]);
+    }
+}
+
 #endif
 
 
+// 模拟实现memmove
+void* my_memmove(void* dest, const void* src, size_t count) {
+    assert(dest && src);
+    char* ret = dest;
+    if (dest < src) {
+        // 从前往后
+        while (count--) {
+            *(char*)dest = *(char*)src;
+            ((char*)dest)++;
+            ((char*)src)++;
+        }
+    }
+    else {
+        // 从后往前
+        while (count--)
+            *((char*)dest + count) = *((char*)src + count);
+    }
+    return ret;
+}
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+int main() {
+    int arr1[] = { 1,2,3,4,5,6,7,8,9,10 };
+    my_memmove(arr1 + 3, arr1, 5 * sizeof(int));
+    for (int i = 0;i < 10;i++) {
+        printf("%d ", arr1[i]);
+    }
+}
 
 
 
