@@ -1,6 +1,6 @@
 ﻿#define _CRT_SECURE_NO_WARNINGS 1
 #include<stdio.h>
-//#include<stdlib.h>
+#include<stdlib.h>
 #include<string.h>
 #include <stdbool.h>
 #include <math.h>
@@ -2794,56 +2794,131 @@ int main() {
     }
 }
 
-#endif
 
 
 // 模拟实现memmove
 void* my_memmove(void* dest, const void* src, size_t count) {
-    assert(dest && src);
-    char* ret = dest;
-    if (dest < src) {
-        // 从前往后
-        while (count--) {
-            *(char*)dest = *(char*)src;
-            ((char*)dest)++;
-            ((char*)src)++;
-        }
-    }
-    else {
-        // 从后往前
-        while (count--)
-            *((char*)dest + count) = *((char*)src + count);
-    }
-    return ret;
+	assert(dest && src);
+	char* ret = dest;
+	if (dest < src) {
+		// 从前往后
+		while (count--) {
+			*(char*)dest = *(char*)src;
+			((char*)dest)++;
+			((char*)src)++;
+		}
+	}
+	else {
+		// 从后往前
+		while (count--)
+			*((char*)dest + count) = *((char*)src + count);
+	}
+	return ret;
 }
 
 int main() {
-    int arr1[] = { 1,2,3,4,5,6,7,8,9,10 };
-    my_memmove(arr1 + 3, arr1, 5 * sizeof(int));
-    for (int i = 0;i < 10;i++) {
-        printf("%d ", arr1[i]);
+	int arr1[] = { 1,2,3,4,5,6,7,8,9,10 };
+	my_memmove(arr1 + 3, arr1, 5 * sizeof(int));
+	for (int i = 0;i < 10;i++) {
+		printf("%d ", arr1[i]);
+	}
+}
+
+int main() {
+	int arr[] = { 1,2,3,4,5,1,2,3,4,6 };
+	int i, x = 0, len = sizeof(arr) / sizeof(arr[0]), n = 0, m = 0;
+
+	// 1. 找出两个单身异或的结果
+	for (i = 0;i < len;i++) {
+		x ^= arr[i];
+	}
+	int pos = 0;
+	// 2. 算出这结果的哪一位是1，然后记录下来
+	for (i = 0;i < 32;i++) {
+		if (((x >> i) & 1) == 1)
+			pos = i;
+	}
+	// 3. 再次遍历数组，看哪个数字的pos下标是0还是1，
+	for (i = 0;i < len;i++) {
+		if (((arr[i] >> pos) & 1) == 1)
+			n ^= arr[i];
+		else
+			m ^= arr[i];
+	}
+	printf("%d %d", n, m);
+	return 0;
+}
+
+#include <stdio.h>
+int main()
+{
+    //int a = 0x11223344;
+    //char* pc = (char*)&a;
+    //*pc = 0;
+    //printf("%x\n", a);
+
+    unsigned int a = 0x1234; // 34 12 00 00 
+    unsigned char b = *(unsigned char*)&a;
+    printf("%x\n", b);
+
+    return 0;
+}
+
+int main()
+{
+    unsigned char a = 200;
+    unsigned char b = 100;
+    unsigned char c = 0;
+    c = a + b;
+    printf(" % d % d", a + b, c);
+    return 0;
+}
+
+int main()
+{
+    char a[1000] = { 0 };
+    int i = 0;
+    for (i = 0; i < 1000; i++)
+    {
+        a[i] = -1 - i;
     }
+    printf("%d", strlen(a));
+    return 0;
 }
 
 
+int check_sys() {
+    int a = 1; // 01 00 00 00
+    return *(char*)&a;
+}
+
+int main() {
+    if(check_sys())
+        printf("小端机器\n");
+    else
+        printf("大端机器\n");
+    return 0;
+}
 
 
+int check_sys() {
+	union {
+		int i;
+		char j;
+	} m;
+	m.i = 1;
+	return m.j;
+}
 
+int main() {
+	if (check_sys())
+		printf("小端机器\n");
+	else
+		printf("大端机器\n");
+	return 0;
+}
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+#endif
 
 
 
