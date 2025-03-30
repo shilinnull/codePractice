@@ -100,14 +100,35 @@
 
 int main()
 {
-	Date d1(2025, 3, 29);
-	//d1 += 7;
-	//d1 += 7;
-	Date d2(d1);
-	d2 -= 10;
-	cout << (d1 >= d2) << endl;
-	//cout << d1 << endl;
-	cout << d2 << endl;
+	//Date d1(2024, 11, 16);
+	//Date d2(2024, 11, 16);
+	//Date d3(2024, 10, 17);
+
+	//cout << (d1 > d2) << endl;
+	//cout << (d1 >= d2) << endl;
+	//cout << (d1 == d2) << endl;
+
+	//cout << (d1 > d3) << endl;
+	//cout << (d1 >= d3) << endl;
+	//cout << (d1 == d3) << endl;
+
+	//Date d1(2025, 3, 29);
+	////d1 += 7;
+	////d1 += 7;
+	//Date d2 = d1;
+	//Date d3,d4;
+	//d4 = d3 = d2 = d1;
+	//d1 = d1;
+	//d4 += -100;
+	////d2 -= 10;
+	////cout << (d1 >= d2) << endl;
+	////cout << d1 << endl;
+	//cout << d4 << endl;
+
+
+	Date d1(2005, 10, 9), d2(2025, 3, 30);
+	cout << (d1 - d2) << endl;
+	
 
 	return 0;
 }
