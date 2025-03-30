@@ -128,7 +128,8 @@ int main()
 
 	Date d1(2005, 10, 9), d2(2025, 3, 30);
 	cout << (d1 - d2) << endl;
-	
+	cin >> d2;
+	cout << d2 << endl;
 
 	return 0;
 }

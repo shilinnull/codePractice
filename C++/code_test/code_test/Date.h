@@ -6,12 +6,15 @@ using namespace std;
 class Date
 {
 public:
+	friend ostream& operator<<(ostream& out, const Date& d);
+	friend istream& operator>>(istream& out, Date& d);
+
 	// 判断闰年
-	bool is_year(int year) {
+	bool is_year(int year) const {
 		return ((year % 4 == 0 && year % 100 != 0) || year % 400 == 0);
 	}
 	// 获取某年某月的天数
-	int GetMonthDay(int year, int month) {
+	int GetMonthDay(int year, int month) const {
 		static int a[13] = { -1,31,28,31,30,31,30,31,31,30,31,30,31 };
 		if (month == 2 && is_year(year)) {
 			return 29;
@@ -70,14 +73,14 @@ public:
 		return *this;
 	}
 	// 日期+天数
-	Date operator+(int day) {
+	Date operator+(int day) const {
 		Date tmp(*this);
 		tmp += day;
 		return tmp;
 	}
 
 	// 日期-天数
-	Date operator-(int day) {
+	Date operator-(int day) const {
 		Date tmp(*this);
 		tmp -= day;
 		return tmp;
@@ -125,7 +128,7 @@ public:
 	}
 
 	// >运算符重载
-	bool operator>(const Date& d) {
+	bool operator>(const Date& d) const {
 		if (_year > d._year)
 			return true;
 		else if (_year == d._year && _month > d._month)
@@ -136,27 +139,27 @@ public:
 	}
 
 	// ==运算符重载
-	bool operator==(const Date& d) {
+	bool operator==(const Date& d) const {
 		return _year == d._year && _month == d._month && _day == d._day;
 	}
 
 	// >=运算符重载
-	bool operator>=(const Date& d) {
+	bool operator>=(const Date& d) const {
 		return (*this > d || *this == d);
 	}
 
 	// <运算符重载
-	bool operator<(const Date& d) {
+	bool operator<(const Date& d) const {
 		return !(*this >= d);
 	}
 
 	// <=运算符重载
-	bool operator<=(const Date& d) {
+	bool operator<=(const Date& d) const {
 		return !(*this > d);
 	}
 
 	// !=运算符重载
-	bool operator!=(const Date& d) {
+	bool operator!=(const Date& d) const {
 		return !(*this == d);
 	}
 #if 0
@@ -210,17 +213,12 @@ public:
 		return n * flag;
 	}
 
-
-	bool CheckInvalid() {
+	bool CheckInvalid() const {
 		if (_year <= 0 || _month < 1 || _month > 12 || _day < 1 || _day > GetMonthDay(_year, _month))
 			return false;
 		else
 			return true;
 	}
-
-	friend ostream& operator<<(ostream& out, const Date& d);
-	friend istream& operator>>(istream& out, Date& d);
-
 
 private:
 	int _year;
@@ -234,7 +232,17 @@ ostream& operator<<(ostream& out,const Date& d) {
 	return out;
 }
 
-istream& operator>>(istream& in, Date& d) {
-	in >> d._year >> d._month >> d._day;
+istream& operator>>(istream& in, Date& d)
+{
+	while (1)
+	{
+		cout << "请依次输入年月日:>";
+		in >> d._year >> d._month >> d._day;
+
+		if (!d.CheckInvalid())
+			cout << "输入非法日期，请重新输入" << endl;
+		else
+			break;
+	}
 	return in;
 }
