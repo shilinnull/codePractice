@@ -1,20 +1,17 @@
 #include "widget.h"
 #include "ui_widget.h"
-#include "QLabel"
 
-
-
+#include <QPushButton>
 Widget::Widget(QWidget *parent)
     : QWidget(parent)
     , ui(new Ui::Widget)
 {
     ui->setupUi(this);
 
-//    QLabel lable1;
-//    lable1.setText("111111");
-
-    QLabel* lable = new QLabel(this);
-    lable->setText("hello world");
+    QPushButton* button = new QPushButton(this);
+    button->setText("按钮");
+    button->move(200,300);
+    this->move(500,500);
 }
 
 Widget::~Widget()
