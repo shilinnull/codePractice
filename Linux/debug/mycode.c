@@ -3,7 +3,8 @@
 int Sum(int s, int e)
 {
     int result = 0;
-    for(int i = s; i <= e; i++)
+    int i;
+    for(i = s; i <= e; i++)
     {
         result += i;
     }
