@@ -15,13 +15,15 @@ public:
     Widget(QWidget *parent = nullptr);
     ~Widget();
 
-    void HandleClicked();
+    void HandleClicked(const QString&);
 signals:
-    void mySignal();
+    void mySignal(const QString&);
 private slots:
 
     void on_pushButton_clicked();
     void HandleMySignal();
+
+    void on_pushButton_2_clicked();
 
 private:
     Ui::Widget *ui;

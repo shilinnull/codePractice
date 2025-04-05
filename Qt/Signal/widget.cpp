@@ -19,7 +19,12 @@ Widget::Widget(QWidget *parent)
     //connect(button,&QPushButton::clicked,this,&Widget::HandleClicked);
 
 
-    connect(this,&Widget::mySignal,this,&Widget::HandleMySignal);
+    // connect(this,&Widget::mySignal,this,&Widget::HandleMySignal);
+    // connect(this,&Widget::mySignal,this,&Widget::HandleClicked);
+    connect(this,&Widget::mySignal,this,[=](const QString& text){
+        qDebug() << "lambda 执行了!";
+        setWindowTitle(text);
+    });
 
 }
 
@@ -28,21 +33,25 @@ Widget::~Widget()
     delete ui;
 }
 
-void Widget::HandleClicked()
+void Widget::HandleClicked(const QString& text)
 {
    // 按下按钮修改窗口标题
-    this->setWindowTitle("按钮按下了！");
+    this->setWindowTitle(text);
 }
-
 
 void Widget::on_pushButton_clicked()
 {
     // 发送自定义信号
-    emit mySignal();
+    emit mySignal("标题一");
     // this->setWindowTitle("按钮按下了！");
 }
 
 void Widget::HandleMySignal()
 {
     this->setWindowTitle("处理自定义信号");
+}
+
+void Widget::on_pushButton_2_clicked()
+{
+    emit mySignal("标题二");
 }
