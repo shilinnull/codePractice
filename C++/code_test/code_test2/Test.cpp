@@ -1,4 +1,4 @@
-﻿#define _CRT_SECURE_NO_WARNINGS 1
+#define _CRT_SECURE_NO_WARNINGS 1
 
 #include<iostream>
 using namespace std;
@@ -188,6 +188,7 @@ template<typename T>
 T Swap(T x,T y) {
 	return x + y;
 }
+
 
 
 
