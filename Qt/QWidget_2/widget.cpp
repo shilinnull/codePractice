@@ -17,7 +17,10 @@ Widget::~Widget()
 
 void Widget::on_pushButton_accept_clicked()
 {
-    ui->label->setText("ok!!!");
+    if(ui->label->text() == QString("ok!!!"))
+        ui->label->setText("no!!!");
+    else
+        ui->label->setText("ok!!!");
 }
 
 void Widget::on_pushButton_reject_clicked()
