@@ -131,77 +131,18 @@ void SelectSort(int* a, int n)
 
 int PartSort1(int* a, int begin, int end)
 {
-	int left = begin, right = end;
-	int keyi = begin;
-
-	while (left < right)
-	{
-		// ×ó±ßÕÒ´ó
-		while (left < right && a[left] <= a[keyi])
-			++left;
-		// ÓÒ±ßÕÒÐ¡
-		while (left < right && a[right] >= a[keyi])
-			--right;
-		
-		// ½»»»
-		if(left < right)
-			Swap(&a[left], &a[right]);
-	}
-	Swap(&a[keyi], &a[left]);
-	return left;
 }
 
 int PartSort2(int* a, int begin, int end)
 {
-	int key = a[begin];
-	int holei = begin;
-
-	while (begin < end)
-	{
-		// ÓÒ±ßÕÒÐ¡
-		while (begin < end && a[end] >= key)
-		{
-			--end;
-		}
-
-		a[holei] = a[end];
-		holei = end;
-
-		// ×ó±ßÕÒ´ó
-		while (begin < end && a[begin] <= key)
-		{
-			++begin;
-		}
-		a[holei] = a[begin];
-		holei = begin;
-	}
-
-	a[holei] = key;
-	return holei;
 }
 
 int PartSort3(int* a, int begin, int end)
 {
-	int cur = begin + 1, prev = begin;
-	int keyi = begin;
-	while (cur <= end)
-	{
-		if (a[cur] < a[keyi] && ++prev != cur) 
-			Swap(&a[cur], &a[prev]);
-		++cur;
-	}
-	Swap(&a[keyi], &a[prev]);
-	return prev;
 }
 
 void QuickSort(int* a, int begin, int end)
 {
-	if (begin >= end)
-		return;
-	int keyi = PartSort2(a, begin, end);
-
-	QuickSort(a, begin, keyi - 1);
-	QuickSort(a, keyi + 1, end);
 }
 
 void QuickSortNonR(int* a, int begin, int end)
