@@ -350,41 +350,962 @@ using namespace std;
 //}
 
 
-class A
-{
-public:
-    int _a;
-};
+//class A
+//{
+//public:
+//    int _a;
+//};
+//
+//class B : virtual public A
+//{
+//public:
+//    int _b;
+//    int _b1;
+//    int _b2;
+//
+//};
+//
+//class C : virtual public A
+//{
+//public:
+//    int _c;
+//};
+//
+//class D : public C, public B
+//{
+//public:
+//    int _d;
+//};
+//
+//int main()
+//{
+//    D d;
+//    d.B::_a = 1;
+//    d.C::_a = 2;
+//    d._a = 3;
+//    d._b = 4;
+//    d._c = 5;
+//    d._d = 6;
+//    return 0;
+//}
+//
+//class Person {
+//public:
+//    virtual void BuyTicket() { cout << "买票-全价" << endl; }
+//};
+//
+//class Student : public Person {
+//public:
+//    void BuyTicket() { cout << "买票-半价" << endl; }
+//};
+//
+//void Func(Person& p)
+//{
+//    p.BuyTicket();
+//}
+//
+//int main()
+//{
+//    Person ps;
+//    Student st;
+//    Func(ps);
+//    Func(st);
+//    return 0;
+//}
 
-class B : virtual public A
-{
-public:
-    int _b;
-    int _b1;
-    int _b2;
+//class A
+//{
+//public:
+//	virtual void func(int val = 1) { std::cout << "A->" << val << std::endl; }
+//	virtual void test() { func(); }
+//};
+//
+//class B : public A
+//{
+//public:
+//	void func(int val = 0) { std::cout << "B->" << val << std::endl; }
+//};
+//
+//int main(int argc, char* argv[])
+//{
+//	B* p = new B;
+//	p->test();
+//	return 0;
+//}
+//
 
-};
 
-class C : virtual public A
-{
-public:
-    int _c;
-};
+//class Person {
+//public:
+//	virtual Person* BuyTicket()
+//	{
+//		cout << "买票-全价" << endl;
+//		return nullptr;
+//	}
+//};
+//
+//class Student : public Person {
+//public:
+//	virtual Person* BuyTicket()
+//	{
+//		cout << "买票-打折" << endl;
+//		return nullptr;
+//	}
+//};
+//
+//void Func(Person* ptr)
+//{
+//	ptr->BuyTicket();
+//}
+//
+//int main()
+//{
+//	Person ps;
+//	Student st;
+//	Func(&ps);
+//	Func(&st);
+//	return 0;
+//}
+//
+//class A
+//{
+//public:
+//    virtual ~A()
+//    {
+//        cout << "~A()" << endl;
+//    }
+//};
+//class B : public A {
+//public:
+//    ~B()
+//    {
+//        cout << "~B()->delete:" << _p << endl;
+//        delete _p;
+//    }
+//protected:
+//    int* _p = new int[10];
+//};
+//
+//int main()
+//{
+//    A* p1 = new A;
+//    A* p2 = new B;
+//    // 只有派生类B的析构函数重写了A的析构函数，下面的delete对象调用析构函数，
+//    // 才能构成多态，才能保证p1和p2指向的对象正确的调用析构函数。
+//    delete p1;
+//    delete p2;
+//    return 0;
+//}
 
-class D : public C, public B
-{
-public:
-    int _d;
-};
+//class Car
+//{
+//public:
+//    virtual void Drive() final {}
+//};
+//class Benz :public Car
+//{
+//public:
+//    virtual void Drive() { cout << "Benz-舒适" << endl; }
+//};
 
-int main()
-{
-    D d;
-    d.B::_a = 1;
-    d.C::_a = 2;
-    d._a = 3;
-    d._b = 4;
-    d._c = 5;
-    d._d = 6;
-    return 0;
-}
+//class Car {
+//public:
+//    virtual void Drive() {}
+//};
+//class Benz :public Car {
+//public:
+//    virtual void Drive() override { cout << "Benz-舒适" << endl; }
+//};
+
+
+////抽象类（接口类）
+//class Car
+//{
+//public:
+//    //纯虚函数
+//    virtual void Drive() = 0;
+//};
+////派生类
+//class Benz : public Car
+//{
+//public:
+//    //重写纯虚函数
+//    virtual void Drive()
+//    {
+//        cout << "Benz-舒适" << endl;
+//    }
+//};
+////派生类
+//class BMW : public Car
+//{
+//public:
+//    //重写纯虚函数
+//    virtual void Drive()
+//    {
+//        cout << "BMW-操控" << endl;
+//    }
+//};
+//
+//int main()
+//{
+//    // 编译报错：error C2259: “Car”: 无法实例化抽象类
+//    // Car car;
+//
+//    Car* pBenz = new Benz;
+//    pBenz->Drive();
+//
+//    Car* pBMW = new BMW;
+//    pBMW->Drive();
+//
+//    return 0;
+//}
+
+//class Base
+//{
+//public:
+//    virtual void Func1()
+//    {
+//        cout << "Func1()" << endl;
+//    }
+//private:
+//    int _b = 1;
+//};
+//
+//int main()
+//{
+//    Base b;
+//    cout << sizeof(b) << endl;
+//
+//    return 0;
+//}
+
+
+//class Base
+//{
+//public:
+//    virtual void Func1()
+//    {
+//        cout << "Base::Func1()" << endl;
+//    }
+//    virtual void Func2()
+//    {
+//        cout << "Base::Func2()" << endl;
+//    }
+//    void Func3()
+//    {
+//        cout << "Base::Func3()" << endl;
+//    }
+//private:
+//    int _b = 1;
+//};
+//
+//class Derive : public Base
+//{
+//public:
+//    virtual void Func1()
+//    {
+//        cout << "Derive::Func1()" << endl;
+//    }
+//private:
+//    int _d = 2;
+//};
+//
+//int main()
+//{
+//    Base b;
+//    Derive d;
+//
+//    return 0;
+//}
+
+
+//
+//class Base {
+//public:
+//    virtual void func1() { cout << "Base::func1" << endl; }
+//    virtual void func2() { cout << "Base::func2" << endl; }
+//private:
+//    int a;
+//};
+//
+//void func()
+//{
+//    cout << "void func()" << endl;
+//}
+//
+//int main()
+//{
+//    Base b1;
+//    Base b2;
+//
+//    static int a = 0;
+//    int b = 0;
+//    int* p1 = new int;
+//    const char* p2 = "hello world";
+//
+//    printf("静态区:%p\n", &a);
+//    printf("栈:%p\n", &b);
+//    printf("堆:%p\n", p1);
+//    printf("代码段:%p\n", p2);
+//    printf("虚表:%p\n", *((int*)&b1));
+//    printf("虚函数地址:%p\n", &Base::func1);
+//    printf("普通函数地址:%p\n", func);
+//
+//    return 0;
+//}
+//
+// 
+
+//
+//class Person {
+//public:
+//    virtual void BuyTicket() { cout << "买票-全价" << endl; }
+//};
+//
+//class Student : public Person {
+//public:
+//    virtual void BuyTicket() { cout << "买票-半价" << endl; }
+//};
+//
+//void Func(Person* p)
+//{
+//    p->BuyTicket();
+//}
+//
+//int main()
+//{
+//    Person Mike;
+//    Func(&Mike);
+//
+//    Mike.BuyTicket();
+//    return 0;
+//}
+
+//
+//class Base {
+//public:
+//    virtual void func1() { cout << "Base::func1" << endl; }
+//private:
+//    int a;
+//};
+//
+//int main()
+//{
+//    Base a;
+//    Base b;
+//
+//    return 0;
+//}
+
+
+//class Base {
+//public:
+//    virtual void func1() { cout << "Base::func1" << endl; }
+//    virtual void func2() { cout << "Base::func2" << endl; }
+//private:
+//    int a;
+//};
+//class Derive :public Base {
+//public:
+//    virtual void func1() { cout << "Derive::func1" << endl; }
+//    virtual void func3() { cout << "Derive::func3" << endl; }
+//    virtual void func4() { cout << "Derive::func4" << endl; }
+//private:
+//    int b;
+//};
+//
+//// 打印虚表
+//typedef void(*VFPTR) ();
+//void PrintVTable(VFPTR vTable[])
+//{
+//    // 依次取虚表中的虚函数指针打印并调用。调用就可以看出存的是哪个函数
+//    cout << " 虚表地址>" << vTable << endl;
+//    for (int i = 0; vTable[i] != nullptr; ++i)
+//    {
+//        printf(" 第%d个虚函数地址 :0X%x,->", i, vTable[i]);
+//        VFPTR f = vTable[i];
+//        f();
+//    }
+//    cout << endl;
+//}
+//
+//int main()
+//{
+//    Base b;
+//    Derive d;
+//
+//    VFPTR* vTableb = (VFPTR*)(*(int*)&b);
+//    PrintVTable(vTableb);
+//    VFPTR* vTabled = (VFPTR*)(*(int*)&d);
+//    PrintVTable(vTabled);
+//
+//    return 0;
+//}
+
+
+//class Base1 {
+//public:
+//    virtual void func1() { cout << "Base1::func1" << endl; }
+//    virtual void func2() { cout << "Base1::func2" << endl; }
+//private:
+//    int b1;
+//};
+//class Base2 {
+//public:
+//    virtual void func1() { cout << "Base2::func1" << endl; }
+//    virtual void func2() { cout << "Base2::func2" << endl; }
+//private:
+//    int b2;
+//};
+//class Derive : public Base1, public Base2 {
+//public:
+//    virtual void func1() { cout << "Derive::func1" << endl; }
+//    virtual void func3() { cout << "Derive::func3" << endl; }
+//private:
+//    int d1;
+//};
+//
+//typedef void(*VFPTR) ();
+//void PrintVTable(VFPTR vTable[])
+//{
+//    cout << " 虚表地址>" << vTable << endl;
+//    for (int i = 0; vTable[i] != nullptr; ++i)
+//    {
+//        printf(" 第%d个虚函数地址 :0X%x,->", i, vTable[i]);
+//        VFPTR f = vTable[i];
+//        f();
+//    }
+//    cout << endl;
+//}
+//
+//int main()
+//{
+//    Derive d;
+//    VFPTR* vTableb1 = (VFPTR*)(*(int*)&d);
+//    PrintVTable(vTableb1);
+//    VFPTR* vTableb2 = (VFPTR*)(*(int*)((char*)&d + sizeof(Base1)));
+//    PrintVTable(vTableb2);
+//    // 这样也可以，发生切片
+//    Base2* ptr = &d;
+//    PrintVTable(((VFPTR*)*(int*)ptr));
+//    return 0;
+//}
+
+
+
+
+
+
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
