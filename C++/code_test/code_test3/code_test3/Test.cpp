@@ -790,11 +790,144 @@ using namespace std;
 //    PrintVTable(((VFPTR*)*(int*)ptr));
 //    return 0;
 //}
+#include <set>
+#include <map>
+
+void test_set1()
+{
+    // 去重+升序排序
+    set<int> s1;
+    // 去重+降序排序（给一个大于的仿函数）
+    // set<int, greater<int>> s;
+
+    s1.insert(1);
+    s1.insert(11);
+    s1.insert(3);
+    s1.insert(1);
+    s1.insert(4);
+    s1.insert(2);
+
+    set<int>::iterator it = s1.begin();
+    while (it != s1.end())
+    {
+        // *it = 1; // 不支持修改
+        cout << *it << " ";
+        ++it;
+    }
+    cout << endl;
+
+    vector<int> v = { 3,2,8,1,10,2 };
+    set<int> s2(v.begin(), v.end());
+    for (auto e : s2)
+    {
+        cout << e << " ";
+    }
+    cout << endl;
+
+    // 插入一段initializer_list列表值，已经存在的值插入失败
+    set<int> s3;
+    s3.insert({ 3,2,8,1,10,2 });
+    for (auto e : s3)
+    {
+        cout << e << " ";
+    }
+    cout << endl;
+
+    // 删除
+    s3.erase(8);
+    s3.erase(18);
+    for (auto e : s3)
+    {
+        cout << e << " ";
+    }
+    cout << endl;
+
+    auto pos = s3.find(10);
+    if (pos != s3.end())
+    {
+        cout << *pos << endl;
+        s3.erase(pos);
+    }
+    else
+    {
+        cout << "找不到" << endl;
+    }
+
+    for (auto e : s3)
+    {
+        cout << e << " ";
+    }
+    cout << endl;
+
+    set<string> strset = { "sort", "insert", "add" };
+    // 遍历string比较ascll码大小顺序遍历的
+    for (auto& e : strset)
+    {
+        cout << e << " ";
+    }
+    cout << endl;
+}
+
+void test_set2()
+{
+    set<int> s = { 4,2,7,2,8,5,9 };
+    for (auto e : s)
+    {
+        cout << e << " ";
+    }
+    cout << endl;
+
+    int x;
+    cin >> x;
+    // 算法库的查找 O(N)
+    auto pos1 = find(s.begin(), s.end(), x);
+    // set自身实现的查找 O(logN)
+    auto pos2 = s.find(x);
+
+    // 利用count间接实现快速查找
+    cin >> x;
+    if (s.count(x))
+    {
+        cout << x << "在！" << endl;
+    }
+    else
+    {
+        cout << x << "不存在！" << endl;
+    }
+
+    std::set<int> myset;
+    for (int i = 1; i < 10; i++)
+        myset.insert(i * 10); // 10 20 30 40 50 60 70 80 90
+
+    for (auto e : myset)
+    {
+        cout << e << " ";
+    }
+    cout << endl;
+
+    // [25,60)
+    auto itlow = myset.lower_bound(25);      // >=val	
+    auto itup = myset.upper_bound(60);       // >val
+
+    myset.erase(itlow, itup);
+    for (auto e : myset)
+    {
+        cout << e << " ";
+    }
+    cout << endl;
+
+    auto ret = myset.equal_range(35);
+    std::cout << *ret.first << std::endl; // >=val
+    std::cout << *ret.second << std::endl; // >val
+}
 
 
-
-
-
+int main()
+{
+    // test_set1();
+    test_set2();
+    return 0;
+}
 
  
 
