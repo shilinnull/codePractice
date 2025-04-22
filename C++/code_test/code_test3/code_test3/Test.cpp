@@ -921,17 +921,64 @@ void test_set2()
     std::cout << *ret.second << std::endl; // >val
 }
 
+void test_map1()
+{
+    map<string, string> dict;
+    dict.insert(pair<string, string>("sort", "排序"));
+    dict.insert(pair<string, string>("inster", "插入"));
+    dict.insert(pair<const char*, const char*>("left", "左"));
+    // 推荐
+    dict.insert(make_pair("right", "右"));
+    // 单参数类型支持 隐式类型转换
+    dict.insert({ "left", "左" });
+
+    string s1("xxx"), s2("yyy");
+    dict.insert(make_pair(s1, s2));
+
+    for (auto& e : dict)
+    {
+        cout << e.first << " " << e.second << endl;
+    }
+    cout << endl;
+}
+
+void test_map4()
+{
+    map<string, string> dict;
+    dict.insert(pair<string, string>("sort", "排序"));
+    dict.insert(pair<string, string>("inster", "插入"));
+    dict.insert(pair<const char*, const char*>("left", "左"));
+
+    dict.insert(make_pair("right", "右"));
+
+    string s1("xxx"), s2("yyy");
+    dict.insert(make_pair(s1, s2));
+
+    dict["erase"];  // 插入
+    cout << dict["erase"] << endl; // 查找
+    dict["erase"] = "删除"; // 修改
+    dict["test"] = "测试";  // 插入+修改
+    dict["left"] = "左边、剩余"; // 修改
+
+    map<string, string>::iterator it = dict.begin();
+    while (it != dict.end())
+    {
+        //cout << (*it).first << " " << (*it).second << endl;
+        cout << it->first << " " << it->second << endl;
+        ++it;
+    }
+}
 
 int main()
 {
     // test_set1();
-    test_set2();
+    // test_set2();
+    //test_map1();
+    test_map4();
     return 0;
 }
 
  
-
-
 
 
 
