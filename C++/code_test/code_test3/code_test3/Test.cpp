@@ -968,93 +968,769 @@ void test_map4()
         ++it;
     }
 }
+//
+//int main()
+//{
+//    // test_set1();
+//    // test_set2();
+//    //test_map1();
+//    test_map4();
+//    return 0;
+//}
+//
+// 
 
-int main()
+//#include<iostream>
+//#include<vector>
+//using namespace std;
+//struct Point
+//{
+//    int _x;
+//    int _y;
+//};
+//class Date
+//{
+//public:
+//    Date(int year = 1, int month = 1, int day = 1)
+//        :_year(year)
+//        , _month(month)
+//        , _day(day)
+//    {
+//        cout << "Date(int year, int month, int day)" << endl;
+//    }
+//    Date(const Date& d)
+//        :_year(d._year)
+//        , _month(d._month)
+//        , _day(d._day)
+//    {
+//        cout << "Date(const Date& d)" << endl;
+//    }
+//private:
+//    int _year;
+//    int _month;
+//    int _day;
+//};
+//
+//// 一切皆可用列表初始化，且可以不加=
+//int main()
+//{
+//    //////////// C++98支持的 //////////////
+//    int a1[] = { 1, 2, 3, 4, 5 };
+//    int a2[5] = { 0 };
+//    Point p = { 1, 2 };
+//
+//    /////////// C++11支持的 ///////////////
+//    
+//    // 内置类型支持
+//    int x1 = { 2 };
+//
+//    // 自定义类型支持
+//    // 这里本质是用{ 2025, 1, 1}构造一个Date临时对象
+//    // 临时对象再去拷贝构造d1，编译器优化后合二为一变成{ 2025, 1, 1}直接构造初始化d1
+//    // 运行一下，我们可以验证上面的理论，发现是没调用拷贝构造的
+//    Date d1 = { 2025, 1, 1 };
+//
+//    // 这里d2引用的是{ 2024, 7, 25 }构造的临时对象
+//    const Date& d2 = { 2024, 7, 25 };
+//    
+//    // 需要注意的是C++98支持单参数时类型转换，也可以不用{}
+//    Date d3 = { 2025 };
+//    Date d4 = 2025;
+//    
+//    // 可以省略掉=
+//    Point p1{ 1, 2 };
+//    int x2{ 2 };
+//    Date d6{ 2024, 7, 25 };
+//    const Date& d7{ 2024, 7, 25 };
+//    
+//    // 不支持下面这个，只有{}初始化，才能省略=
+//    // Date d8 2025;
+//    vector<Date> v;
+//    v.push_back(d1);
+//    v.push_back(Date(2025, 1, 1));
+//
+//    // 比起有名对象和匿名对象传参，这里{}更有性价比
+//    v.push_back({ 2025, 1, 1 });
+//    
+//    return 0;
+//}
+
+
+//int main()
+//{
+//    std::initializer_list<int> mylist;
+//    mylist = { 10, 20, 30 };
+//    cout << sizeof(mylist) << endl;
+//    
+//    // 这里begin和end返回的值initializer_list对象中存的两个指针
+//    // 这两个指针的值跟i的地址跟接近，说明数组存在栈上
+//    int i = 0;
+//    cout << mylist.begin() << endl;
+//    cout << mylist.end() << endl;
+//    cout << &i << endl;
+//    
+//    // {}列表中可以有任意多个值
+//    // 这两个写法语义上还是有差别的，第一个v1是直接构造，
+//    // 第二个v2是构造临时对象+临时对象拷贝v2+优化为直接构造
+//    vector<int> v1({ 1,2,3,4,5 });
+//    vector<int> v2 = { 1,2,3,4,5 };
+//    const vector<int>& v3 = { 1,2,3,4,5 };
+//    // 这里是pair对象的{}初始化和map的initializer_list构造结合到一起用了
+//    map<string, string> dict = { {"sort", "排序"}, {"string", "字符串"} };
+//    // initializer_list版本的赋值支持
+//    v1 = { 10,20,30,40,50 };
+//    return 0;
+//}
+
+
+
+
+//int main()
+//{
+//    vector<int> v1 = { 1,2,3,4 };
+//    vector<int> v2 = { 1,2,3,4,5,6 };
+//
+//    v1 = { 10,20,30 };
+//
+//    list<int> lt = { 10,20,30 };
+//
+//    // 多参数构造类型转换  构造+拷贝构造->优化直接构造
+//    // 跟对应构造函数参数个数匹配
+//    Date d2 = { 2023, 11, 25 };
+//
+//    // the type of il is an initializer_list 
+//    auto il1 = { 10, 20, 30, 40, 50 };
+//    cout << typeid(il1).name() << endl;
+//
+//    initializer_list<int> il2 = { 10, 20, 30 };
+//
+//    initializer_list<int>::iterator it2 = il2.begin();
+//    while (it2 != il2.end())
+//    {
+//        cout << *it2 << " ";
+//        ++it2;
+//    }
+//    cout << endl;
+//
+//    //for (int e : il2)
+//    for (auto e : il2)
+//    {
+//        cout << e << " ";
+//    }
+//    cout << endl;
+//
+//    pair<string, string> kv1("sort", "排序");
+//    map<string, string> dict = { {"insert", "插入"}, {"get","获取"} };
+//    for (auto& kv : dict)
+//    {
+//        cout << kv.first << ":" << kv.second << endl;
+//    }
+//
+//    Date dd2 = { 2023, 11, 25 };
+//    // Date dd3 = { 2023, 11, 25, 20}; // 报错
+//
+//    return 0;
+//}
+
+//int main()
+//{
+//    // 左值引用只能引用左值，不能引用右值。
+//    int a = 10;
+//    int& ra1 = a;
+//
+//    // ra为a的别名
+//    int& ra2 = 10;   // 编译失败，因为10是右值
+//    // const左值引用既可引用左值，也可引用右值。
+//    const int& ra3 = 10;
+//    const int& ra4 = a;
+//    return 0;
+//}
+ 
+
+//int main()
+//{
+//    // 右值引用只能右值，不能引用左值。
+//    int&& r1 = 10;
+//
+//    // error C2440: “初始化”: 无法从“int”转换为“int &&”
+//    // message : 无法将左值绑定到右值引用
+//    int a = 10;
+//    int&& r2 = a;
+//
+//    // 右值引用可以引用move以后的左值
+//    int&& r3 = std::move(a);
+//    return 0;
+//}
+
+
+
+#include<assert.h>
+
+namespace lsl
 {
-    // test_set1();
-    // test_set2();
-    //test_map1();
-    test_map4();
-    return 0;
+    class string
+    {
+    public:
+        typedef char* iterator;
+        typedef const char* const_iterator;
+        iterator begin()
+        {
+            return _str;
+        }
+        iterator end()
+        {
+            return _str + _size;
+        }
+        const_iterator begin() const
+        {
+            return _str;
+        }
+        const_iterator end() const
+        {
+            return _str + _size;
+        }
+        string(const char* str = "")
+            :_size(strlen(str))
+            , _capacity(_size)
+        {
+            cout << "string(char* str)-构造" << endl;
+            _str = new char[_capacity + 1];
+            strcpy(_str, str);
+        }
+        void swap(string& s)
+        {
+            ::swap(_str, s._str);
+            ::swap(_size, s._size);
+            ::swap(_capacity, s._capacity);
+        }
+        string(const string& s)
+            :_str(nullptr)
+        {
+            cout << "string(const string& s) -- 拷贝构造" << endl;
+            reserve(s._capacity);
+            for (auto ch : s)
+            {
+                push_back(ch);
+            }
+        }
+        // 移动构造
+        string(string&& s)
+        {
+            cout << "string(string&& s) -- 移动构造" << endl;
+            swap(s);
+        }
+        string& operator=(const string& s)
+        {
+            cout << "string& operator=(const string& s) -- 拷贝赋值" <<
+                endl;
+            if (this != &s)
+            {
+                _str[0] = '\0';
+                _size = 0;
+                reserve(s._capacity);
+                for (auto ch : s)
+                {
+                    push_back(ch);
+                }
+            }
+            return *this;
+        }
+        // 移动赋值
+        string& operator=(string&& s)
+        {
+            cout << "string& operator=(string&& s) -- 移动赋值" << endl;
+            swap(s);
+            return *this;
+        }
+        ~string()
+        {
+            cout << "~string() -- 析构" << endl;
+            delete[] _str;
+            _str = nullptr;
+        }
+
+        char& operator[](size_t pos)
+        {
+            assert(pos < _size);
+            return _str[pos];
+        }
+        void reserve(size_t n)
+        {
+            if (n > _capacity)
+            {
+                char* tmp = new char[n + 1];
+                if (_str)
+                {
+                    strcpy(tmp, _str);
+                    delete[] _str;
+                }
+                _str = tmp;
+                _capacity = n;
+            }
+        }
+        void push_back(char ch)
+        {
+            if (_size >= _capacity)
+            {
+                size_t newcapacity = _capacity == 0 ? 4 : _capacity *
+                    2;
+                reserve(newcapacity);
+            }
+            _str[_size] = ch;
+            ++_size;
+            _str[_size] = '\0';
+        }
+        string& operator+=(char ch)
+        {
+            push_back(ch);
+            return *this;
+        }
+        const char* c_str() const
+        {
+            return _str;
+        }
+        size_t size() const
+        {
+            return _size;
+        }
+    private:
+        char* _str = nullptr;
+        size_t _size = 0;
+        size_t _capacity = 0;
+    };
 }
 
- 
-
-
-
-
-
-
-
-
-
-
-
-
-
- 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
- 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
- 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
- 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+namespace lsl {
+    string addStrings(string num1, string num2)
+    {
+        string str;
+        int end1 = num1.size() - 1, end2 = num2.size() - 1;
+        int next = 0;
+        while (end1 >= 0 || end2 >= 0)
+        {
+            int val1 = end1 >= 0 ? num1[end1--] - '0' : 0;
+            int val2 = end2 >= 0 ? num2[end2--] - '0' : 0;
+            int ret = val1 + val2 + next;
+            next = ret / 10;
+            ret = ret % 10;
+            str += ('0' + ret);
+        }
+        if (next == 1)
+            str += '1';
+        reverse(str.begin(), str.end());
+
+        cout << "******************************" << endl;
+        return str;
+    }
+}
+
+//int main()
+//{
+//    lsl::string ret = lsl::addStrings("11111", "2222");
+//    cout << &ret << endl;
+//    cout << ret.c_str() << endl;
+//    return 0;
+//}
+
+
+//int main()
+//{
+//    lsl::string ret;
+//    ret = lsl::addStrings("11111", "2222");
+//    cout << ret.c_str() << endl;
+//    return 0;
+//}
+
+//int main()
+//{
+//    lsl::string s1("xxxxx");
+//    // 拷贝构造
+//    lsl::string s2 = s1;
+//    // 构造+移动构造，优化后直接构造
+//    lsl::string s3 = lsl::string("yyyyy");
+//    // 移动构造
+//    lsl::string s4 = move(s1);
+//    return 0;
+//}
+
+//lsl::string to_string(int x)
+//{
+//    lsl::string ret;
+//    while (x)
+//    {
+//        int val = x % 10;
+//        x /= 10;
+//        ret += ('0' + val);
+//    }
+//    reverse(ret.begin(), ret.end());
+//
+//    return ret;
+//}
+//
+//int main()
+//{
+//    lsl::string ret = lsl::to_string(1234);
+//    return 0;
+//}
+
+//void func1(lsl::string s)
+//{
+//}
+//void func2(const lsl::string& s)
+//{
+//}
+//int main()
+//{
+//    lsl::string s1("hello world");
+//    // func1和func2的调用我们可以看到左值引用做参数减少了拷贝，提高效率的使用场景和价值
+//    func1(s1);
+//    func2(s1);
+//
+//    s1 += '!';
+//    return 0;
+//}
+
+
+
+//int main()
+//{
+//    // 左值：可以取地址
+//    // 以下的p、b、c、*p、s、s[0]就是常见的左值
+//    int* p = new int(0);
+//    int b = 1;
+//    const int c = b;
+//    *p = 10;
+//    string s("111111");
+//    s[0] = 'x';
+//    double x = 1.1, y = 2.2;
+//
+//    // 左值引用给左值取别名
+//    int& r1 = b;
+//    int*& r2 = p;
+//    int& r3 = *p;
+//    string& r4 = s;
+//    char& r5 = s[0];
+// 
+//    // 右值引用给右值取别名
+//    int&& rr1 = 10;
+//    double&& rr2 = x + y;
+//    double&& rr3 = fmin(x, y);
+//    string&& rr4 = string("11111");
+//
+//    // 左值引用不能直接引用右值，但是const左值引用可以引用右值
+//    const int& rx1 = 10;
+//    const double& rx2 = x + y;
+//    const double& rx3 = fmin(x, y);
+//    const string& rx4 = string("11111");
+//
+//    // 右值引用不能直接引用左值，但是右值引用可以引用move(左值)
+//    int&& rrx1 = move(b);
+//    int*&& rrx2 = move(p);
+//    int&& rrx3 = move(*p);
+//    string&& rrx4 = move(s);
+//    string&& rrx5 = (string&&)s;
+//
+//    // b、r1、rr1都是变量表达式，都是左值
+//    cout << &b << endl;
+//    cout << &r1 << endl;
+//    cout << &rr1 << endl;
+//
+//    // 这里要注意的是，rr1的属性是左值，所以不能再被右值引用绑定，除非move一下
+//    int& r6 = r1;
+//    // int&& rrx6 = rr1;
+//    int&& rrx6 = move(rr1);
+//    return 0;
+//}
+
+
+//int main()
+//{
+//    std::string s1 = "Test";
+//    // std::string&& r1 = s1; // 错误：不能绑定到左值
+//
+//    const std::string& r2 = s1 + s1; // OK：到 const 的左值引用延长生存期
+//    
+//    // r2 += "Test"; // 错误：不能通过到 const 的引用修改
+//    std::string&& r3 = s1 + s1; // OK：右值引用延长生存期
+//    r3 += "Test"; // OK：能通过到非 const 的引用修改
+//    
+//    std::cout << r3 << '\n';
+//    return 0;
+//}
+
+
+//void f(int& x)
+//{
+//    std::cout << "左值引用重载 f(" << x << ")\n";
+//}
+//void f(const int& x)
+//{
+//    std::cout << "到 const 的左值引用重载 f(" << x << ")\n";
+//}
+//void f(int&& x)
+//{
+//    std::cout << "右值引用重载 f(" << x << ")\n";
+//}
+//
+//int main()
+//{
+//    int i = 1;
+//    const int ci = 2;
+//    f(i); // 调用 f(int&)
+//    f(ci); // 调用 f(const int&)
+//
+//    f(3); // 调用 f(int&&)，如果没有 f(int&&) 重载则会调用 f(const int&)
+//    f(std::move(i)); // 调用 f(int&&)
+//
+//    // 右值引用变量在用于表达式时是左值(注意)
+//    int&& x = 1;
+//    f(x); // 调用 f(int& x)
+//    f(std::move(x)); // 调用 f(int&& x)
+//    return 0;
+//}
+
+
+#include"list.h"
+//int main()
+//{
+// 
+//    lsl::list<lsl::string> lt;
+//    cout << "*************************" << endl;
+//    lsl::string s1("111111111111111111111");
+//    lt.push_back(s1);
+//    cout << "*************************" << endl;
+//    lt.push_back(lsl::string("22222222222222222222222222222"));
+//    cout << "*************************" << endl;
+//    lt.push_back("3333333333333333333333333333");
+//    cout << "*************************" << endl;
+//    lt.push_back(move(s1));
+//    cout << "*************************" << endl;
+//    return 0;
+//}
+
+//template<class ...Args>
+//void Print(Args... args)
+//{
+//    cout << sizeof...(args) << endl;
+//}
+//
+//int main()
+//{
+//    double x = 2.2;
+//    Print(); // 包里有0个参数
+//    Print(1); // 包里有1个参数
+//    Print(1, string("xxxxx")); // 包里有2个参数
+//    Print(1.1, string("xxxxx"), x); // 包里有3个参数
+//    return 0;
+//}
+
+//template <class ...Args>
+//void Print(Args... args)
+//{
+//	// 可变参数模板编译时解析
+//	// 下面是运行获取和解析，所以不支持这样用
+//	cout << sizeof...(args) << endl;
+//	for (size_t i = 0; i < sizeof...(args); i++)
+//	{
+//		cout << args[i] << " ";
+//	}
+//	cout << endl;
+//}
+
+//void ShowList()
+//{
+//    // 编译器时递归的终止条件，参数包是0个时，直接匹配这个函数
+//    cout << endl;
+//}
+//template <class T, class ...Args>
+//void ShowList(T x, Args... args)
+//{
+//    cout << x << " ";
+//    // args是N个参数的参数包
+//    // 调用ShowList，参数包的第一个传给x，剩下N-1传给第二个参数包
+//    ShowList(args...);
+//}
+//// 编译时递归推导解析参数
+//template <class ...Args>
+//void Print(Args... args)
+//{
+//    ShowList(args...);
+//}
+//int main()
+//{
+//    Print();
+//    Print(1);
+//    Print(1, string("xxxxx"));
+//    Print(1, string("xxxxx"), 2.2);
+//    return 0;
+//}
+
+//template <class T>
+//const T& GetArg(const T& x)
+//{
+//    cout << x << " ";
+//    return x;
+//}
+//
+//template <class ...Args>
+//void Arguments(Args... args)
+//{
+//}
+//
+//template <class ...Args>
+//void Print(Args... args)
+//{
+//    // 注意GetArg必须返回或者到的对象，这样才能组成参数包给Arguments
+//    Arguments(GetArg(args)...);
+//}
+//// 本质可以理解为编译器编译时，包的扩展模式
+//// 将上面的函数模板扩展实例化为下面的函数
+//// 是不是很抽象，C++11以后，只能说委员会的大佬设计语法思维跳跃得太厉害
+////void Print(int x, string y, double z)
+////{
+//// Arguments(GetArg(x), GetArg(y), GetArg(z));
+////}
+//
+//int main()
+//{
+//    Print(1, string("xxxxx"), 2.2);
+//    return 0;
+//}
+
+//int main()
+//{
+//    lsl::list<lsl::string> lt;
+//    // 传左值，跟push_back一样，走拷贝构造
+//    lsl::string s1("111111111111");
+//    lt.emplace_back(s1);
+//    cout << "*********************************" << endl;
+//
+//    // 右值，跟push_back一样，走移动构造
+//    lt.emplace_back(move(s1));
+//    cout << "*********************************" << endl;
+//
+//    // 直接把构造string参数包往下传，直接用string参数包构造string
+//    // 这里达到的效果是push_back做不到的
+//    lt.emplace_back("111111111111");
+//    cout << "*********************************" << endl;
+//
+//    lsl::list<pair<lsl::string, int>> lt1;
+//    // 跟push_back一样
+//    // 构造pair + 拷贝/移动构造pair到list的节点中data上
+//    pair<lsl::string, int> kv("苹果", 1);
+//    lt1.emplace_back(kv);
+//    cout << "*********************************" << endl;
+//
+//    // 跟push_back一样
+//    lt1.emplace_back(move(kv));
+//    cout << "*********************************" << endl;
+//
+//    ////////////////////////////////////////////////////////////////////
+//    // 直接把构造pair参数包往下传，直接用pair参数包构造pair
+//    // 这里达到的效果是push_back做不到的
+//    lt1.emplace_back("苹果", 1);
+//    cout << "*********************************" << endl;
+//
+//    return 0;
+//}
+
+
+
+#include<functional>
+//
+//void swap_func(int& r1, int& r2)
+//{
+//    int tmp = r1;
+//    r1 = r2;
+//    r2 = tmp;
+//}
+//
+//struct Swap
+//{
+//    void operator()(int& r1, int& r2)
+//    {
+//        int tmp = r1;
+//        r1 = r2;
+//        r2 = tmp;
+//    }
+//};
+//
+//
+//int main()
+//{
+//    int x = 0, y = 1;
+//    cout << x << ":" << y << endl;
+//
+//    // lambda
+//    auto swaplambda = [](int& r1, int& r2) {int tmp = r1; r1 = r2; r2 = tmp; };
+//
+//    // 函数指针
+//    function<void(int&, int&)> f1 = swap_func;
+//    f1(x, y);
+//    cout << x << " " << y << endl << endl;
+//    // 类[匿名对象]
+//    function<void(int&, int&)> f2 = Swap();
+//    f2(x, y);
+//    cout << x << " " << y << endl << endl;
+//    // lambda
+//    function<void(int&, int&)> f3 = swaplambda;
+//    f3(x, y);
+//    cout << x << " " << y << endl << endl;
+//
+//    map<std::string, std::function<void(int&, int&)>> CmdOp{
+//        {"函数指针", swap_func},
+//        {"仿函数", Swap()},
+//        {"lambda", swaplambda},
+//
+//        //{"函数指针", f1},
+//        //{"仿函数", f2},
+//        //{"lambda", f3},
+//    };
+//
+//    // 使用
+//    CmdOp["函数指针"](x, y);
+//    cout << x << " " << y << endl << endl;
+//
+//    CmdOp["仿函数"](x, y);
+//    cout << x << " " << y << endl << endl;
+//
+//    CmdOp["lambda"](x, y);
+//    cout << x << " " << y << endl << endl;
+//
+//    return 0;
+//}
+
+
+
+
+//int Sub(int a, int b)
+//{
+//    return a - b;
+//}
+//
+//int main()
+//{
+//    function<int(int, int)> f1 = Sub;
+//    cout << f1(10, 5) << endl;
+//
+//    // 调整参数顺序
+//    function<int(int, int)> f2 = bind(Sub, placeholders::_2, placeholders::_1);
+//    cout << f2(10, 5) << endl;
+//
+//    // 调整参数个数，有些参数可以bind时写死
+//    function<int(int)> f3 = bind(Sub, 20, placeholders::_1);
+//    cout << f3(5) << endl;
+//
+//    return 0;
+//}
+//
+
+#include <iostream>
+int main() {
+    auto func = [] (){ std::cout << "Hello, World!" << std::endl; };
+    func();
+    return 0;
+}
 
  
 
