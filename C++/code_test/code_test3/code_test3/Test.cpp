@@ -2012,43 +2012,113 @@ void SendMsg(const string& s)
 //}
 
 
-double Divide(int a, int b) noexcept
-{
-    // 当b == 0时抛出异常
-    if (b == 0)
+//double Divide(int a, int b) noexcept
+//{
+//    // 当b == 0时抛出异常
+//    if (b == 0)
+//    {
+//        throw "Division by zero condition!";
+//    }
+//    return (double)a / (double)b;
+//}
+//
+//int main()
+//{
+//    int i = 0;
+//    cout << noexcept(Divide(1, 2)) << endl;
+//    cout << noexcept(Divide(1, 0)) << endl;
+//    cout << noexcept(++i) << endl;
+//
+//    try
+//    {
+//        int len, time;
+//        cin >> len >> time;
+//        cout << Divide(len, time) << endl;
+//    }
+//    catch (const char* errmsg)
+//    {
+//        cout << errmsg << endl;
+//    }
+//    catch (...)
+//    {
+//        cout << "Unkown Exception" << endl;
+//    }
+//
+//    return 0;
+//}
+
+namespace lsl {
+    template <class T>
+    class shared_ptr
     {
-        throw "Division by zero condition!";
-    }
-    return (double)a / (double)b;
+    public:
+        shared_ptr(T* ptr)
+            :_ptr(ptr)
+            , _pcount(new int(1))
+        {
+        }
+
+        shared_ptr(const shared_ptr<T>& sp)
+            :_ptr(sp._ptr)
+            , _pcount(sp._pcount)
+        {
+            ++*(_pcount);
+        }
+
+        void release()
+        {
+            if (--*(_pcount) == 0)
+            {
+                // 析构
+                delete _ptr;
+                delete _pcount;
+                _ptr = _pcount = nullptr;
+            }
+        }
+
+        // sp1 = sp2
+        shared_ptr<T>& operator=(const shared_ptr<T>& sp)
+        {
+            if (_ptr != sp._ptr)
+            {
+                release();
+                _ptr = sp._ptr;
+                _pcount = sp._pcount;
+                ++(*_pcount);
+            }
+            return *this;
+        }
+
+        T* get() const
+        {
+            return _ptr;
+        }
+
+        int use_count() const
+        {
+            return *(_pcount);
+        }
+
+        T& operator*()
+        {
+            return *_ptr;
+        }
+
+        T* operator->()
+        {
+            return _ptr;
+        }
+        
+        ~shared_ptr()
+        {
+            release();
+        }
+
+    private:
+        T* _ptr;
+        int* _pcount;
+    };
 }
-
-int main()
-{
-    int i = 0;
-    cout << noexcept(Divide(1, 2)) << endl;
-    cout << noexcept(Divide(1, 0)) << endl;
-    cout << noexcept(++i) << endl;
-
-    try
-    {
-        int len, time;
-        cin >> len >> time;
-        cout << Divide(len, time) << endl;
-    }
-    catch (const char* errmsg)
-    {
-        cout << errmsg << endl;
-    }
-    catch (...)
-    {
-        cout << "Unkown Exception" << endl;
-    }
-
-    return 0;
-}
-
-
- 
 
 
 
