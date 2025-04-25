@@ -1,0 +1,7 @@
+total 28
+drwxrwxr-x  2 lin lin 4096 Apr 25 20:36 .
+drwxrwxr-x 12 lin lin 4096 Apr 25 15:32 ..
+-rwxrwxr-x  1 lin lin 8456 Apr 25 20:36 a.out
+-rw-rw-r--  1 lin lin    0 Apr 25 20:36 log.txt
+-rw-rw-r--  1 lin lin   61 Apr 25 20:16 makefile
+-rw-rw-r--  1 lin lin 1005 Apr 25 20:36 test.c
