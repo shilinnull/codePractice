@@ -8,7 +8,15 @@ char pwd[SIZE];
 char *gargv[ARGS] = {NULL};
 int argc = 0;
 
+// 重定向部分
+#define NONE_REDIR 0
+#define OUPUT_REDIR 1
+#define APPEND_REDIR 2
+#define INPUT_REDIR 3
+std::string filename;
+int redir_type = NONE_REDIR;
 
+// 退出码
 int lastcode = 0;
 
 void InitGlobal()
@@ -173,6 +181,30 @@ void ForkAndExec()
     }
     else if(id == 0)
     {
+        // 检测是否为输入输出重定向
+        if(redir_type == OUPUT_REDIR)
+        {
+            int output = open(filename.c_str(), O_CREAT | O_WRONLY | O_TRUNC, 0666);
+            (void)output;
+
+            dup2(output, 1);
+        }
+        else if(redir_type == INPUT_REDIR)
+        {
+            int input = open(filename.c_str(), O_RDONLY);
+            (void)input;
+            dup2(input, 0);
+        }
+        else if(redir_type == APPEND_REDIR)
+        {
+            int appendfd = open(filename.c_str(), O_CREAT | O_WRONLY | O_APPEND);
+            (void)appendfd;
+            dup2(appendfd, 1);
+        }
+        else 
+        {}
+
+
         execvp(gargv[0], gargv);
         exit(0);
     }
@@ -186,11 +218,63 @@ void ForkAndExec()
         }
     }
 }
+#define SkipSpace(start) do{\
+    while(isspace(*start))\
+    {\
+        ++start;\
+    }\
+}while(0)
 
 
-
-
-
+void CheckRedir(char cmd[])
+{
+    char *start = cmd;
+    char *end = cmd + strlen(cmd) - 1;
+    
+    while(start <= end)
+    {
+        // 输出重定向
+        if(*start == '>')
+        {
+            if(*(start + 1) == '>')
+            {
+                // 追加
+                redir_type = APPEND_REDIR;
+                *start = '\0';
+                start += 2;
+                // 跳过空格
+                SkipSpace(start);
+                filename = start;
+                break;
+            } 
+            else 
+            {
+                // 输出
+                redir_type = OUPUT_REDIR;
+                *start = '\0';
+                start++;
+                
+                SkipSpace(start);
+                filename = start;
+                break;
+            }
+        }
+        else if(*start == '<')
+        {
+            redir_type = INPUT_REDIR;
+            *start = '\0';
+            start++;
+            
+            SkipSpace(start);
+            filename = start;
+            break;
+        }
+        else 
+        {
+            start++;
+        }
+    }
+}
 
 
 

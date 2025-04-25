@@ -16,6 +16,9 @@ int main()
         // 2. 获取用户输入的命令
         if(!GetCommandStr(commandstr,SIZE))
             continue;
+        // 2.1 重定向检测
+        CheckRedir(commandstr);
+        
         // 对命令字符串，进行解析 -> 命令行参数表
         ParseCommandStr(commandstr); 
         // 4. 检测命令，内键命令，要让shell自己执行！
