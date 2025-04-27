@@ -2046,59 +2046,325 @@ void SendMsg(const string& s)
 //
 //    return 0;
 //}
+#include <functional>
+//namespace lsl {
+//    template <class T>
+//    class shared_ptr
+//    {
+//    public:
+//        explicit shared_ptr(T* ptr = nullptr)
+//            : _ptr(ptr)
+//            , _pcount(new int(1))
+//        {
+//        }
+//
+//        template<class D>
+//        shared_ptr(T* ptr, D del)
+//            :_ptr(ptr)
+//            , _pcount(new int(1))
+//            , _del(del)
+//        {
+//        }
+//
+//        shared_ptr(const shared_ptr<T>& sp)
+//            :_ptr(sp._ptr)
+//            , _pcount(sp._pcount)
+//            , _del(sp._del)
+//        {
+//            ++*(_pcount);
+//        }
+//
+//        void release()
+//        {
+//            if (--*(_pcount) == 0)
+//            {
+//                // 析构
+//                //delete _ptr;
+//                _del(_ptr);
+//                delete _pcount;
+//            }
+//        }
+//
+//        // sp1 = sp2
+//        shared_ptr<T>& operator=(const shared_ptr<T>& sp)
+//        {
+//            if (_ptr != sp._ptr)
+//            {
+//                release();
+//                _ptr = sp._ptr;
+//                _pcount = sp._pcount;
+//                ++(*_pcount);
+//                _del = sp._del;
+//            }
+//            return *this;
+//        }
+//
+//        T* get() const
+//        {
+//            return _ptr;
+//        }
+//
+//        int use_count() const
+//        {
+//            return *(_pcount);
+//        }
+//
+//        T& operator*()
+//        {
+//            return *_ptr;
+//        }
+//
+//        T* operator->()
+//        {
+//            return _ptr;
+//        }
+//        
+//        ~shared_ptr()
+//        {
+//            release();
+//        }
+//
+//    private:
+//        T* _ptr;
+//        int* _pcount;
+//		function<void(T*)> _del = [](T* ptr) {delete ptr;};
+//    };
+//    template<class T>
+//    class weak_ptr
+//    {
+//    public:
+//        weak_ptr()
+//            :_ptr(nullptr)
+//        {
+//        }
+//
+//        weak_ptr(const shared_ptr<T>& we)
+//            :_ptr(we.get())
+//        {
+//        }
+//
+//        weak_ptr<T>& operator=(const shared_ptr<T>& we)
+//        {
+//            _ptr = we.get();
+//            return *this;
+//        }
+//
+//
+//        T& operator*()
+//        {
+//            return *_ptr;
+//        }
+//
+//        T* operator->()
+//        {
+//            return _ptr;
+//        }
+//
+//    private:
+//        T* _ptr;
+//    };
+//}
+
+
+struct Date
+{
+    int _year;
+    int _month;
+    int _day;
+    Date(int year = 1, int month = 1, int day = 1)
+        :_year(year)
+        , _month(month)
+        , _day(day)
+    {}
+    ~Date()
+    {
+        cout << "~Date()" << endl;
+    }
+};
+
+
+//int main()
+//{
+//    auto_ptr<Date> ap1(new Date);
+//    // 拷贝时，管理权限转移，被拷贝对象ap1悬空
+//    auto_ptr<Date> ap2(ap1);
+//    // 空指针访问，ap1对象已经悬空
+//    //ap1->_year++;
+//
+//
+//    unique_ptr<Date> up1(new Date);
+//    // 不支持拷贝
+//    //unique_ptr<Date> up2(up1);
+//    // 支持移动，但是移动后up1也悬空，所以使用移动要谨慎
+//    unique_ptr<Date> up3(move(up1));
+//    
+//    shared_ptr<Date> sp1(new Date);
+//    // 支持拷贝
+//    shared_ptr<Date> sp2(sp1);
+//    shared_ptr<Date> sp3(sp2);
+//    cout << sp1.use_count() << endl;
+//    sp1->_year++;
+//    cout << sp1->_year << endl;
+//    cout << sp2->_year << endl;
+//    cout << sp3->_year << endl;
+//    // 支持移动，但是移动后sp1也悬空，所以使用移动要谨慎
+//    shared_ptr<Date> sp4(move(sp1));
+//    return 0;
+//}
+
+template<class T>
+void DeleteArrayFunc(T* ptr)
+{
+    delete[] ptr;
+}
+
+template<class T>
+class DeleteArray
+{
+public:
+    void operator()(T* ptr)
+    {
+        delete[] ptr;
+    }
+};
+
+class Fclose
+{
+public:
+    void operator()(FILE* ptr)
+    {
+        cout << "fclose:" << ptr << endl;
+        fclose(ptr);
+    }
+};
+
+//int main()
+//{
+//    // 因为new[]经常使用，所以unique_ptr和shared_ptr
+//    // 实现了一个特化版本，这个特化版本析构时用的delete[]
+//	//shared_ptr<Date[]> sp1(new Date[10]);
+//    //unique_ptr<Date[]> up1(new Date[10]);
+//
+//    // 定制删除器  函数指针/仿函数/lambda
+//    lsl::shared_ptr<Date> sp2(new Date[5], DeleteArray<Date>());
+//    lsl::shared_ptr<Date> sp3(new Date[5], DeleteArrayFunc<Date>);
+//
+//	auto delArrOBJ = [](Date* ptr) {delete[] ptr; };
+//    lsl::shared_ptr<Date> sp4(new Date[5], delArrOBJ);
+//	// 实现其他资源管理的删除器
+//    lsl::shared_ptr<FILE> sp5(fopen("Test.cpp", "r"), Fclose());
+//    lsl::shared_ptr<FILE> sp6(fopen("Test.cpp", "r"), [](FILE* ptr) {
+//		    cout << "fclose:" << ptr << endl;
+//		    fclose(ptr);
+//		});
+//
+//    // 不传也可以
+//    lsl::shared_ptr<Date> sp7(new Date);
+//
+//	unique_ptr<Date, DeleteArray<Date>> up2(new Date[5]);
+//	unique_ptr<Date, void(*)(Date*)> up3(new Date[5], DeleteArrayFunc<Date>);
+//	// decltype对象的类型，decltype是推导对象的类型
+//	unique_ptr<Date, decltype(delArrOBJ)> up4(new Date[5], delArrOBJ);
+//
+//	return 0;
+//}
+
+//int main()
+//{
+//	shared_ptr<Date> sp1(new Date(2024, 9, 11));
+//	shared_ptr<Date> sp2 = make_shared<Date>(2024, 9, 11);
+//	auto sp3 = make_shared<Date>(2024, 9, 11);
+//	shared_ptr<Date> sp4;
+//
+//	if (sp1.operator bool())
+//	//if (sp1) // 等价
+//		cout << "sp1 is not nullptr" << endl;
+//
+//	if (!sp4)
+//		cout << "sp1 is nullptr" << endl;
+//
+//	// 报错，不能类型转换
+//	//shared_ptr<Date> sp5 = new Date(2024, 9, 11);
+//	//unique_ptr<Date> sp6 = new Date(2024, 9, 11);
+//
+//	return 0;
+//}
+
+
+//int main()
+//{
+//    std::shared_ptr<string> sp1(new string("111111"));
+//    std::shared_ptr<string> sp2(sp1);
+//    std::weak_ptr<string> wp = sp1;
+//    cout << wp.expired() << endl;
+//    cout << wp.use_count() << endl;
+//    // sp1和sp2都指向了其他资源，则weak_ptr就过期了
+//    sp1 = make_shared<string>("222222");
+//    cout << wp.expired() << endl;
+//    cout << wp.use_count() << endl;
+//    sp2 = make_shared<string>("333333");
+//    cout << wp.expired() << endl;
+//    cout << wp.use_count() << endl;
+//    wp = sp1;
+//    //std::shared_ptr<string> sp3 = wp.lock();
+//    auto sp3 = wp.lock();
+//    cout << wp.expired() << endl;
+//    cout << wp.use_count() << endl;
+//    *sp3 += "###";
+//    cout << *sp1 << endl;
+//    return 0;
+//}
+
 
 namespace lsl {
     template <class T>
     class shared_ptr
     {
     public:
-        shared_ptr(T* ptr)
+        shared_ptr(T* ptr = nullptr)
             :_ptr(ptr)
-            , _pcount(new int(1))
-        {
-        }
+            ,_pcount(new int(1))
+        { }
+ 
+        template <class D>
+        shared_ptr(T* ptr, D del)
+            :_ptr(ptr)
+            ,_pcount(new int(1))
+            ,_del(del)
+        { }
 
         shared_ptr(const shared_ptr<T>& sp)
             :_ptr(sp._ptr)
-            , _pcount(sp._pcount)
-        {
-            ++*(_pcount);
+            ,_pcount(sp._pcount)
+        { 
+            ++*_pcount;
         }
 
         void release()
         {
-            if (--*(_pcount) == 0)
+            if (--(*_pcount) == 0)
             {
-                // 析构
-                delete _ptr;
+                _del(_ptr);
                 delete _pcount;
-                _ptr = _pcount = nullptr;
             }
         }
-
-        // sp1 = sp2
+        // s1 = s2
         shared_ptr<T>& operator=(const shared_ptr<T>& sp)
         {
             if (_ptr != sp._ptr)
             {
-                release();
+                release(); // 释放s1
                 _ptr = sp._ptr;
                 _pcount = sp._pcount;
-                ++(*_pcount);
+                ++*_pcount;
+                _del = sp._del;
             }
             return *this;
         }
-
-        T* get() const
+        ~shared_ptr()
         {
-            return _ptr;
+            release();
         }
-
-        int use_count() const
-        {
-            return *(_pcount);
-        }
-
         T& operator*()
         {
             return *_ptr;
@@ -2108,430 +2374,39 @@ namespace lsl {
         {
             return _ptr;
         }
-        
-        ~shared_ptr()
+
+        int use_count() const 
         {
-            release();
+            return *_pcount;
+        }
+
+        T* get() const 
+        {
+            return _ptr;
         }
 
     private:
         T* _ptr;
-        int* _pcount;
+        atomic<int>* _pcount;
+        function<void(T*)> _del = [](T* ptr) {delete ptr;};
+    };
+
+    template<class T>
+    class weak_ptr
+    {
+    public:
+        weak_ptr() = default;
+        weak_ptr(const shared_ptr<T>& sp)
+            :_ptr(sp.get())
+        { }
+
+        weak_ptr<T>& operator=(const shared_ptr<T>& sp)
+        {
+            _ptr = sp.get();
+            return *this;
+        }
+
+    private:
+        T* _ptr = nullptr;
     };
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
- 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
- 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
- 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
- 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
- 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
- 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
- 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
- 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
- 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
- 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
- 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
- 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
- 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
- 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
- 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
- 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
- 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
- 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
- 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
- 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
- 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
- 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
- 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
- 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
- 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
