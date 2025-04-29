@@ -1,3 +1,4 @@
+#define _CRT_SECURE_NO_WARNINGS 1
 #include "Sort.h"
 
 void Swap(int* p1, int* p2)
@@ -289,7 +290,7 @@ static void _MergeSort(int *a, int begin, int end, int* tmp)
 	// 谁小谁尾插到tmp
 	while (begin1 <= end1 && begin2 <= end2)
 	{
-		if (a[begin1] < a[begin2])
+		if (a[begin1] <= a[begin2])
 			tmp[i++] = a[begin1++];
 		else 
 			tmp[i++] = a[begin2++];
@@ -317,10 +318,274 @@ void MergeSort(int* a, int n)
 
 void MergeSortNonR(int* a, int n)
 {
+	int* tmp = (int*)malloc(sizeof(int) * n);
+
+	int gap = 1;
+	while (gap < n)
+	{
+		//int j = 0;
+		for (int i = 0; i < n; i += 2 * gap)
+		{
+			int begin1 = i, end1 = i + gap - 1;
+			int begin2 = i + gap, end2 = i + 2 * gap - 1;
+
+			// 修正区间
+			//if (begin2 >= n)
+			//	break;
+			if (end1 >= n || begin2 >= n)
+				break;
+
+			if (end2 >= n)
+				end2 = n - 1;
+
+			// 尾插到tmp
+			int j = i;
+			while (begin1 <= end1 && begin2 <= end2)
+			{
+				if (a[begin1] < a[begin2])
+					tmp[j++] = a[begin1++];
+				else
+					tmp[j++] = a[begin2++];
+			}
+
+			// 到这里把剩下的全部尾插
+			while (begin1 <= end1)
+				tmp[j++] = a[begin1++];
+			while (begin2 <= end2)
+				tmp[j++] = a[begin2++];
+			
+			// 拷贝回a数组
+			memcpy(a + i, tmp + i, sizeof(int) * (end2 - i + 1));
+		}// for (int i = 0; i < n; i *= 2)
+
+		gap *= 2;
+	}
+	free(tmp);
 }
+
 
 void CountSort(int* a, int n)
 {
+	int max = a[0], min = a[0];
+	for (int i = 0; i < n; i++)
+	{
+		if (a[i] > max)
+			max = a[i];
+		if (a[i] < min)
+			min = a[i];
+	}
+	int range = max - min + 1;
+	int *count = (int*)calloc(range, sizeof(int));
+
+	// 统计
+	for (int i = 0; i < n; i++)
+	{
+		count[a[i] - min]++;
+	}
+	
+	// 放回原数组
+	int k = 0;
+	for (int j = 0; j < range; j++)
+	{
+		while (count[j]--)
+		{
+			a[k++] = j + min;
+		}
+	}
+
+	free(count);
 }
 
+// 三路划分函数
+KeyWayIndex PartSort3Way(int* a, int left, int right) {
+	int key = a[left];
 
+	// left和right指向就是跟key相等的区间
+	// [开始, left-1][left, right][right+1, 结束]
+
+	int cur = left + 1;
+	while (cur <= right) {
+		// 1、cur遇到比key小，小的换到左边，同时把key换到中间位置
+		// 2、cur遇到比key大，大的换到右边
+
+		if (a[cur] < key) {
+			Swap(&a[left], &a[cur]);
+			++cur;
+			++left;
+		}
+		else if (a[cur] > key) {
+			Swap(&a[right], &a[cur]);
+			--right;
+		}
+		else {
+			++cur;
+		}
+	}
+
+	KeyWayIndex kwi;
+	kwi.leftKeyi = left;
+	kwi.rightKeyi = right;
+	return kwi;
+}
+
+// 创建N个随机数，写到文件中
+void CreateNDate()
+{
+	// 造数据
+	int n = 100000;
+	srand((unsigned int)time(0));
+	const char* file = "data.txt";
+	FILE* fin = fopen(file, "w");
+	if (fin == NULL)
+	{
+		perror("fopen error");
+		return;
+	}
+
+	for (int i = 0; i < n; ++i)
+	{
+		int x = rand() + i;
+		fprintf(fin, "%d\n", x);
+	}
+
+	fclose(fin);
+}
+
+// file1文件的数据和file2文件的数据归并到mfile文件中
+void MergeFile(const char* file1, const char* file2, const char* mfile)
+{
+	FILE* fout1 = fopen(file1, "r");
+	if (fout1 == NULL)
+	{
+		printf("打开文件失败\n");
+		exit(-1);
+	}
+	FILE* fout2 = fopen(file2, "r");
+	if (fout2 == NULL)
+	{
+		printf("打开文件失败\n");
+		exit(-1);
+	}
+	FILE* fin = fopen(mfile, "w");
+	if (fin == NULL)
+	{
+		printf("打开文件失败\n");
+		exit(-1);
+	}
+	// 这里跟内存中数组归并的思想完全类似，只是数据在硬盘文件中而已
+	// 依次读取file1和file2的数据，谁的数据小，谁就往mfile文件中去写
+	// file1和file2其中一个文件结束后，再把另一个文件未结束文件数据，
+	// 依次写到mfile的后面
+	int num1, num2;
+	int ret1 = fscanf(fout1, "%d\n", &num1);
+	int ret2 = fscanf(fout2, "%d\n", &num2);
+	while (ret1 != EOF && ret2 != EOF)
+	{
+		if (num1 < num2)
+		{
+			fprintf(fin, "%d\n", num1);
+			ret1 = fscanf(fout1, "%d\n", &num1);
+		}
+		else
+		{
+			fprintf(fin, "%d\n", num2);
+			ret2 = fscanf(fout2, "%d\n", &num2);
+		}
+	}
+	while (ret1 != EOF)
+	{
+		fprintf(fin, "%d\n", num1);
+		ret1 = fscanf(fout1, "%d\n", &num1);
+	}
+	while (ret2 != EOF)
+	{
+		fprintf(fin, "%d\n", num2);
+		ret2 = fscanf(fout2, "%d\n", &num2);
+	}
+	fclose(fout1);
+	fclose(fout2);
+	fclose(fin);
+}
+
+// 返回读取到的数据个数
+int ReadNNumSortToFile(FILE* fout, int* a, int n, const char* file)
+{
+	int x = 0;
+	// 读取n个数据放到file
+	int i = 0;
+	while (i < n && fscanf(fout, "%d", &x) != EOF)
+	{
+		a[i++] = x;
+	}
+	// 一个数据都没有读到，则说明文件已经读到结尾了
+	if (i == 0)
+		return i;
+	// 排序
+	HeapSort(a, i);
+	FILE* fin = fopen(file, "w");
+	if (fout == NULL)
+	{
+		printf("打开文件%s失败\n", file);
+		exit(-1);
+	}
+	for (int j = 0; j < i; j++)
+	{
+		fprintf(fin, "%d\n", a[j]);
+	}
+	fclose(fin);
+	return i;
+}
+
+// MergeSortFile的第二个是每次取多少个数据到内存中排序，然后写到一个小文件进行归并
+// 这个n给多少取决于我们有多少合理的内存可以利用，相对而言n越大，更多数据到内存中排序后，
+// 再走文件归并排序，整体程序会越快一些。
+void MergeSortFile(const char* file, int n)
+{
+	FILE* fout = fopen(file, "r");
+	if (fout == NULL)
+	{
+		printf("打开文件%s失败\n", file);
+		exit(-1);
+	}
+	int i = 0;
+	int x = 0;
+	const char* file1 = "file1";
+	const char* file2 = "file2";
+	const char* mfile = "mfile";
+	// 分割成一段一段数据，内存排序后写到，小文件，
+	int* a = (int*)malloc(sizeof(int) * n);
+	if (a == NULL)
+	{
+		perror("malloc fail");
+		return;
+	}
+	// 分别读取前n个数据排序后，写到file1和file2文件
+	ReadNNumSortToFile(fout, a, n, file1);
+	ReadNNumSortToFile(fout, a, n, file2);
+	while (1)
+	{
+		// file1和file2文件归并到mfile文件中
+		MergeFile(file1, file2, mfile);
+		// 删除file1和file2
+		if (remove(file1) != 0 || remove(file2) != 0)
+		{
+			perror("Error deleting file");
+			return;
+		}
+		// 将mfile重命名为file1
+		if (rename(mfile, file1) != 0)
+		{
+			perror("Error renaming file");
+			return;
+		}
+		// 读取N个数据到file2，继续走归并
+		// 如果一个数据都没读到，则归并结束了
+		if (ReadNNumSortToFile(fout, a, n, file2) == 0)
+		{
+			break;
+		}
+	}
+	printf("%s文件成功排序到%s\n", file, file1);
+	fclose(fout);
+	free(a);
+}

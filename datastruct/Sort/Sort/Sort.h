@@ -39,4 +39,20 @@ void MergeSortNonR(int* a, int n);
 // 非比较排序
 void CountSort(int* a, int n);
 
+// 三路划分
+typedef struct
+{
+	int leftKeyi;
+	int rightKeyi;
+} KeyWayIndex;
 
+void CreateNDate();
+
+KeyWayIndex PartSort3Way(int* a, int left, int right);
+
+void MergeFile(const char* file1, const char* file2, const char* mfile);
+
+int ReadNNumSortToFile(FILE* fout, int* a, int n, const char* file);
+
+
+void MergeSortFile(const char* file, int n);
