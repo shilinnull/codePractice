@@ -389,164 +389,219 @@ using namespace std;
 //}
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+#include<iostream>
+#include<fstream>
+#include<string>
+using namespace std;
+
+//int main()
+//{
+//	ofstream ofs("test.txt");
+//	ofs.put('x');
+//	ofs.write("hello\n world", 10);
+//
+//	ofs << "使用 << 写的" << endl;
+//
+//	ofs.close();
+//
+//	// app和ate都是尾部追加，不同的是app不能移动文件指针，永远是在文件尾写
+//	// ate可以移动文件指针，写到其他位置
+//	ofs.open("test.txt", ios_base::out | ios_base::app);
+//	ofs << "1111111" << endl;
+//	ofs.seekp(0, ios_base::beg);
+//	ofs.close();
+//
+//	ofs.open("test.txt", ios_base::out | ios_base::ate);
+//	ofs << "1111111" << endl;
+//	ofs.seekp(0, ios_base::beg);
+//	ofs.close();
+//
+//	return 0;
+//}
+
+//int main()
+//{
+//	ofstream ofs("test.txt");
+//	ofs.open("test.txt", ios_base::out);
+//	ofs.open("test.txt", ios_base::out | ios_base::trunc);
+//
+//	ofs << "xxx";
+//	ofs.close();
+//
+//	return 0;
+//}
+
+
+//int main()
+//{
+//	// 实现一个图片文件的复制，需要用二进制方式打开读写
+//	ifstream ifs("test.png", ios_base::in | ios_base::binary);
+//	ofstream ofs("test.copy.png", ios_base::out | ios_base::binary);
+//	
+//	int n = 0;
+//	while (ifs && ofs)
+//	{
+//		char ch = ifs.get();
+//		ofs << ch;
+//		++n;
+//	}
+//	cout << n << endl;
+//
+//	return 0;
+//}
+
+#include<iostream>
+#include<fstream>
+#include<string>
+using namespace std;
+
+class Date
+{
+	friend ostream& operator << (ostream& out, const Date& d);
+	friend istream& operator >> (istream& in, Date& d);
+public:
+	Date(int year = 1, int month = 1, int day = 1)
+		:_year(year)
+		, _month(month)
+		, _day(day)
+	{}
+private:
+	int _year;
+	int _month;
+	int _day;
+};
+
+
+istream& operator >> (istream& in, Date& d)
+{
+	in >> d._year >> d._month >> d._day;
+	return in;
+}
+ostream& operator << (ostream& out, const Date& d)
+{
+	out << d._year << " " << d._month << " " << d._day << endl;
+	return out;
+}
+
+
+struct ServerInfo
+{
+	// 二进制读写时，这里不能用string，否则写到文件中的是string中指向字符数组的指针
+	// 若string对象析构后再去文件中读取string对象，string中读到是一个野指针。
+	char _address[32];
+	//string _address;
+	int _port;
+	Date _date;
+};
+struct ConfigManager
+{
+public:
+	ConfigManager(const char* filename)
+		:_filename(filename)
+	{}
+
+	// 二进制写
+	// 内存中怎么存，囫囵吞枣，就怎么直接写出去
+	void WriteBin(const ServerInfo& info)
+	{
+		ofstream ofs(_filename, ios_base::out | ios_base::binary);
+		ofs.write((const char*)&info, sizeof(info));
+	}
+
+	// 二进制读
+	// 将文件中的内容直接囫囵吞枣，直接读到内存中
+	void ReadBin(ServerInfo& info)
+	{
+		ifstream ifs(_filename, ios_base::in | ios_base::binary);
+		ifs.read((char*)&info, sizeof(info));
+	}
+	void WriteText(const ServerInfo& info)
+	{
+		ofstream ofs(_filename);
+		ofs << info._address << " " << info._port << " " << info._date;
+	}
+	void ReadText(ServerInfo& info)
+	{
+		ifstream ifs(_filename);
+		ifs >> info._address >> info._port >> info._date;
+	}
+private:
+	string _filename; // 配置文件
+};
+void WriteBin()
+{
+	ServerInfo winfo = { "192.0.0.1111111111111111111111", 80, { 2025, 1, 10 } };
+	// 二进制读写
+	ConfigManager cf_bin("test.bin");
+	cf_bin.WriteBin(winfo);
+}
+
+void ReadBin()
+{
+	// 二进制读写
+	ConfigManager cf_bin("test.bin");
+	ServerInfo rbinfo;
+	cf_bin.ReadBin(rbinfo);
+	cout << rbinfo._address << " " << rbinfo._port << " " << rbinfo._date << endl;
+}
+void WriteText()
+{
+	ServerInfo winfo = { "192.0.0.1", 80, { 2025, 1, 10 } };
+	// 文本读写
+	ConfigManager cf_text("test.txt");
+	cf_text.WriteText(winfo);
+}
+void ReadText()
+{
+	ConfigManager cf_text("test.txt");
+	ServerInfo rtinfo;
+	cf_text.ReadText(rtinfo);
+	cout << rtinfo._address << " " << rtinfo._port << " " << rtinfo._date << endl;
+}
+
+//int main()
+//{
+//	WriteBin();
+//	ReadBin();
+//
+//	WriteText();
+//	ReadText();
+//	return 0;
+//}
+
+#include <sstream>
+struct ChatInfo
+{
+	string _name; // 名字
+	int _id;      // id
+	Date _date;   // 时间
+	string _msg;  // 聊天信息
+};
+
+int main()
+{
+	ChatInfo winfo = { "张三", 135246, { 2022, 4, 10 }, "晚上一起看电影吧" };
+	stringstream oss;
+	oss << winfo._name << endl;
+	oss << winfo._id << endl;
+	oss << winfo._date << endl;
+	oss << winfo._msg << endl;
+	cout << oss.str() << endl;
+
+	// 网络输出
+	ChatInfo rinfo;
+	string str = oss.str();
+	stringstream iss(str);
+	iss >> rinfo._name;
+	iss >> rinfo._id;
+	iss >> rinfo._date;
+	iss >> rinfo._msg;
+
+	cout << "-------------------------------------------------------" << endl;
+	cout << "姓名：" << rinfo._name << "(" << rinfo._id << ") ";
+	cout << rinfo._date << endl;
+	cout << rinfo._name << ":>" << rinfo._msg << endl;
+	cout << "-------------------------------------------------------" << endl;
+
+	return 0;
+}
