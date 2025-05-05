@@ -65,9 +65,9 @@ void test_set()
 void test_map()
 {
 	lsl::map<string, string> dict;
-	dict.insert({ "sort", "ÅÅĞò" });
-	dict.insert({ "left", "×ó±ß" });
-	dict.insert({ "right", "ÓÒ±ß" });
+	dict.insert({ "sort", "" });
+	dict.insert({ "left", "" });
+	dict.insert({ "right", "?" });
 
 	lsl::map<string, string>::iterator it = dict.begin();
 	while (it != dict.end())
@@ -90,9 +90,9 @@ void test_map()
 void test_map1()
 {
 	lsl::map<string, string> dict;
-	dict.insert({ "sort", "ÅÅĞò" });
-	dict.insert({ "left", "×ó±ß" });
-	dict.insert({ "right", "ÓÒ±ß" });
+	dict.insert({ "sort", "" });
+	dict.insert({ "left", "" });
+	dict.insert({ "right", "?" });
 
 	lsl::map<string, string>::iterator it = dict.begin();
 	while (it != dict.end())
@@ -106,7 +106,7 @@ void test_map1()
 	cout << endl;
 
 	dict["insert"];
-	dict["left"] = "×ó±ß¡¢Ê£Óà";
+	dict["left"] = "??";
 
 	for (auto& e : dict)
 	{
@@ -118,13 +118,8 @@ void test_map1()
 int main()
 {
 	
-<<<<<<< HEAD
 	test_set();
-	//test_map1();
-=======
-	//test_set();
 	test_map1();
->>>>>>> 7482668f66368f1919d0498280638e4cd2642d3c
 
 	return 0;
 }

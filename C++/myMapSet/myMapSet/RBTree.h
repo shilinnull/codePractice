@@ -2,14 +2,13 @@
 #include<iostream>
 
 using namespace std;
+
 //枚举定义结点的颜色
 enum Colour
 {
     RED,
     BLACK
 };
-
-
 
 //红黑树结点的定义
 template<class T>
@@ -36,72 +35,86 @@ struct RBTreeNode
     {}
 };
 
+//正向迭代器
 template<class T, class Ref, class Ptr>
-class __TreeIterator
+struct __TreeIterator
 {
-public:
-    typedef RBTreeNode<T> Node;
-    typedef __TreeIterator<T, Ref, Ptr> Self;
 
-    Node* _node;
-    Node* _root;
+    typedef RBTreeNode<T> Node; //结点的类型
+    typedef __TreeIterator<T, Ref, Ptr> Self; //正向迭代器的类型
 
+    Node* _node; //正向迭代器所封装结点的指针
+    Node* _root; //根节点
+
+    //构造函数
     __TreeIterator(Node* node, Node* root)
-        :_node(node)
-        ,_root(root)
+        :_node(node) //根据所给结点指针构造一个正向迭代器
+        , _root(root)
     {}
 
     Ref operator*()
     {
-        return _node->_data;
+        return _node->_data; //返回结点数据的引用
     }
-
     Ptr operator->()
     {
-        return &_node->_data;
+        return &_node->_data; //返回结点数据的指针
     }
-
+    //判断两个正向迭代器是否不同
     bool operator!=(const Self& s) const
     {
-        return _node != s._node;
+        return _node != s._node; //判断两个正向迭代器所封装的结点是否是同一个
     }
+    //判断两个正向迭代器是否相同
     bool operator==(const Self& s) const
     {
-        return !(_node != s._node);
+        return _node == s._node; //判断两个正向迭代器所封装的结点是否是同一个
     }
 
+    //前置++
+    /*
+    1. it指向的节点，右子树不为空，下一个右子树的最左节点
+    2. it指向的节点，右子树为空，it中的节点所在的子树访问完了，往上找孩子是父亲左的那个祖先
+    */
     Self& operator++()
     {
-        if (_node->_right)
+        if (_node->_right) //结点的右子树不为空
         {
-            _node = _node->_right;
-            while (_node->_left)
-                _node = _node->_left;
+            //寻找该结点右子树当中的最左结点
+            Node* left = _node->_right;
+            while (left->_left)
+            {
+                left = left->_left;
+            }
+            _node = left; //++后变为该结点
         }
-        else
+        else //结点的右子树为空
         {
             //寻找孩子不在父亲右的祖先
             Node* cur = _node;
             Node* parent = cur->_parent;
-            while (parent && parent->_right == cur)
+            while (parent && cur == parent->_right)
             {
                 cur = parent;
                 parent = parent->_parent;
             }
-            _node = parent;
+            _node = parent; //++后变为该结点
         }
         return *this;
     }
 
+    //前置--
     Self& operator--()
     {
         if (_node == nullptr) // end()
         {
             // --end()，特殊处理，走到中序最后一个结点，整棵树的最右结点
-            Node* right = _root;
-            while (right && right->_right)
-                right = right->_right;
-            _node = right;
+            Node* rightMost = _root;
+            while (rightMost && rightMost->_right)
+            {
+                rightMost = rightMost->_right;
+            }
+            _node = rightMost;
         }
         else if (_node->_left) //结点的左子树不为空
         {
@@ -129,42 +142,51 @@ public:
     }
 };
 
+
 //红黑树的实现
 template<class K, class T, class KeyOfT>
 class RBTree
 {
     KeyOfT kot; // 用于比较
-    typedef RBTreeNode<T> Node;
+    typedef RBTreeNode<T> Node; //结点的类型
 public:
     typedef __TreeIterator<T, T&, T*> iterator;
-    typedef __TreeIterator<T, const T&, const T*> const_iterator;
+    typedef __TreeIterator<T, const T&, const T*> const_iterator; //const迭代器
 
     iterator begin()
     {
-        Node* cur = _root;
-        while (cur && cur->_left)
-            cur = cur->_left;
-        return iterator(cur, _root);
+        //寻找最左结点
+        Node* left = _root;
+        while (left && left->_left)
+        {
+            left = left->_left;
+        }
+        //返回最左结点的正向迭代器
+        return iterator(left, _root);
     }
-    
+
     iterator end()
     {
+        //返回由nullptr构造得到的正向迭代器（不严谨）
         return iterator(nullptr, _root);
-    } 
-
-    const_iterator begin() const
-    {
-        Node* cur = _root;
-        while (cur && cur->_left)
-            cur = cur->_left;
-        return const_iterator(cur, _root);
     }
-    
-    const_iterator end() const 
+
+    const_iterator begin()const
     {
+        //寻找最左结点
+        Node* left = _root;
+        while (left && left->_left)
+        {
+            left = left->_left;
+        }
+        //返回最左结点的正向迭代器
+        return const_iterator(left, _root);
+    }
+    const_iterator end()const
+    {
+        //返回由nullptr构造得到的正向迭代器（不严谨）
         return const_iterator(nullptr, _root);
     }
-
     //构造函数
     RBTree()
         :_root(nullptr)
@@ -179,8 +201,8 @@ public:
     //赋值运算符重载（现代写法）
     RBTree<K, T, KeyOfT>& operator=(RBTree<K, T, KeyOfT> t)
     {
-        std::swap(_root, t._root);
-        return *this;
+        swap(_root, t._root);
+        return *this; //支持连续赋值
     }
 
     //析构函数
@@ -191,25 +213,26 @@ public:
     }
 
     //查找函数
-    Node* Find(const K& key)
+    iterator Find(const K& key)
     {
+        KeyOfT kot;
         Node* cur = _root;
         while (cur)
         {
-            if (key < cur->_kv.first) //key值小于该结点的值
+            if (key < kot(cur->_data)) //key值小于该结点的值
             {
                 cur = cur->_left; //在该结点的左子树当中查找
             }
-            else if (key > cur->_kv.first) //key值大于该结点的值
+            else if (key > kot(cur->_data)) //key值大于该结点的值
             {
                 cur = cur->_right; //在该结点的右子树当中查找
             }
             else //找到了目标结点
             {
-                return cur; //返回该结点
+                return iterator(cur); //返回该结点
             }
         }
-        return nullptr; //查找失败
+        return end(); //查找失败
     }
 
     //插入函数
@@ -219,13 +242,8 @@ public:
         {
             _root = new Node(data);
             _root->_col = BLACK; //根结点必须是黑色
-<<<<<<< HEAD
 
             return std::make_pair(iterator(_root, _root), true);
-=======
-            
-            return std::make_pair(_root, true);
->>>>>>> 7482668f66368f1919d0498280638e4cd2642d3c
             //return { iterator(_root, _root), true }; //插入成功
         }
         //1、按二叉搜索树的插入方法，找到待插入位置
@@ -247,11 +265,7 @@ public:
             }
             else //待插入结点的key值等于当前结点的key值
             {
-<<<<<<< HEAD
                 return std::make_pair(iterator(cur, _root), false);
-=======
-                return std::make_pair(cur, false);
->>>>>>> 7482668f66368f1919d0498280638e4cd2642d3c
                 //return { iterator(cur, _root), false }; //插入成功
             }
         }
@@ -346,287 +360,10 @@ public:
             }
         }
         _root->_col = BLACK; //根结点的颜色为黑色（可能被情况一变成了红色，需要变回黑色）
-<<<<<<< HEAD
 
         return std::make_pair(iterator(newnode, _root), true); //插入成功
         //return { iterator(newnode, _root), true }; //插入成功
     }
-    
-=======
-        
-        return std::make_pair(newnode, true);
-        //return { iterator(newnode, _root), true }; //插入成功
-    }
-
-    //删除函数
-    bool Erase(const K& key)
-    {
-        //用于遍历二叉树
-        Node* parent = nullptr;
-        Node* cur = _root;
-        //用于标记实际的待删除结点及其父结点
-        Node* delParentPos = nullptr;
-        Node* delPos = nullptr;
-        while (cur)
-        {
-            if (key < kot(cur->_data)) //所给key值小于当前结点的key值
-            {
-                //往该结点的左子树走
-                parent = cur;
-                cur = cur->_left;
-            }
-            else if (key > kot(cur->_data)) //所给key值大于当前结点的key值
-            {
-                //往该结点的右子树走
-                parent = cur;
-                cur = cur->_right;
-            }
-            else //找到了待删除结点
-            {
-                if (cur->_left == nullptr) //待删除结点的左子树为空
-                {
-                    if (cur == _root) //待删除结点是根结点
-                    {
-                        _root = _root->_right; //让根结点的右子树作为新的根结点
-                        if (_root)
-                        {
-                            _root->_parent = nullptr;
-                            _root->_col = BLACK; //根结点为黑色
-                        }
-                        delete cur; //删除原根结点
-                        return true;
-                    }
-                    else
-                    {
-                        delParentPos = parent; //标记实际删除结点的父结点
-                        delPos = cur; //标记实际删除的结点
-                    }
-                    break; //进行红黑树的调整以及结点的实际删除
-                }
-                else if (cur->_right == nullptr) //待删除结点的右子树为空
-                {
-                    if (cur == _root) //待删除结点是根结点
-                    {
-                        _root = _root->_left; //让根结点的左子树作为新的根结点
-                        if (_root)
-                        {
-                            _root->_parent = nullptr;
-                            _root->_col = BLACK; //根结点为黑色
-                        }
-                        delete cur; //删除原根结点
-                        return true;
-                    }
-                    else
-                    {
-                        delParentPos = parent; //标记实际删除结点的父结点
-                        delPos = cur; //标记实际删除的结点
-                    }
-                    break; //进行红黑树的调整以及结点的实际删除
-                }
-                else //待删除结点的左右子树均不为空
-                {
-                    //替换法删除
-                    //寻找待删除结点右子树当中key值最小的结点作为实际删除结点
-                    Node* minParent = cur;
-                    Node* minRight = cur->_right;
-                    while (minRight->_left)
-                    {
-                        minParent = minRight;
-                        minRight = minRight->_left;
-                    }
-                    cur->_data = minRight->_data; //将待删除结点的_data改为minRight的_data
-                    delParentPos = minParent; //标记实际删除结点的父结点
-                    delPos = minRight; //标记实际删除的结点
-                    break; //进行红黑树的调整以及结点的实际删除
-                }
-            }
-        }
-        if (delPos == nullptr) //delPos没有被修改过，说明没有找到待删除结点
-        {
-            return false;
-        }
-
-        //记录待删除结点及其父结点（用于后续实际删除）
-        Node* del = delPos;
-        Node* delP = delParentPos;
-
-        //调整红黑树
-        if (delPos->_col == BLACK) //删除的是黑色结点
-        {
-            if (delPos->_left) //待删除结点有一个红色的左孩子（不可能是黑色）
-            {
-                delPos->_left->_col = BLACK; //将这个红色的左孩子变黑即可
-            }
-            else if (delPos->_right) //待删除结点有一个红色的右孩子（不可能是黑色）
-            {
-                delPos->_right->_col = BLACK; //将这个红色的右孩子变黑即可
-            }
-            else //待删除结点的左右均为空
-            {
-                while (delPos != _root) //可能一直调整到根结点
-                {
-                    if (delPos == delParentPos->_left) //待删除结点是其父结点的左孩子
-                    {
-                        Node* brother = delParentPos->_right; //兄弟结点是其父结点的右孩子
-                        //情况一：brother为红色
-                        if (brother->_col == RED)
-                        {
-                            delParentPos->_col = RED;
-                            brother->_col = BLACK;
-                            RotateL(delParentPos);
-                            //需要继续处理
-                            brother = delParentPos->_right; //更新brother（否则在本循环中执行其他情况的代码会出错）
-                        }
-                        //情况二：brother为黑色，且其左右孩子都是黑色结点或为空
-                        if (((brother->_left == nullptr) || (brother->_left->_col == BLACK))
-                            && ((brother->_right == nullptr) || (brother->_right->_col == BLACK)))
-                        {
-                            brother->_col = RED;
-                            if (delParentPos->_col == RED)
-                            {
-                                delParentPos->_col = BLACK;
-                                break;
-                            }
-                            //需要继续处理
-                            delPos = delParentPos;
-                            delParentPos = delPos->_parent;
-                        }
-                        else
-                        {
-                            //情况三：brother为黑色，且其左孩子是红色结点，右孩子是黑色结点或为空
-                            if ((brother->_right == nullptr) || (brother->_right->_col == BLACK))
-                            {
-                                brother->_left->_col = BLACK;
-                                brother->_col = RED;
-                                RotateR(brother);
-                                //需要继续处理
-                                brother = delParentPos->_right; //更新brother（否则执行下面情况四的代码会出错）
-                            }
-                            //情况四：brother为黑色，且其右孩子是红色结点
-                            brother->_col = delParentPos->_col;
-                            delParentPos->_col = BLACK;
-                            brother->_right->_col = BLACK;
-                            RotateL(delParentPos);
-                            break; //情况四执行完毕后调整一定结束
-                        }
-                    }
-                    else //delPos == delParentPos->_right //待删除结点是其父结点的左孩子
-                    {
-                        Node* brother = delParentPos->_left; //兄弟结点是其父结点的左孩子
-                        //情况一：brother为红色
-                        if (brother->_col == RED) //brother为红色
-                        {
-                            delParentPos->_col = RED;
-                            brother->_col = BLACK;
-                            RotateR(delParentPos);
-                            //需要继续处理
-                            brother = delParentPos->_left; //更新brother（否则在本循环中执行其他情况的代码会出错）
-                        }
-                        //情况二：brother为黑色，且其左右孩子都是黑色结点或为空
-                        if (((brother->_left == nullptr) || (brother->_left->_col == BLACK))
-                            && ((brother->_right == nullptr) || (brother->_right->_col == BLACK)))
-                        {
-                            brother->_col = RED;
-                            if (delParentPos->_col == RED)
-                            {
-                                delParentPos->_col = BLACK;
-                                break;
-                            }
-                            //需要继续处理
-                            delPos = delParentPos;
-                            delParentPos = delPos->_parent;
-                        }
-                        else
-                        {
-                            //情况三：brother为黑色，且其右孩子是红色结点，左孩子是黑色结点或为空
-                            if ((brother->_left == nullptr) || (brother->_left->_col == BLACK))
-                            {
-                                brother->_right->_col = BLACK;
-                                brother->_col = RED;
-                                RotateL(brother);
-                                //需要继续处理
-                                brother = delParentPos->_left; //更新brother（否则执行下面情况四的代码会出错）
-                            }
-                            //情况四：brother为黑色，且其左孩子是红色结点
-                            brother->_col = delParentPos->_col;
-                            delParentPos->_col = BLACK;
-                            brother->_left->_col = BLACK;
-                            RotateR(delParentPos);
-                            break; //情况四执行完毕后调整一定结束
-                        }
-                    }
-                }
-            }
-        }
-        //进行实际删除
-        if (del->_left == nullptr) //实际删除结点的左子树为空
-        {
-            if (del == delP->_left) //实际删除结点是其父结点的左孩子
-            {
-                delP->_left = del->_right;
-                if (del->_right)
-                    del->_right->_parent = delP;
-            }
-            else //实际删除结点是其父结点的右孩子
-            {
-                delP->_right = del->_right;
-                if (del->_right)
-                    del->_right->_parent = delP;
-            }
-        }
-        else //实际删除结点的右子树为空
-        {
-            if (del == delP->_left) //实际删除结点是其父结点的左孩子
-            {
-                delP->_left = del->_left;
-                if (del->_left)
-                    del->_left->_parent = delP;
-            }
-            else //实际删除结点是其父结点的右孩子
-            {
-                delP->_right = del->_left;
-                if (del->_left)
-                    del->_left->_parent = delP;
-            }
-        }
-        delete del; //实际删除结点
-        return true;
-    }
-
->>>>>>> 7482668f66368f1919d0498280638e4cd2642d3c
-    // 中序遍历
-    void InOrder()
-    {
-        _InOrder(_root);
-        cout << endl;
-    }
-
-    // 检查是否为红黑树
-    bool IsBalance()
-    {
-        if (_root == nullptr)
-            return true;
-
-        if (_root->_col == RED)
-            return false;
-
-        //参考值
-        int refVal = 0;
-        Node* cur = _root;
-        while (cur)
-        {
-            if (cur->_col == BLACK)
-            {
-                ++refVal;
-            }
-
-            cur = cur->_left;
-        }
-
-        int blacknum = 0;
-        return Check(_root, blacknum, refVal);
-    }
-
 private:
     //拷贝树
     Node* _Copy(Node* root, Node* parent)
@@ -738,48 +475,6 @@ private:
     {
         RotateR(parent->_right);
         RotateL(parent);
-    }
-
-    // 根节点->当前节点这条路径的黑色节点的数量
-    bool Check(Node* root, int blacknum, const int refVal)
-    {
-        if (root == nullptr)
-        {
-            //cout << balcknum << endl;
-            if (blacknum != refVal)
-            {
-                cout << "存在黑色节点数量不相等的路径" << endl;
-                return false;
-            }
-
-            return true;
-        }
-
-        if (root->_col == RED && root->_parent && root->_parent->_col == RED)
-        {
-            cout << "有连续的红色节点" << endl;
-
-            return false;
-        }
-
-        if (root->_col == BLACK)
-        {
-            ++blacknum;
-        }
-
-        return Check(root->_left, blacknum, refVal)
-            && Check(root->_right, blacknum, refVal);
-    }
-
-    // 中序遍历
-    void _InOrder(Node* root)
-    {
-        if (root == nullptr)
-            return;
-
-        _InOrder(root->_left);
-        cout << root->_kv.first << " ";
-        _InOrder(root->_right);
     }
 
     Node* _root; //红黑树的根结点
