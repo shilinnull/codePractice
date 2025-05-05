@@ -118,8 +118,8 @@ void test_map1()
 int main()
 {
 	
-	//test_set();
-	test_map1();
+	test_set();
+	//test_map1();
 
 	return 0;
 }
