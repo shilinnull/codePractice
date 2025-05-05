@@ -43,6 +43,14 @@ namespace lsl
 		{
 			return _t.Insert(key);
 		}
+<<<<<<< HEAD
+=======
+		//É¾³ıº¯Êı
+		void erase(const K& key)
+		{
+			_t.Erase(key);
+		}
+>>>>>>> 7482668f66368f1919d0498280638e4cd2642d3c
 		//²éÕÒº¯Êı
 		iterator find(const K& key)
 		{

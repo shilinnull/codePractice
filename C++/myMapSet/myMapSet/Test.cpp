@@ -118,8 +118,13 @@ void test_map1()
 int main()
 {
 	
+<<<<<<< HEAD
 	test_set();
 	//test_map1();
+=======
+	//test_set();
+	test_map1();
+>>>>>>> 7482668f66368f1919d0498280638e4cd2642d3c
 
 	return 0;
 }
