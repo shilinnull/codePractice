@@ -1,0 +1,12 @@
+
+// 声明是 proto3 语法
+syntax = "proto3";
+
+// 表示proto的命名空间
+package contacts;
+
+// 定义一个消息类型
+message PeopleInfo{
+    string name = 1; // 姓名
+    int32 age = 2; // 年龄
+}
