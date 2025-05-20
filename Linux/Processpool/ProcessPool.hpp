@@ -6,6 +6,7 @@
 #include <vector>
 #include <functional>
 #include <limits.h>
+#include <assert.h>
 
 #include <unistd.h>
 #include <sys/types.h>
@@ -69,6 +70,7 @@ public:
     {
         for (int i = 0; i < _sub_num; i++)
         {
+            sleep(1);
             // 创建管道
             int pipefd[2] = {0};
             int n = pipe(pipefd);
@@ -81,6 +83,21 @@ public:
                 return false;
             if (id == 0)
             {
+                // 子进程除了要关闭自己的写端，同时也要关闭自己从父进程继承下来的w端
+                // _channels本身是被子进程继承下去的.
+                // 1. 子进程不要担心，父进程会影响自己的_channels.
+                // 2. fork之后，当前进程，只会看到所有的历史进程的wfd,并不受后续父进程emplace_backd的影响
+                std::cout << "进程:" << getpid() << ", 关闭了: ";
+                if(!_channels.empty())
+                {
+                    for(auto &e : _channels)
+                    {
+                        std::cout << e.Fd() << " ";
+                        e.Close();
+                    }
+                    std::cout <<"\n";
+                }
+
                 ///////////////////// child----read
                 // 关闭写
                 close(pipefd[1]);
@@ -109,10 +126,10 @@ public:
         if (count < 0)
             return;
 
-        int index = 0;
         // 轮询方式
         if (Polling == ctrl_sub_process_mode)
         {
+            int index = 0;
             // 轮询选择一个信道
             while (count--)
             {
@@ -124,13 +141,11 @@ public:
         else if (Random == ctrl_sub_process_mode) // 随机方式
         {
             while (count--)
-            {
-                index = (rand() ^ getpid() ^ 17777) % _channels.size();
-                CtrlSubProcessHelper(index);
-            }
+                CtrlSubProcessHelper((rand() ^ getpid() ^ 17777) % _channels.size());
         }
         else
         {
+            assert(false);
         }
     }
 
@@ -152,18 +167,18 @@ private:
     void WaitSubProcesses()
     {
         // 方法三：就顺序关闭，但是需要在创建子进程的时候关闭多余的写端
-        // for(auto& c: _channels)
-        // {
-        //     c.Close();
-        //     c.Wait();
-        // }
+        for(auto& c: _channels)
+        {
+            c.Close();
+            c.Wait();
+        }
 
         // 方法二：倒着关闭
-        for (int i = _channels.size() - 1; i >= 0; i--)
-        {
-            _channels[i].Close();
-            _channels[i].Wait();
-        }
+        // for (int i = _channels.size() - 1; i >= 0; i--)
+        // {
+        //     _channels[i].Close();
+        //     _channels[i].Wait();
+        // }
 
         // 方法一：先全部关闭管道写，然后进行等待子进程
         // for(auto& c : _channels)

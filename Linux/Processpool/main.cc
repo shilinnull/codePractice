@@ -1,5 +1,6 @@
 #include "ProcessPool.hpp"
 
+
 void sub_execute_task(int fd)
 {
     while (true)
@@ -17,6 +18,7 @@ void sub_execute_task(int fd)
         }
         else if (n == 0)
         {
+            // 子进程读到0后就会自动退出
             std::cout << "子进程应该退出了: " << getpid() << std::endl;
             break;
         }
@@ -34,8 +36,7 @@ int main()
     ProcessPool pp(5);
 
     // 初始化进程池
-    pp.InitProcessPool([](int fd)
-                       { sub_execute_task(fd); });
+    pp.InitProcessPool([](int fd){ sub_execute_task(fd); });
 
     // 父进程控制子进程    第一个参数是控制方式，第二个参数是让子进程执行多少次
     // pp.CtrlSubProcess(Polling); // 轮询方式控制
