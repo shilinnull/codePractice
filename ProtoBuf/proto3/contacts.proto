@@ -1,0 +1,50 @@
+
+// 引入proto3语法
+syntax = "proto3";
+
+// 相当于命名空间
+package contacts;
+
+// 方法一：嵌套写法
+message PeopleInfo {
+    string name = 1;
+    int32 age = 2;
+    message Phone {
+        string number = 1;
+    }
+}
+
+// 方法二：非嵌套写法
+message Phone {
+    string number = 1;
+}
+
+message PeopleInfo {
+    string name = 1;
+    int32 age = 1;
+}
+
+// 消息类型作为字段使用
+message PeopleInfo {
+    string name = 1;
+    int32 age = 2;
+    message Phone {
+        string number = 1;
+    }
+    repeated Phone phone = 3; // 消息类型作为字段使用
+}
+
+// 方法三：外部导入
+// 导入其他proto文件中的消息
+import "phone.proto";
+
+message PeopleInfo {
+    string name = 1;
+    int32 age = 2;
+    // 使用命名空间.消息类型
+    repeated phone.Phone phone = 3;
+}
+
+
+
+
