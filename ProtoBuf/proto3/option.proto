@@ -1,0 +1,37 @@
+syntax = "proto3";
+
+package namespace_option;
+
+/*
+ optimize_for:该选项为文件选项，可以设置protoc编译器的优化级别
+ 分别为 SPEED 、 CODE_SIZE 、 LITE_RUNTIME 。受该选项影响，设置不同的优化级别，
+ 编译.proto文件后生成的代码内容不同。
+
+
+SPEED : protoc 编译器将生成的代码是高度优化的，代码运行效率高，但是由此生成的代码
+编译后会占用更多的空间。SPEED 是默认选项。
+
+CODE_SIZE : proto 编译器将生成最少的类，会占用更少的空间，是依赖基于反射的代码来
+实现序列化、反序列化和各种其他操作。但和SPEED 恰恰相反，它的代码运行效率较低。这
+种方式适合用在包含大量的.proto文件，但并不盲目追求速度的应用中。
+
+LITE_RUNTIME : 生成的代码执行效率高，同时生成代码编译后的所占用的空间也是非常
+少。这是以牺牲Protocol Buffer提供的反射功能为代价的，仅仅提供 encoding+序列化 功能，
+所以我们在链接 BP 库时仅需链接libprotobuf-lite，而非libprotobuf。这种模式通常用于资源
+有限的平台，例如移动手机平台中。
+
+*/
+
+
+option optimize_for = LITE_RUNTIME;
+
+
+
+enum PhoneType {
+    option allow_alias = true;
+
+    MP = 0;
+    TEL = 1;
+    LANDLINE = 1; // 允许别名
+}
+
