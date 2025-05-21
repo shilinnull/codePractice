@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+package namespace_enum;
+
+enum PhoneType{
+    MP = 0; // 移动电话，默认
+    TEL = 1; // 固定电话
+}
+
+
+
+
