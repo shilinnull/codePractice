@@ -6,6 +6,7 @@ int main()
     // 创建共享内存
     SharedMemory shm(Creater);
 
+    shm.PrintAttr();
     // server--->read  通信
     char c;
     while (true)

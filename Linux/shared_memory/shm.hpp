@@ -153,6 +153,23 @@ public:
         (*_num)--;
     }
 
+    void PrintAttr()
+    {
+        struct shmid_ds ds;
+        int n = shmctl(_shmid, IPC_STAT, &ds);
+        if(n < 0)
+        {
+            perror("shmctl");
+            return;
+        }
+
+        // 打印输出shm相关属性
+        printf("key: 0x%x\n", ds.shm_perm.__key);
+        printf("size: %ld\n", ds.shm_segsz);
+        printf("atime: %lu\n", ds.shm_atime);
+        printf("nattach: %ld\n", ds.shm_nattch);
+    }
+
     ~SharedMemory()
     {
         // 分离
