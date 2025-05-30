@@ -6,7 +6,7 @@
 int main()
 {
     // signal(SIGINT, SIG_DFL);
-    signal(SIGINT, SIG_IGN);
+    // signal(SIGINT, SIG_IGN);
 
     while (true)
     {
