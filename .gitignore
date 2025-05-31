@@ -32,6 +32,9 @@ CMakeLists.txt
 build*/
 x64/
 
+# python
+.idea
+.venv
 
 
 
