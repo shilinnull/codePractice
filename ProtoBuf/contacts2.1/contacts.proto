@@ -1,0 +1,24 @@
+syntax = "proto3";
+package namespace_Contacts;
+
+// 联系人
+message PeopleInfo {
+    string name = 1;
+    int32 age = 2;
+    // 嵌套
+    message Phone {
+        string number = 1;
+
+        enum PhoneType {
+            MP = 0; // 固定电话
+            TEL = 1; // 移动电话
+        }
+        PhoneType type = 2;
+    }
+    repeated Phone phone = 3;
+}
+
+// 通讯录
+message Contacts {
+    repeated PeopleInfo contacts = 1;
+}

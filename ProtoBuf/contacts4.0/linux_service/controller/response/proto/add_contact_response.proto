@@ -1,0 +1,9 @@
+syntax = "proto3";
+package add_contact_resp;
+
+import "base_response.proto";   // 引入base_response
+
+message AddContactResponse {
+  base_response.BaseResponse base_resp = 1;
+  string uid = 2;
+}

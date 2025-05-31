@@ -1,0 +1,7 @@
+syntax = "proto3";
+package del_contact_req;
+
+// 删除一个联系人 req
+message DelContactRequest {
+  string uid = 1;                    // 联系人ID
+}

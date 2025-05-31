@@ -1,0 +1,17 @@
+syntax = "proto3";
+package find_all_contacts_resp;
+
+import "base_response.proto";  // 引入base_response
+
+
+// 联系人摘要信息
+message PeopleInfo {
+  string uid = 1;                   // 联系人ID
+  string name = 2;                  // 姓名
+}
+
+// 查询所有联系人 resp
+message FindAllContactsResponse {
+  base_response.BaseResponse base_resp = 1;
+  repeated PeopleInfo contacts = 2;
+}

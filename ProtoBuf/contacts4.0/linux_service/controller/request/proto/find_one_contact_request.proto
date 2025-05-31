@@ -1,0 +1,7 @@
+syntax = "proto3";
+package find_one_contact_req;
+
+// 查询一个联系人 req
+message FindOneContactRequest {
+  string uid = 1;                    // 联系人ID
+}
