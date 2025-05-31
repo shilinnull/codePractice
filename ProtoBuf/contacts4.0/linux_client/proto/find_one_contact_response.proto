@@ -1,0 +1,26 @@
+syntax = "proto3";
+package find_one_contact_resp;
+
+import "base_response.proto";
+
+
+// 查询一个联系人 resp
+message FindOneContactResponse {
+  base_response.BaseResponse base_resp = 1;
+
+  string uid = 2;                   // 联系人ID
+  string name = 3;                  // 姓名
+  int32 age = 4;                    // 年龄
+
+  message Phone {
+    string number = 1;     // 电话号码
+    enum PhoneType {
+      MP = 0;    // 移动电话
+      TEL = 1;   // 固定电话
+    }
+    PhoneType type = 2;    // 类型
+  }
+  
+  repeated Phone phone = 5;         // 电话
+  map<string, string> remark = 6;   // 备注
+}

@@ -1,0 +1,10 @@
+syntax = "proto3";
+package del_contact_resp;
+
+import "base_response.proto";   // 引入base_response
+
+// 删除一个联系人 resp
+message DelContactResponse {
+  base_response.BaseResponse base_resp = 1;
+  string uid = 2;
+}
