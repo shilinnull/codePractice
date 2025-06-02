@@ -46,20 +46,48 @@ print(alist)
 alist.pop(2)
 print(alist)
 
+alist = [1, 2, 3, 4, 5]
+blist = [5, 6, 7]
+# print(alist + blist)
+alist.extend(blist)
+print(alist)
+print(blist)
 
+atuple = ()
+atuple = tuple()
 
+def getPoint():
+    return 10, 20
 
+result = getPoint()
+print(type(result))
 
+a = { 'id': 1, 'name' : 'John', 'age': 20}
+b = dict()
+print(type(a))
+print(type(b))
 
+b = {
+    'id' : 1,
+    'name' : 'John',
+    'age' : 20
+}
+print(b)
+print('id' in b)
 
+print(b['name'])
 
+b['name'] = 'zhangsan'
+print(b['name'])
 
+b.pop('name')
+print(b)
 
+for key in b:
+    print(key, b[key])
+print(b.keys())
+print(b.values())
+print(b.items())
 
-
-
-
-
-
-
-
+print(hash('hello'))
+print(hash(3.14))
