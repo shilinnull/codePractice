@@ -91,3 +91,17 @@ print(b.items())
 
 print(hash('hello'))
 print(hash(3.14))
+
+
+f = open('test.txt', 'a')
+
+f.write('你好')
+
+f.close()
+
+f = open('test.txt', 'r')
+
+for line in f:
+    print(line)
+
+f.close()
