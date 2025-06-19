@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    
+</body>
+<script>
+
+    var add =  function(){
+        var sum = 0;
+        for(var i = 0; i < arguments.length; i++)
+        {
+            sum += arguments[i];   
+        }
+        return sum;
+    }
+    console.log(add(10, 20));
+    console.log(add(10));
+    console.log(add(10, 20, 30));
+    console.log(add(1, 2, 3, 4));
+    console.log(typeof add);
+
+
+    function fun() {
+        console.log("hello");
+    }
+    fun();
+
+
+    var arr1 = new Array();
+    var arr2 = [];
+    var arr3 = [1, 2, '1', false];
+    console.log(arr1);
+    console.log(arr2);
+    console.log(arr3);
+    for(var i = 0; i < arr3.length; i++)
+    {
+        if(i % 2 == 0)
+        {
+            arr3[i] = 'hehe';
+            arr3.push('haha');       
+        }
+    }
+
+    arr3.splice(3, 1);
+    console.log(arr3);
+
+    console.log("1" == 1);
+    console.log("1" === 1);
+    var a = "hello";
+    var c = "zhansgan";
+    console.log(a + c);
+    console.log(a - c); 
+    console.log(a.length);
+
+
+    let max = Number.MAX_VALUE;
+    console.log(max);
+    console.log(max * 2);
+    console.log(-max * 2);
+    // var name = prompt("姓名：");
+    // var age = prompt("姓名：");
+    // alert(name);
+    // alert(age);
+    var a = 7;
+    let b = 0xa;
+    var c = 0b10;
+    console.log(a);
+    console.log(b);
+    console.log(c);
+    
+    
+</script>
+</html>
