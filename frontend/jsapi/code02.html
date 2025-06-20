@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <button id="btn">点我</button>
+    <div>
+        <span>hello world</span>
+        <span>hello world</span>
+    </div>
+</body>
+<script>
+    let div = document.querySelector('div');
+    console.log(div.innerText);
+    console.log(div);
+
+    var btn = document.getElementById('btn');
+    btn.onclick = function(){
+        alert("hello world");
+    }
+</script>
+</html>
