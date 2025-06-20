@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <button type="button" id="reset">重新开始一局游戏</button><br>
+    请输入要猜的数字: <input type="text" id="number"><input type="button" value="猜" id="Guest"> <br>
+    已经猜的次数: <span id="count">0</span> <br>
+    结果: <span id="result"></span>
+</body>
+<script>
+    // 修正选择器
+    var input = document.querySelector('#number');
+    var countSpan = document.querySelector('#count');
+    var reset = document.querySelector('#reset');
+    var result = document.querySelector('#result');
+    var Guest = document.querySelector('#Guest');
+
+    // 游戏状态变量
+    var answer = Math.floor(Math.random() * 100) + 1; // 要猜的数字
+    console.log(answer);
+    var count = 0; // 次数
+
+    // 猜按钮事件
+    Guest.onclick = function(){
+        var userGuess = parseInt(input.value);
+        if (isNaN(userGuess)) {
+            result.innerHTML = "请输入有效数字";
+            result.style = "color: orange";
+            return;
+        }
+        count++;
+        countSpan.innerHTML = count;
+        if(userGuess == answer){
+            result.innerHTML = "猜对了";
+            result.style = "color: green";
+        } else if(userGuess < answer){
+            result.innerHTML = "猜小了";
+            result.style = "color: red";
+        } else if(userGuess > answer){
+            result.innerHTML = "猜大了";
+            result.style = "color: red";
+        }
+    }
+
+    // 重新开始按钮事件
+    reset.onclick = function(){
+        answer = Math.floor(Math.random() * 100) + 1;
+        count = 0;
+        countSpan.innerHTML = count;
+        result.innerHTML = "";
+        input.value = "";
+    }
+</script>
+</html>
