@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+
+</body>
+<script>
+    // let a = {}
+    // let student = {
+    //     name: '坤坤',
+    //     height: 180,
+    //     weight: 170,
+    //     Say:function(){
+    //         console.log("hello");
+    //     }
+    // }
+    // console.log(student.name);
+    // console.log(student['height']);5
+    // student.Say()
+
+    // let student  = new Object();
+    // student.name = "蔡徐坤";
+    // studnet.height = 175;
+    // student['weight'] = 170;
+    // student.Say = function(){
+    //     console.log("HELLO");
+    // }
+
+    // console.log(student.name);
+    // console.log(student.height);
+    // console.log(student['weight']);
+    // student.Say();
+
+    // function Cat(name, type, sound) {
+    //     this.name = name;
+    //     this.type = type;
+    //     this.sound = sound;
+    //     this.miao = function () {
+    //         console.log(sound);
+    //     }
+    // }
+
+    // var mimi = new Cat('猫咪', '田园猫', '喵');
+    // var xiaohei = new Cat('小黑', '波斯喵', '猫呜');
+    // var ciqiu = new Cat('刺球', '金渐层', '咕噜噜');
+    // console.log(mimi);
+    // mimi.miao();
+    // console.log(xiaohei);
+    // mimi.miao();
+    // console.log(ciqiu);
+    // mimi.miao();
+
+    class People {
+        constructor(name, height, weight) {
+            this.name = name
+            this.height = height
+            this.weight = weight
+        }
+        Say() {
+            console.log(this.name + "正在说:Hello")
+        }
+
+        static other = "other"
+        static Sum() {
+            return 100
+        }
+    }
+
+    let xiaoming = new People("小明", 175, 75)
+    console.log(xiaoming)
+    xiaoming.Say()
+    // alert(People.other)
+    // alert(People.Sum())
+
+    class Student extends People {
+        constructor(name, height, weight, number) {
+            super(name, height, weight);
+            this.number = number;
+        }
+        Say() {
+            console.log("Say---");
+        }
+    }
+    let student = new Student('张三', 180, 200, 1);
+    console.log(student);
+    student.Say();
+
+</script>
+
+</html>
