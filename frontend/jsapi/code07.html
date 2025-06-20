@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <div class="container"></div>
+    <div class="container">
+        <div>11</div>
+        <div>22</div>
+        <div>33</div>
+        <div>44</div>
+    </div>
+</body>
+<script>
+    var newDiv = document.createElement('div');
+    newDiv.innerHTML = '我是新的节点';
+    var container = document.querySelector('.container');
+    container.insertBefore(newDiv, container.children[0]);
+
+
+    var div = document.createElement('div');
+    div.id = 'nydiv';
+    div.className = 'box';
+    // div.innerHTML = 'hehe';
+    div.innerText = 'haha';
+    var container = document.querySelector(".container");
+    container.appendChild(div);
+
+    container.insertBefore(newDiv, container.children[2]);
+    container.innerHTML = '修改节点'
+
+</script>
+
+</html>
