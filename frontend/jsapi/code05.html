@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <input type="checkbox" id="all">我全都要 <br>
+    <input type="checkbox" class="girl">貂蝉 <br>
+    <input type="checkbox" class="girl">小乔 <br>
+    <input type="checkbox" class="girl">安琪拉 <br>
+    <input type="checkbox" class="girl">妲己 <br>
+</body>
+    <script>
+        // 1. 获取全部元素
+        var all = document.querySelector("#all");
+        var girls = document.querySelectorAll('.girl');
+
+        // 2. 注册点击事件
+        all.onclick = function() {
+            for(var i = 0; i < girls.length; i++){
+                girls[i].checked = all.checked;
+            }
+        }
+
+        // 注册
+        for(var i = 0; i < girls.length; i++)
+        {
+            girls[i].onclick = function(){
+                all.checked = checkGirls(girls);
+            }
+        }
+
+        // 检查
+        function checkGirls(girls){
+            for(var i = 0; i < girls.length; i++){
+                if(!girls[i].checked){
+                    return false;
+                }
+            }
+            return true;
+        }
+
+    </script>
+</html>
