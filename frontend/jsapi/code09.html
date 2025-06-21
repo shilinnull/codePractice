@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<style>
+    *{
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+    .container{
+        width: 100%;
+        margin: 0 auto;
+    }
+    h1{
+        text-align: center;
+        padding: 20px 0;
+    }
+    p{
+       color: gray;
+        text-align: center;
+        font-size: 15px;
+        padding: 10px 0;
+    }
+    .row{
+        display: flex;
+        height: 40px;
+        align-items: center;
+        justify-content: center;
+    }
+    span{
+        width: 100px;
+        line-height: 40px;
+    }
+    .edit{
+        width: 200px;
+        height: 30px;
+        border-radius: 5px;
+    }
+    .submit{
+        width: 300px;
+        height: 40px;
+        border: none;
+        background-color: orange;
+        color: white;
+    }
+    .submit:active{
+        background-color: green;
+    }
+</style>
+<body>
+    <div class="container">
+        <h1>表白墙</h1>
+        <p>输入后点击提交, 会将信息显示在表格中</p>
+        <div class="row">
+            <span>谁：</span><input class="edit" type="text">
+        </div>
+        <div class="row">
+            <span>对谁：</span><input class="edit" type="text">
+        </div>
+        <div class="row">
+            <span>说什么：</span><input class="edit" type="text">
+        </div>
+        <div class="row">
+            <input type="button" value="提交" class="submit">
+        </div>
+    </div>
+</body>
+<script>
+    let submit = document.querySelector('.submit');
+    submit.onclick = function(){
+        // 1. 获取编辑器里的内容
+        let edits = document.querySelectorAll('.edit');
+        let from = edits[0].value;
+        let to = edits[1].value;
+        let message = edits[2].value;
+        if(from == '' || to == '' || message == ''){
+            alert('有一项木写~');
+        }
+        // 2. 构建html元素
+        var row = document.createElement('div');
+        row.className = 'row';
+        row.innerHTML = from + '对' + to + '说：' + message;
+        // 3。 加入
+        var container = document.querySelector('.container');
+        container.appendChild(row);
+        // 4. 清理之前输入框的内容
+        for(var i = 0; i < edits.length; i++){
+            edits[i].value = '';
+        }
+    }
+</script>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
