@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="../css/common.css">
+    <link rel="stylesheet" href="../css/blog_content.css">
+</head>
+<body>
+<!--导航栏-->
+<div class="nav">
+    <img src="../img/logo.jpg" alt="">
+    <span class="title">我的博客系统</span>
+    <span class="spacer"></span>
+    <a href="blog_list.html">主页</a>
+    <a href="bolg_edit.html">写博客</a>
+    <a href="layout">注销</a>
+</div>
+<!-- 版心 -->
+<div class="container">
+    <!-- 左侧个人信息 -->
+    <div class="container-left">
+        <div class="card">
+            <img src="../img/logo.jpg" alt="" class="avtar">
+            <h3>仕林</h3>
+            <a href="http:www.github.com">GitHub地址</a>
+            <div class="counter">
+                <span>文章</span>
+                <span>分类</span>
+            </div>
+            <div class="counter">
+                <span>C/C++</span>
+                <span>Linux</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="container-right">
+        <div class="blog-content">
+            <!-- 博客标题 -->
+            <h3 id="blog-title">我的第一篇博客</h3>
+            <!-- 博客时间 -->
+            <div class="date" id="blog-date">2025-06-22</div>
+            <!-- 博客正文 -->
+            <div id="blog-body">
+
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    // 获取URL参数
+    function getQueryParam(name) {
+        const params = new URLSearchParams(window.location.search);
+        return params.get(name);
+    }
+
+    // 文章数据
+    const blogs = {
+        "1": {
+            title: "我的第一篇博客",
+            date: "2025-06-22",
+            body: `
+            <p>
+                    从今天起我要好好敲代码.
+                    Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aut recusandae omnis natus ut! Autem alias ullam sit facilis ipsa dolore, molestiae neque aperiam in a facere dolor mollitia dolorum animi.
+                    Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aut recusandae omnis natus ut! Autem alias ullam sit facilis ipsa dolore, molestiae neque aperiam in a facere dolor mollitia dolorum animi.
+                    Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aut recusandae omnis natus ut! Autem alias ullam sit facilis ipsa dolore, molestiae neque aperiam in a facere dolor mollitia dolorum animi.
+            <\p>
+            `
+        },
+        "2": {
+            title: "我的第二篇博客",
+            date: "2021-06-30",
+            body: `
+            <p>
+                    从今天起我要好好敲代码.
+                    Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aut recusandae omnis natus ut! Autem alias ullam sit facilis ipsa dolore, molestiae neque aperiam in a facere dolor mollitia dolorum animi.
+                    Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aut recusandae omnis natus ut! Autem alias ullam sit facilis ipsa dolore, molestiae neque aperiam in a facere dolor mollitia dolorum animi.
+                    Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aut recusandae omnis natus ut! Autem alias ullam sit facilis ipsa dolore, molestiae neque aperiam in a facere dolor mollitia dolorum animi.
+            <\p>
+            `
+        }
+    };
+
+    // 渲染对应文章
+    window.onload = function() {
+        const blogId = getQueryParam("blogId") || "1";
+        const blog = blogs[blogId];
+        if (blog) {
+            document.getElementById("blog-title").innerText = blog.title;
+            document.getElementById("blog-date").innerText = blog.date;
+            document.getElementById("blog-body").innerHTML = blog.body;
+        } else {
+            document.getElementById("blog-title").innerText = "未找到对应的博客";
+            document.getElementById("blog-date").innerText = "";
+            document.getElementById("blog-body").innerHTML = "<p>该博客不存在。</p>";
+        }
+    };
+</script>
+</body>
+</html>
