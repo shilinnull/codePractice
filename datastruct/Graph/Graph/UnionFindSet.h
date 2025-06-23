@@ -11,14 +11,24 @@ public:
 	{}
 	
 	// 给一个元素的编号，找到该元素所在集合的名称
-	int FindRoot(int index)
+	int FindRoot(int x)
 	{
+		int root = x;
 		// 如果数组中存储的是负数，找到，否则一直继续
-		while (_ufs[index] >= 0)
+		while (_ufs[root] >= 0)
 		{
-			index = _ufs[index];
+			root = _ufs[root];
 		}
-		return index;
+
+		// 压缩路径
+		while (_ufs[x] >= 0)
+		{
+			int parent = _ufs[x];
+			_ufs[x] = root;
+			x = parent;
+		}
+
+		return root;
 	}
 
 	bool Union(int x1, int x2)
@@ -30,7 +40,8 @@ public:
 		if (root1 == root2)
 			return false;
 
-		if (root2 < root1)
+		// 让小的合并
+		if (abs(_ufs[root1]) < abs(_ufs[root2]))
 			std::swap(root1, root2);
 		
 		// 将两个集合中元素合并
