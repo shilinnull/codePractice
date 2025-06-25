@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<script>
+    // 箭头函数
+    const add = (x, y) => {
+        return x + y;
+    }
+    const fn = () => {
+
+    }
+
+    const log = arg => {
+        console.log(arg);
+    }
+
+    const sub = (x, y) => x - y;
+    console.log(sub(2, 1))
+
+    const d = (x, y) =>{
+        return x / y;
+    }
+    const state = () => ({
+        tocken:"xxxx",
+        userInfo : {
+            name : 'admin',
+            id : 1
+        }
+    })
+    console.log(state())
+
+    setTimeout(()=>{
+        console.log('aaa')
+    }, 2000)
+
+
+</script>
+</body>
+</html>

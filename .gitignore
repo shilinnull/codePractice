@@ -35,8 +35,9 @@ x64/
 # python
 .idea
 .venv
-
-
+.gitignore
+out/
+*.iml
 
 
 # Project files, i.e. `.project`, `.actionScriptProperties` and `.flexProperties`
