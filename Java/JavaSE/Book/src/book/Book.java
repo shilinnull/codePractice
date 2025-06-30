@@ -52,7 +52,7 @@ public class Book {
                 "name='" + name + '\'' +
                 ", anthor='" + anthor + '\'' +
                 ", prise=" + prise +
-                ", isBorrowed=" + isBorrowed +
+                ( (isBorrowed) ? " 已借出" : " 未借出" ) +
                 '}';
     }
 }

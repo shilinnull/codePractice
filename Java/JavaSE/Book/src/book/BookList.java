@@ -12,7 +12,24 @@ public class BookList {
         usedSize = 3;
     }
 
+    public int getUsedSize(){
+        return usedSize;
+    }
 
+    public Book[] getBooks() {
+        return books;
+    }
 
+    public Book getBook(int pos){
+        return books[pos];
+    }
+
+    public void setUsedSize(int size){
+        usedSize = size;
+    }
+
+    public void setBook(int pos, Book book){
+        books[pos] = book;
+    }
 
 }
