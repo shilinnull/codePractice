@@ -89,7 +89,7 @@ public class MySingleList implements IList{
     }
 
     @Override
-    public void addIndex(int index, int data) {
+    public void addIndex(int index, int data) throws PositionException{
         int len = size();
         if(index < 0 || index > len){
             throw new PositionException("index不合法!");
