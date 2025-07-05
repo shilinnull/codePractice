@@ -90,16 +90,51 @@ public class MyLinkedList implements IList {
         while (cur != null) {
             // 删除
             if (cur.val == key) {
-
-
+                if(cur == head){ // 等于head
+                    head = head.next;
+                    if(head != null){
+                        head.prev = null;
+                    }
+                }
+                else {
+                    cur.prev.next = cur.next; // 前面的连接下一个
+                    if(cur.next == null){ // 最后一个
+                        last = last.prev;
+                    }
+                    else {
+                        cur.next.prev = cur.prev; // 连接前一个
+                    }
+                }
+                return;
             }
-
+            cur = cur.next;
         }
     }
 
     @Override
     public void removeAllKey(int key) {
-
+        ListNode cur = head;
+        while (cur != null) {
+            // 删除
+            if (cur.val == key) {
+                if(cur == head){ // 等于head
+                    head = head.next;
+                    if(head != null){
+                        head.prev = null;
+                    }
+                }
+                else {
+                    cur.prev.next = cur.next; // 前面的连接下一个
+                    if(cur.next == null){ // 最后一个
+                        last = last.prev;
+                    }
+                    else {
+                        cur.next.prev = cur.prev; // 连接前一个
+                    }
+                }
+            }
+            cur = cur.next;
+        }
     }
 
     @Override
@@ -129,7 +164,7 @@ public class MyLinkedList implements IList {
     public void display() {
         ListNode cur = head;
         while (cur != null) {
-            System.out.println(cur.val + " ");
+            System.out.print(cur.val + " ");
             cur = cur.next;
         }
         System.out.println();

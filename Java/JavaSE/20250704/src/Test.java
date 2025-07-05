@@ -2,7 +2,7 @@ import java.util.*;
 
 public class Test {
 
-    public static void main2(String[] args) {
+    public static void main(String[] args) {
         LinkedList<Integer> linkedList2 = new LinkedList<>();
         linkedList2.add(1);//默认都是尾插
         linkedList2.addLast(3);
@@ -47,7 +47,7 @@ public class Test {
 
 
     }
-    public static void main6(String[] args) {
+    public static void main3(String[] args) {
         List<Integer> linkedList1 = new LinkedList<>();
         LinkedList<Integer> linkedList2 = new LinkedList<>();
         linkedList2.add(1);//默认都是尾插
@@ -71,16 +71,21 @@ public class Test {
 
     }
 
-    public static void main(String[] args) {
+    public static void main2(String[] args) {
         MyLinkedList myLinkedList = new MyLinkedList();
-        myLinkedList.addLast(1);
-        myLinkedList.addLast(1);
-        myLinkedList.addLast(1);
-        myLinkedList.addLast(1);
-        myLinkedList.addLast(1);
+        myLinkedList.addLast(5);
+        myLinkedList.addLast(2);
+        myLinkedList.addLast(4);
+        myLinkedList.addLast(2);
+        myLinkedList.addLast(11);
+        myLinkedList.addLast(45);
+
+        myLinkedList.remove(4);
 
         myLinkedList.display();
-
+        myLinkedList.removeAllKey(2);
+        myLinkedList.display();
+        System.out.println("===============");
         myLinkedList.clear();
         //myLinkedList.addIndex(3,9);
         myLinkedList.display();
