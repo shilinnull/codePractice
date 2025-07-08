@@ -112,5 +112,27 @@ public class BinaryTree {
         return null;
     }
 
+    public boolean isCompleteTree(TreeNode root){
+        Queue<TreeNode> q = new LinkedList<>();
+        q.offer(root);
+        while(!q.isEmpty()){
+            TreeNode cur = q.poll();
+            if(cur != null){
+                q.offer(cur.left);
+                q.offer(cur.right);
+            }
+            else {
+                break;
+            }
+        }
+        while(!q.isEmpty()){
+            TreeNode cur = q.peek();
+            if(cur != null) {
+                return false;
+            }
+            q.poll();
+        }
+        return true;
+    }
 
 }
