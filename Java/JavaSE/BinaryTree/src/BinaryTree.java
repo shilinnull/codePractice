@@ -52,6 +52,73 @@ public class BinaryTree {
         System.out.print(root.val + " ");
     }
 
+    public void preOrderNor(TreeNode root) {
+        if(root == null) return;  // 空树直接返回
+        Stack<TreeNode> stack = new Stack<>();  // 使用栈辅助遍历
+        TreeNode cur = root;
+
+        // 当前节点不为空或栈不为空
+        while(cur != null || !stack.isEmpty()){
+            // 一直向左走，边走边访问节点值
+            while(cur != null){
+                stack.push(cur);
+                System.out.print(cur.val + " ");
+                cur = cur.left;
+            }
+            // 左子树走到头了，弹出栈顶元素
+            TreeNode top = stack.pop();
+            // 转向右子树
+            cur = top.right;
+        }
+    }
+
+    public void inOrderNor(TreeNode root) {
+        if(root == null) return;
+        Stack<TreeNode> stack = new Stack<>();
+        TreeNode cur = root;  // 当前节点指针
+
+        while (cur != null || !stack.isEmpty()) {
+            while (cur != null) {
+                stack.push(cur);
+                cur = cur.left;
+            }
+            // 左子树走到头了，弹出栈顶元素并访问
+            TreeNode top = stack.pop();
+            System.out.print(top.val + " ");  // 访问根节点
+
+            // 转向右子树
+            cur = top.right;
+        }
+    }
+
+    public void postOrderNor(TreeNode root) {
+        if(root == null) return;
+        Stack<TreeNode> stack = new Stack<>();
+        TreeNode cur = root;
+        TreeNode prev = null;  // 记录上一个访问的节点
+
+        while (cur != null || !stack.isEmpty()) {
+            // 一直向左走，将路径上的节点全部入栈
+            while (cur != null) {
+                stack.push(cur);
+                cur = cur.left;
+            }
+            // 取栈顶元素但不弹出
+            TreeNode top = stack.peek();
+
+            // 判断是否可以访问当前节点：
+            // 1. 没有右子树 或 2. 右子树已经被访问过
+            if (top.right == null || top.right == prev) {
+                System.out.print(top.val + " ");
+                stack.pop();
+                prev = top;  // 更新上一个访问的节点
+            } else {
+                // 右子树存在且未被访问，转向右子树
+                cur = top.right;
+            }
+        }
+    }
+
     public int size(TreeNode root) {
         if (root == null) {
             return 0;
