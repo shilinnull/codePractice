@@ -11,6 +11,6 @@ public class Test {
 
         BinaryTree.TreeNode ret2 = binaryTree.findVal(root,'A');
         System.out.println(ret2.val);
-
+        System.out.println(binaryTree.isCompleteTree(root));
     }
 }
