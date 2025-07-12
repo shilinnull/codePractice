@@ -6,7 +6,7 @@
 std::string TOHEX(pthread_t x)
 {
     char buffer[128];
-    snprintf(buffer, sizeof(buffer), "%p", x);
+    snprintf(buffer, sizeof(buffer), "0x%lx", x);
     return buffer;
 }
 
@@ -16,14 +16,14 @@ void *Consumer(void *args)
 
     while (true)
     {
+        sleep(1);
         // 消费
-        Task t = bq->Pop();
+        Task t(0, 0, '+'); // 创建一个空任务
+        bq->Pop(&t);
         // t.Run(); // 之间调用
         t(); // 仿函数
 
         std::cout << "处理任务: " << t.GetTask() << " 运算结果是： " << t.GetResult() << " thread id: " << TOHEX(pthread_self()) << std::endl;
-
-        // sleep(1);
     }
 }
 
@@ -41,15 +41,13 @@ void *Productor(void *args)
         Task t(data1, data2, op);
         bq->Push(t); // 入队
         std::cout << "生产了一个任务: " << t.GetTask() << " thread id: " << TOHEX(pthread_self()) << std::endl;
-        
-        sleep(1);
     }
 }
 
 int main()
 {
     srand(time(nullptr));
-    // 在堆上上创建对象
+
     BlockQueue<Task> *bq = new BlockQueue<Task>();
     pthread_t c[3], p[5];
     for (int i = 0; i < 3; i++)
