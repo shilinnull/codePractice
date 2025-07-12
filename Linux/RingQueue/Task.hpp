@@ -5,7 +5,7 @@
 #include <functional>
 #include <map>
 
-std::string opers = "+-*/%";
+const static std::string opers = "+-*/%";
 
 enum
 {
@@ -17,7 +17,7 @@ enum
 class Task
 {
 public:
-    Task()
+    Task() : data1_(0), data2_(0), oper_('+'), result_(0), exitcode_(0) 
     {}
     Task(int x, int y, char op)
         : data1_(x), data2_(y), oper_(op)
