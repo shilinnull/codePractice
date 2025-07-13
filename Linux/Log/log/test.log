@@ -1,0 +1,4 @@
+time: [2025-07-13 18:37:01] level: [Error] pid: [1550493] filename: [main.cc] line: [9] message:  - hello world, 3.14 123
+time: [2025-07-13 18:37:01] level: [Warning] pid: [1550493] filename: [main.cc] line: [10] message:  - hello world, 3.14 123
+time: [2025-07-13 18:37:01] level: [Error] pid: [1550493] filename: [main.cc] line: [11] message:  - hello world, 3.14 123
+time: [2025-07-13 18:37:01] level: [Error] pid: [1550493] filename: [main.cc] line: [12] message:  - hello world, 3.14 123
