@@ -27,7 +27,12 @@ public class Test {
         int[] array = { 2, 1, 4, 7, 5, 8, 9, 10, 3, 6};
         System.out.println("排序前："+Arrays.toString(array));
 //        Sort.insertSort(array);
-        Sort.shellSort(array);
+//        Sort.shellSort(array);
+//        Sort.selectSort(array);
+//        Sort.heapSort(array);
+//        Sort.bubbleSort(array);
+//        Sort.quickSort(array);
+        Sort.mergeSort(array);
         System.out.println("排序后："+Arrays.toString(array));
     }
 
