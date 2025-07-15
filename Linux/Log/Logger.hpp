@@ -142,6 +142,7 @@ class Logger
 public:
     Logger()
     {
+        EnableConsoleLogStrategy();
     }
 
     void EnableConsoleLogStrategy()
