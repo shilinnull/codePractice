@@ -55,13 +55,6 @@ public:
         pthread_cancel(_tid);
     }
 
-    void Join()
-    {
-        if (!_isRuning)
-            return;
-        pthread_join(_tid, nullptr);
-    }
-
     ~Thread()
     {
     }
