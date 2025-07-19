@@ -9,16 +9,17 @@
 #include <strings.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
+#include <functional>
 
 #include "Logger.hpp"
 
-const std::string DEFAULT_IP = "0.0.0.0";
+using callback_t = std::function<std::string(const std::string &word, const std::string &whoip, uint16_t whoport)>;
 
-class UdpServer
+class DictServer
 {
 public:
-    UdpServer(const uint16_t &port)
-        : _port(port), _sockfd(-1), _isRunning(false)
+    DictServer(const uint16_t &port, callback_t cb)
+        : _port(port), _sockfd(-1), _isRunning(false), _cb(cb)
     {
     }
 
@@ -69,17 +70,16 @@ public:
             }
             else
             {
-                // 2. 打印数据 需要client的ip和port
-                std::string peer_ip = inet_ntoa(peer.sin_addr); // 将网络字节序转换为字符串
-                uint16_t peer_port = ntohs(peer.sin_port);      // 将网络字节序转换为主机字节序
-                buffer[n] = 0;
-                LOG(LogLevel::DEBUG) << "[" << peer_ip
-                                     << ":" << peer_port << "]# " << buffer;
+                buffer[n] = 0; // 清空
+                uint16_t client_port = ntohs(peer.sin_port);
+                std::string client_ip = inet_ntoa(peer.sin_addr);
 
-                // 3. 回复数据
-                std::string echo_msg = "server echo: ";
-                echo_msg += buffer;
-                sendto(_sockfd, echo_msg.c_str(), echo_msg.size(), 0, (struct sockaddr *)&peer, len);
+                std::string word = buffer;
+                LOG(LogLevel::DEBUG) << "[" << client_ip << ":" << client_port << "]"
+                                     << "# " << word;
+                // 2. 调用回调函数 处理任务
+                std::string result = _cb(word, client_ip, client_port);
+                sendto(_sockfd, result.c_str(), result.size(), 0, (struct sockaddr *)&peer, len);
             }
         }
         _isRunning = false;
@@ -89,7 +89,7 @@ public:
     {
         _isRunning = false;
     }
-    ~UdpServer()
+    ~DictServer()
     {
         if (_sockfd >= 0)
         {
@@ -102,7 +102,9 @@ private:
     uint16_t _port; // 服务器端口号
     int _sockfd;    // 套接字描述符
 
-    bool _isRunning; // 服务器是否在运行
+    callback_t _cb; // 回调函数
+
+    bool _isRunning; // 服务器是否在 -运行
 };
 
 #endif // UDP_SERVER_HPP
