@@ -42,7 +42,6 @@ private:
                 _q.pop();
             }
             t(); // 执行任务
-            LOG(LogLevel::DEBUG) << name << " handler task: " << t.Result2String();
         }
     }
     std::unique_ptr<ThreadPool<T>> &operator=(const std::unique_ptr<ThreadPool<T>> &) = delete; // 赋值重载禁用掉
