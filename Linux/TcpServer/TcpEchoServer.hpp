@@ -58,9 +58,32 @@ public:
         LOG(LogLevel::INFO) << "listen sockte success, fd: " << _listenSocketfd;
     }
 
+    class ThreadData
+    {
+    public:
+        ThreadData(int sockfd, TcpEchoServer *self, const InetAddr &addr)
+            : _sockfd(sockfd), _self(self), _addr(addr)
+        {
+        }
+        // private:
+        int _sockfd;
+        TcpEchoServer *_self;
+        InetAddr _addr;
+    };
+
+    static void *Routine(void *args)
+    {
+        ThreadData *td = static_cast<ThreadData *>(args);
+        pthread_detach(pthread_self());               // 分离线程
+        td->_self->HandlerIO(td->_sockfd, td->_addr); // 处理任务
+
+        delete td;
+        return nullptr;
+    }
+
     void Start()
     {
-        signal(SIGCHLD, SIG_IGN); // 忽略子进程退出的信号
+        // signal(SIGCHLD, SIG_IGN); // 忽略子进程退出的信号
         for (;;)
         {
             struct sockaddr_in peer;
@@ -76,28 +99,36 @@ public:
 
             LOG(LogLevel::INFO) << "获取新连接成功, sockfd: " << sockfd << " client addr: " << clientaddr.ToString();
 
-            // 多进程 version1
-            pid_t id = fork();
-            if (id < 0)
-            {
-                LOG(LogLevel::FATAL) << "资源不足，创建子进程失败";
-                exit(FORK_ERR);
-            }
-            else if (id == 0)
-            {
-                close(_listenSocketfd); // 关闭
-                if (fork() > 0)
-                    exit(OK);
+            // 单进程 version1
+            // HandlerIO(sockfd, clientaddr);
 
-                // 让孙子进程处理任务
-                HandlerIO(sockfd, clientaddr);
-                exit(OK);
-            }
-            else
-            {
-                close(sockfd); // 父进程需要关闭
-                waitpid(id, nullptr, 0);
-            }
+            // 多进程 version2
+            // pid_t id = fork();
+            // if (id < 0)
+            // {
+            //     LOG(LogLevel::FATAL) << "资源不足，创建子进程失败";
+            //     exit(FORK_ERR);
+            // }
+            // else if (id == 0)
+            // {
+            //     close(_listenSocketfd); // 关闭
+            //     if (fork() > 0)
+            //         exit(OK);
+
+            //     // 让孙子进程处理任务
+            //     HandlerIO(sockfd, clientaddr);
+            //     exit(OK);
+            // }
+            // else
+            // {
+            //     close(sockfd); // 父进程需要关闭
+            //     waitpid(id, nullptr, 0);
+            // }
+
+            // 多线程版本 version3
+            pthread_t tid;
+            ThreadData *td = new ThreadData(sockfd, this, clientaddr);
+            pthread_create(&tid, nullptr, Routine, (void *)td); // 创建线程
         }
     }
 
