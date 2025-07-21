@@ -5,6 +5,7 @@
 #include <string>
 #include <cstring>
 #include <sys/types.h>
+#include <sys/wait.h>
 #include <sys/socket.h>
 #include <arpa/inet.h>
 #include <netinet/in.h>
@@ -59,6 +60,7 @@ public:
 
     void Start()
     {
+        signal(SIGCHLD, SIG_IGN); // 忽略子进程退出的信号
         for (;;)
         {
             struct sockaddr_in peer;
@@ -74,8 +76,28 @@ public:
 
             LOG(LogLevel::INFO) << "获取新连接成功, sockfd: " << sockfd << " client addr: " << clientaddr.ToString();
 
-            // 单进程
-            HandlerIO(sockfd, clientaddr);
+            // 多进程 version1
+            pid_t id = fork();
+            if (id < 0)
+            {
+                LOG(LogLevel::FATAL) << "资源不足，创建子进程失败";
+                exit(FORK_ERR);
+            }
+            else if (id == 0)
+            {
+                close(_listenSocketfd); // 关闭
+                if (fork() > 0)
+                    exit(OK);
+
+                // 让孙子进程处理任务
+                HandlerIO(sockfd, clientaddr);
+                exit(OK);
+            }
+            else
+            {
+                close(sockfd); // 父进程需要关闭
+                waitpid(id, nullptr, 0);
+            }
         }
     }
 
