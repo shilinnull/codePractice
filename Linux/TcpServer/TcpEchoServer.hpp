@@ -22,7 +22,7 @@ class TcpEchoServer
 {
 public:
     TcpEchoServer(uint16_t port = 8080)
-        : _port(port)
+        : _listenSocketfd(-1), _port(port)
     {
     }
 
