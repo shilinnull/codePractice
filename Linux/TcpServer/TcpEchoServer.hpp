@@ -4,6 +4,7 @@
 #include <iostream>
 #include <string>
 #include <cstring>
+#include <functional>
 #include <sys/types.h>
 #include <sys/wait.h>
 #include <sys/socket.h>
@@ -13,6 +14,7 @@
 #include "Logger.hpp"
 #include "Comm.hpp"
 #include "InetAddr.hpp"
+#include "ThreadPool.hpp"
 
 const int gbacklog = 8;
 
@@ -58,28 +60,28 @@ public:
         LOG(LogLevel::INFO) << "listen sockte success, fd: " << _listenSocketfd;
     }
 
-    class ThreadData
-    {
-    public:
-        ThreadData(int sockfd, TcpEchoServer *self, const InetAddr &addr)
-            : _sockfd(sockfd), _self(self), _addr(addr)
-        {
-        }
-        // private:
-        int _sockfd;
-        TcpEchoServer *_self;
-        InetAddr _addr;
-    };
+    // class ThreadData
+    // {
+    // public:
+    //     ThreadData(int sockfd, TcpEchoServer *self, const InetAddr &addr)
+    //         : _sockfd(sockfd), _self(self), _addr(addr)
+    //     {
+    //     }
+    //     // private:
+    //     int _sockfd;
+    //     TcpEchoServer *_self;
+    //     InetAddr _addr;
+    // };
 
-    static void *Routine(void *args)
-    {
-        ThreadData *td = static_cast<ThreadData *>(args);
-        pthread_detach(pthread_self());               // 分离线程
-        td->_self->HandlerIO(td->_sockfd, td->_addr); // 处理任务
+    // static void *Routine(void *args)
+    // {
+    //     ThreadData *td = static_cast<ThreadData *>(args);
+    //     pthread_detach(pthread_self());               // 分离线程
+    //     td->_self->HandlerIO(td->_sockfd, td->_addr); // 处理任务
 
-        delete td;
-        return nullptr;
-    }
+    //     delete td;
+    //     return nullptr;
+    // }
 
     void Start()
     {
@@ -126,9 +128,14 @@ public:
             // }
 
             // 多线程版本 version3
-            pthread_t tid;
-            ThreadData *td = new ThreadData(sockfd, this, clientaddr);
-            pthread_create(&tid, nullptr, Routine, (void *)td); // 创建线程
+            // pthread_t tid;
+            // ThreadData *td = new ThreadData(sockfd, this, clientaddr);
+            // pthread_create(&tid, nullptr, Routine, (void *)td); // 创建线程
+        
+            // 进程池版本 version4
+            ThreadPool<task_t>::getInstance()->Push([this, sockfd, clientaddr](){
+                this->HandlerIO(sockfd, clientaddr);
+            });
         }
     }
 
@@ -137,6 +144,8 @@ public:
     }
 
 private:
+    using task_t = std::function<void()>;
+
     void HandlerIO(int sockfd, InetAddr client)
     {
         char buffer[1024];
