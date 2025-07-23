@@ -1,6 +1,7 @@
 #pragma once
 
 #include <memory>
+#include <functional>
 
 #include <unistd.h>
 #include <signal.h>
@@ -8,11 +9,13 @@
 #include "Socket.hpp"
 #include "InetAddr.hpp"
 
+using callback_t = std::function<std::string(std::string&)>;
+
 class TcpServer
 {
 public:
-    TcpServer(uint16_t port)
-        : _port(port), _listensocket(std::make_unique<TcpSocket>())
+    TcpServer(uint16_t port, callback_t cb)
+        : _port(port), _listensocket(std::make_unique<TcpSocket>()), _cb(cb)
     {
         _listensocket->BuildListenSocketMethod(_port);
     }
@@ -51,7 +54,13 @@ private:
             if (n > 0)
             {
                 LOG(LogLevel::DEBUG) << addr.ToString() << "# " << inbuffer;
-                sockfd->Send(inbuffer);
+                
+                // 回掉函数，交给上层处理
+                std::string send_str = _cb(inbuffer);
+                if(send_str.empty())
+                    continue;
+                LOG(LogLevel::DEBUG) << "send_str: " << send_str;
+                sockfd->Send(send_str);
             }
             else if (n == 0)
             {
@@ -70,4 +79,6 @@ private:
 private:
     uint16_t _port;
     std::unique_ptr<Socket> _listensocket;
+
+    callback_t _cb;
 };

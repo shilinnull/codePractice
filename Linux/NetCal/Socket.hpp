@@ -30,6 +30,7 @@ public:
     virtual void Close() = 0;
     virtual ssize_t Recv(std::string *out) = 0;
     virtual ssize_t Send(const std::string &in) = 0;
+    virtual bool Connect(InetAddr &peer) = 0;
 
 public:
     void BuildListenSocketMethod(int port)
@@ -38,7 +39,10 @@ public:
         BindSocketOrDie(port);
         ListenSocketOrDie(gbacklog);
     }
-    // 目前只写了TCP
+    void BuildClientSocketMethod()
+    {
+        CreateSocketOrDie();
+    }
 };
 
 class TcpSocket : public Socket
@@ -115,6 +119,15 @@ public:
     {
         return send(_sockfd, in.c_str(), in.size(), 0);
     }
+    bool Connect(InetAddr &peer) override
+    {
+        int n = connect(_sockfd, peer.Addr(), peer.Length());
+        if (n >= 0)
+            return true;
+        else
+            return false;
+    }
+
     ~TcpSocket() {}
 
 private:
