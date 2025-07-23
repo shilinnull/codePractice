@@ -5,6 +5,6 @@ server: Server.cc
 client: Client.cc
 	g++ -o client Client.cc -lpthread -std=c++17
 
-.PHONY: server client
+.PHONY:clean
 clean:
 	rm -f server client
