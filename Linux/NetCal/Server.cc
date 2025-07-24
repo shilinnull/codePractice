@@ -1,7 +1,9 @@
 #include <memory>
 
-#include "TcpServer.hpp"
-#include "Parser.hpp"
+#include "TcpServer.hpp" // Tcp
+#include "Parser.hpp"    // 序列化与分序列化
+#include "Calculator.hpp"// 计算
+#include "daemon.hpp"    // 守护进程
 
 void Usage(std::string proc)
 {
@@ -15,7 +17,9 @@ int main(int argc, char *argv[])
         Usage(argv[0]);
         exit(0);
     }
-
+    EnableFileLog(); // 开启文件日志
+    myDaemon(); // 守护进程化
+    
     // 计算器模块
     std::unique_ptr<Calculator> cal = std::make_unique<Calculator>();
 
