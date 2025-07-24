@@ -11,8 +11,9 @@ Widget::Widget(QWidget *parent)
     ui->setupUi(this);
     this->setWindowTitle("服务器");
     socket = new QUdpSocket(this);
+    // 连接      				readyRead 收到数据后触发
     connect(socket, &QUdpSocket::readyRead, this, &Widget::processRequest);
-
+    // 绑定ip和端口
     bool ret = socket->bind(QHostAddress::Any, 9090);
     if(!ret)
     {
@@ -28,12 +29,17 @@ Widget::~Widget()
 
 void Widget::processRequest()
 {
+    // 1. 读取请求
     const QNetworkDatagram& requestDatagram = socket->receiveDatagram();
     QString request = requestDatagram.data();
+    // 2. 根据请求准备回复
     const QString& response = process(request);
-    QNetworkDatagram responseDatagram(response.toUtf8(), requestDatagram.senderAddress(), requestDatagram.senderPort());
+    // 3. 发回去
+    QNetworkDatagram responseDatagram(response.toUtf8(),
+                        requestDatagram.senderAddress(), requestDatagram.senderPort());
     socket->writeDatagram(responseDatagram);
 
+    // ============================================================
     QString log = "[" + requestDatagram.senderAddress().toString() + ":"
             + QString::number(requestDatagram.senderPort()) + "] req: "
             + request + ", resp: " + response;
@@ -42,5 +48,6 @@ void Widget::processRequest()
 
 QString Widget::process(const QString &request)
 {
+    // 这里就直接返回了
     return request;
 }
