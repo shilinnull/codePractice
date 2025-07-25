@@ -53,13 +53,13 @@ private:
             ssize_t n = sockfd->Recv(&inbuffer);
             if (n > 0)
             {
-                LOG(LogLevel::DEBUG) << addr.ToString() << "# " << inbuffer;
+                LOG(LogLevel::DEBUG) << "处理前: " <<  addr.ToString() << "# " << inbuffer;
                 
                 // 回掉函数，交给上层处理
                 std::string send_str = _cb(inbuffer);
                 if(send_str.empty())
                     continue;
-                LOG(LogLevel::DEBUG) << "send_str: " << send_str;
+                LOG(LogLevel::DEBUG) << "处理后, 准备发送: " << send_str;
                 sockfd->Send(send_str);
             }
             else if (n == 0)

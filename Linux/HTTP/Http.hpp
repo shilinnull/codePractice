@@ -8,7 +8,7 @@
 static const std::string linesep = "\r\n";
 static const std::string innersep1 = " ";
 static const std::string innersep2 = ": ";
-static const std::string webroot = "./wwwroot/";
+static const std::string webroot = "./wwwroot";
 static const std::string defaulthome = "index.html";
 
 class HttpRequest
@@ -54,9 +54,9 @@ public:
         if (!status)
             return false;
 
-        ParseReqLine(reqline); //  解析数据
+        ParseReqLine(reqline); //  解析method和uri
 
-        LOG(LogLevel::DEBUG) << _method << " " << _uri << " " << _httpversion;
+        LOG(LogLevel::DEBUG) << "查看请求头: " << _method << " " << _uri << " " << _httpversion;
 
         for (;;) // 解析kv
         {
@@ -80,19 +80,25 @@ public:
                 return false;
             }
         }
+
+        LOG(LogLevel::DEBUG) << "查看kv结构: =======================";
         for (auto &[x, y] : _req_handers)
         {
-            LOG(LogLevel::DEBUG) << "k: " << x << "v: " << y;
+            LOG(LogLevel::DEBUG) << "kv: " << x << ": " << y;
         }
+
+        LOG(LogLevel::DEBUG) << "kv结构: ======================= end";
 
         _req_body = reqstr;
         _path = webroot;
+
         if (_uri == "/")
         {
-            _path += defaulthome; // 默认
+            _path += "/" + defaulthome; // 默认文件
         }
 
-        LOG(LogLevel::DEBUG) << "_path " << _path;
+        LOG(LogLevel::DEBUG) << "查看路径: " << _path;
+        LOG(LogLevel::DEBUG) << "查看请求体: " << _req_body;
         return true;
     }
     std::string Path()
@@ -138,6 +144,7 @@ public:
         std::ifstream file(path, std::ios::binary);
         if (!file.is_open())
         {
+            file.close();
             throw std::runtime_error("无法打开文件: " + path);
         }
 
@@ -155,6 +162,7 @@ public:
         // 检查是否读取了所有数据
         if (!file)
         {
+            file.close();
             throw std::runtime_error("读取文件时出错: " + path);
         }
         file.close();
