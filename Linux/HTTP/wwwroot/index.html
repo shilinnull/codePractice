@@ -1,45 +1,85 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hello World</title>
+    <title>清风小站</title>
     <style>
-        /* CSS 样式部分 */
         body {
-            font-family: Arial, sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            background-color: #f8faf7;
+            color: #5a6d5a;
             margin: 0;
-            background-color: #f0f8ff;
+            padding: 0;
+            line-height: 1.6;
         }
         
-        .hello-container {
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 40px 20px;
             text-align: center;
-            padding: 30px;
-            border-radius: 10px;
-            background-color: white;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
         
         h1 {
-            color: #2c3e50;
+            color: #7ba17b;
+            font-weight: 300;
             font-size: 2.5em;
             margin-bottom: 10px;
         }
         
-        .subtitle {
-            color: #7f8c8d;
+        .tagline {
+            color: #9ab39a;
             font-size: 1.2em;
+            margin-bottom: 40px;
+        }
+        
+        .nav-links {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-bottom: 50px;
+        }
+        
+        .nav-links a {
+            color: #7ba17b;
+            text-decoration: none;
+            font-size: 1.1em;
+            transition: color 0.3s;
+            padding: 5px 0;
+            border-bottom: 1px solid transparent;
+        }
+        
+        .nav-links a:hover {
+            color: #5a6d5a;
+            border-bottom: 1px solid #c8d9c8;
+        }
+        
+        .footer {
+            margin-top: 80px;
+            color: #9ab39a;
+            font-size: 0.9em;
         }
     </style>
 </head>
 <body>
-    <div class="hello-container">
-        <h1>Hello World!</h1>
-        <p class="subtitle">这是我的第一个网页</p>
+    <div class="container">
+        <h1>清风</h1>
+        <p class="tagline">记录思考与创作的小天地</p>
+        
+        <div class="nav-links">
+            <a href="/login.html">登录</a>
+            <a href="/register.html">注册</a>
+        </div>
+
+        <div>
+            <img src="/image/1.png" alt="板书"/>
+            <img src="/image/2.jpg" alt=""/>
+        </div>
+        
+        <div class="footer">
+            © 2023 清风 · 保持简单
+        </div>
     </div>
 </body>
 </html>
