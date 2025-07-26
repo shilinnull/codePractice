@@ -3,13 +3,19 @@
 #include <string>
 #include <unordered_map>
 #include <sstream>
+#include <string_view>
+
 #include "Logger.hpp"
 
+// #define Debug
 static const std::string linesep = "\r\n";
 static const std::string innersep1 = " ";
 static const std::string innersep2 = ": ";
 static const std::string webroot = "./wwwroot";
+// static const std::string defaulthome = "blog_login.html";
 static const std::string defaulthome = "index.html";
+static const std::string defaultHtml404 = "404.html";
+static const std::string suffixsep = ".";
 
 class HttpRequest
 {
@@ -23,14 +29,8 @@ private:
             return std::string();
         }
         std::string line = reqstr.substr(0, pos);
-        reqstr.erase(0, pos + linesep.size());
+        reqstr.erase(0, pos + linesep.size()); // 删除读取到的元素
         return line;
-    }
-
-    void ParseReqLine(std::string &reqline)
-    {
-        std::stringstream ss(reqline);
-        ss >> _method >> _uri >> _httpversion;
     }
 
     void BuildKV(std::string &line, std::string *k, std::string *v)
@@ -54,9 +54,12 @@ public:
         if (!status)
             return false;
 
-        ParseReqLine(reqline); //  解析method和uri
+        std::stringstream ss(reqline);
+        ss >> _method >> _uri >> _httpversion;
 
-        LOG(LogLevel::DEBUG) << "查看请求头: " << _method << " " << _uri << " " << _httpversion;
+#ifndef Debug
+        LOG(LogLevel::DEBUG) << _method << " " << _uri << " " << _httpversion;
+#endif
 
         for (;;) // 解析kv
         {
@@ -72,38 +75,59 @@ public:
             }
             else if (status)
             {
+                LOG(LogLevel::DEBUG) << "解析到了空行";
                 _back_line = linesep; // 解析到空行就退出
                 break;
             }
             else
             {
-                return false;
+                LOG(LogLevel::DEBUG) << "非法请求";
+                // return false;
+                break;
             }
         }
 
-        LOG(LogLevel::DEBUG) << "查看kv结构: =======================";
-        for (auto &[x, y] : _req_handers)
-        {
-            LOG(LogLevel::DEBUG) << "kv: " << x << ": " << y;
-        }
+        _req_body = reqstr; // 剩下的就是内容
+        _path = webroot;    // 默认目录
 
-        LOG(LogLevel::DEBUG) << "kv结构: ======================= end";
-
-        _req_body = reqstr;
-        _path = webroot;
-
-        if (_uri == "/")
-        {
+        if (_uri == "/")                // 如直接请求的默认就是/ 此时直接跳转到默认目录
             _path += "/" + defaulthome; // 默认文件
-        }
+        else
+            _path += _uri;
+
+#ifndef Debug
+
+        LOG(LogLevel::DEBUG) << "反序列化: ";
+        for (auto &[x, y] : _req_handers)
+            LOG(LogLevel::DEBUG) << "kv: " << x << ": " << y;
 
         LOG(LogLevel::DEBUG) << "查看路径: " << _path;
         LOG(LogLevel::DEBUG) << "查看请求体: " << _req_body;
+#endif
         return true;
     }
     std::string Path()
     {
         return _path;
+    }
+
+    void SetPath(const std::string &path)
+    {
+        _path = path;
+    }
+
+    std::string Suffix()
+    {
+        if (_path.empty())
+            return std::string();
+        else
+        {
+            auto pos = _path.rfind(suffixsep);
+            if (pos == std::string::npos)
+                return std::string();
+            else
+                return _path.substr(pos); // 截取后缀
+        }
     }
 
     ~HttpRequest() {}
@@ -121,31 +145,119 @@ private:
 
 class HttpResponse
 {
+private:
+    std::string Code2Desc(int code)
+    {
+        switch (code)
+        {
+        // 2xx Success
+        case 200:
+            return "OK";
+        case 201:
+            return "Created";
+        case 202:
+            return "Accepted";
+        case 204:
+            return "No Content";
+
+        // 3xx Redirection
+        case 301:
+            return "Moved Permanently";
+        case 302:
+            return "Found";
+        case 303:
+            return "See Other";
+        case 304:
+            return "Not Modified";
+        case 307:
+            return "Temporary Redirect";
+        case 308:
+            return "Permanent Redirect";
+
+        // 4xx Client Errors
+        case 400:
+            return "Bad Request";
+        case 401:
+            return "Unauthorized";
+        case 403:
+            return "Forbidden";
+        case 404:
+            return "Not Found";
+        case 405:
+            return "Method Not Allowed";
+        case 408:
+            return "Request Timeout";
+        case 409:
+            return "Conflict";
+        case 413:
+            return "Payload Too Large";
+        case 415:
+            return "Unsupported Media Type";
+        case 429:
+            return "Too Many Requests";
+
+        // 5xx Server Errors
+        case 500:
+            return "Internal Server Error";
+        case 501:
+            return "Not Implemented";
+        case 502:
+            return "Bad Gateway";
+        case 503:
+            return "Service Unavailable";
+        case 504:
+            return "Gateway Timeout";
+
+        default:
+            return "";
+        }
+    }
+
 public:
-    HttpResponse() : _httpversion("HTTP/1.1"), _black_line("\r\n") {}
+    HttpResponse() : _httpversion("HTTP/1.1"), _black_line(linesep) {}
 
     std::string Serialize()
     {
-        std::string respstr = _httpversion + innersep1 + std::to_string(_code) + innersep1 + _desc + linesep;
+        // 添加状态行
+        std::string respstr = _httpversion + innersep1 + std::to_string(_code) +
+                              innersep1 + _desc + linesep;
+        // 添加Content-Length
+        if (!_resp_body.empty())
+        {
+            std::string len = std::to_string(_resp_body.size());
+            LOG(LogLevel::DEBUG) << "_resp_body 的大小: " << _resp_body.size();
 
+            SetHeader("Content-Length", len);
+        }
+
+        // 添加相应报头
         for (auto &[x, y] : _req_handers)
         {
             respstr += x + innersep2 + y + linesep;
         }
-        respstr += _black_line;
-        respstr += _resp_body;
+
+#ifndef Debug
+        LOG(LogLevel::DEBUG) << "序列化: ";
+        for (auto &[x, y] : _req_handers)
+            LOG(LogLevel::DEBUG) << "kv: " << x << ": " << y;
+#endif
+
+        respstr += _black_line; // 添加空行
+        respstr += _resp_body;  // 添加正文
+        // LOG(LogLevel::DEBUG) << "_resp_body 的内容: \n" << _resp_body;
         return respstr;
     }
 
-    void ReadContent(const std::string &path)
+    bool ReadContent(const std::string &path)
     {
         // 以二级制方式读取
         // 打开文件，二进制模式
         std::ifstream file(path, std::ios::binary);
         if (!file.is_open())
         {
+            LOG(LogLevel::WARNING) << path << " 资源不存在!";
             file.close();
-            throw std::runtime_error("无法打开文件: " + path);
+            return false;
         }
 
         // 定位到文件末尾获取文件大小
@@ -158,20 +270,27 @@ public:
 
         // 读取文件内容到字符串
         file.read(&_resp_body[0], fileSize);
-
-        // 检查是否读取了所有数据
-        if (!file)
-        {
-            file.close();
-            throw std::runtime_error("读取文件时出错: " + path);
-        }
         file.close();
+
+        return true;
     }
 
-    void SetCode(int code, const std::string &desc)
+    void SetCode(int code)
     {
-        _code = code;
-        _desc = desc;
+        if (code >= 100 && code < 600)
+        {
+            _code = code;
+            _desc = Code2Desc(code);
+        }
+        else
+        {
+            LOG(LogLevel::DEBUG) << "非法的状态码: " << code;
+        }
+    }
+
+    void SetHeader(const std::string &key, const std::string &value)
+    {
+        _req_handers[key] = value;
     }
 
 private:
@@ -185,6 +304,83 @@ private:
 
 class Http
 {
+private:
+    std::string Suffix2Desc(const std::string &suffix)
+    {
+        if (suffix == ".html" || suffix == ".htm")
+        {
+            return "text/html";
+        }
+        else if (suffix == ".css")
+        {
+            return "text/css";
+        }
+        else if (suffix == ".js")
+        {
+            return "application/javascript"; // Updated from x-javascript to standard type
+        }
+        else if (suffix == ".png")
+        {
+            return "image/png";
+        }
+        else if (suffix == ".jpg" || suffix == ".jpeg")
+        {
+            return "image/jpeg";
+        }
+        else if (suffix == ".gif")
+        {
+            return "image/gif";
+        }
+        else if (suffix == ".txt")
+        {
+            return "text/plain";
+        }
+        else if (suffix == ".json")
+        {
+            return "application/json";
+        }
+        else if (suffix == ".pdf")
+        {
+            return "application/pdf";
+        }
+        else if (suffix == ".xml")
+        {
+            return "application/xml";
+        }
+        else if (suffix == ".svg")
+        {
+            return "image/svg+xml";
+        }
+        else if (suffix == ".ico")
+        {
+            return "image/x-icon";
+        }
+        else if (suffix == ".mp4")
+        {
+            return "video/mp4";
+        }
+        else if (suffix == ".webm")
+        {
+            return "video/webm";
+        }
+        else if (suffix == ".mp3")
+        {
+            return "audio/mpeg";
+        }
+        else if (suffix == ".woff")
+        {
+            return "font/woff";
+        }
+        else if (suffix == ".woff2")
+        {
+            return "font/woff2";
+        }
+        else
+        {
+            return "text/html"; // Default fallback
+        }
+    }
+
 public:
     Http()
     {
@@ -193,13 +389,34 @@ public:
     std::string HandlerRequest(std::string &requeststr)
     {
         std::string respstr;
-        HttpRequest req;
-        if (req.Deserialize(requeststr)) // 反序列化成功
+        HttpRequest req;                 // 请求
+        if (req.Deserialize(requeststr)) // 反序列化
         {
-            HttpResponse resp;
-            resp.ReadContent(req.Path()); // 读取内容
-            resp.SetCode(200, "OK");      // 设置状态码
-            respstr = resp.Serialize();   // 序列化
+            HttpResponse resp;                // 构建回复
+            if(req.Path() == "/redir") // for test
+            {
+                resp.SetCode(307); // 设置临时重定向
+                resp.SetHeader("Location", "/" + defaultHtml404);
+            }
+            else if (resp.ReadContent(req.Path())) // 读取内容
+            {
+                std::string suffix = req.Suffix();                 // 获取后缀
+                std::string mime_type_value = Suffix2Desc(suffix); // 识别类型
+                resp.SetHeader("Content-type", mime_type_value);   // 添加类型
+                resp.SetCode(200);
+            }
+            else // 没有此路径的文件
+            {
+                std::string error_404 = webroot + "/" + defaultHtml404;
+                req.SetPath(error_404);       // 设置状态码
+                resp.ReadContent(req.Path()); // 读取内容
+
+                std::string suffix = req.Suffix();                 // 获取后缀
+                std::string mime_type_value = Suffix2Desc(suffix); // 识别类型
+                resp.SetHeader("Content-type", mime_type_value);   // 添加类型
+                resp.SetCode(404);
+            }
+            respstr = resp.Serialize(); // 序列化
         }
         return respstr;
     }
