@@ -1,6 +1,7 @@
 #pragma once
 
 #include <string>
+#include <vector>
 #include <unordered_map>
 #include <sstream>
 #include <functional>
@@ -11,10 +12,10 @@
 static const std::string linesep = "\r\n";
 static const std::string innersep1 = " ";
 static const std::string innersep2 = ": ";
-// static const std::string webroot = "./wwwroot";
-// static const std::string defaulthome = "index.html";
-static const std::string webroot = "./wwwroot_blog";
-static const std::string defaulthome = "blog_login.html";
+static const std::string webroot = "./wwwroot";
+static const std::string defaulthome = "index.html";
+// static const std::string webroot = "./wwwroot_blog";
+// static const std::string defaulthome = "blog_login.html";
 static const std::string defaultHtml404 = "404.html";
 static const std::string suffixsep = ".";
 static const std::string argssep = "?";
@@ -269,6 +270,13 @@ public:
             respstr += x + innersep2 + y + linesep;
         }
 
+        // 添加cookies
+        for (auto &cookie : _cookies)
+        {
+            respstr += cookie;
+            respstr += linesep;
+        }
+
 #ifndef Debug
         LOG(LogLevel::DEBUG) << "序列化: ";
         for (auto &[x, y] : _req_handers)
@@ -326,6 +334,14 @@ public:
         _req_handers[key] = value;
     }
 
+    void SetCookie(const std::string& key, const std::string &value)
+    {
+        std::string cookie = key;
+        cookie += ": ";
+        cookie += value;
+        _cookies.push_back(cookie);
+    }
+
 private:
     std::string _httpversion;
     int _code;
@@ -333,6 +349,8 @@ private:
     std::unordered_map<std::string, std::string> _req_handers;
     std::string _black_line;
     std::string _resp_body;
+
+    std::vector<std::string> _cookies;
 };
 
 using func_t = std::function<HttpResponse(HttpRequest &)>;

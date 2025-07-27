@@ -10,8 +10,17 @@ using namespace std;
 
 HttpResponse Login(HttpRequest& req)
 {
+    HttpResponse resp;
     LOG(LogLevel::DEBUG)<< "-----Login: " << req.Body();
-    return HttpResponse();
+    resp.SetCode(200);
+    // resp.SetCookie("Set-Cookie", req.Body());
+    resp.SetCookie("Set-Cookie", "k1=1");
+    resp.SetCookie("Set-Cookie", "k2=2");
+    resp.SetCookie("Set-Cookie", "k3=3");
+    resp.SetCookie("Set-Cookie", "k4=4");
+
+    resp.SetHeader("Location", "/");
+    return resp;
 }
 HttpResponse Register(HttpRequest& req)
 {
@@ -39,9 +48,7 @@ int main(int argc, char *argv[])
         exit(0);
     }
 
-    EnableFileLog();
-
-    // myDaemon();
+    // EnableFileLog();
 
     std::unique_ptr<Http> http = std::make_unique<Http>();
     // 注册服务
