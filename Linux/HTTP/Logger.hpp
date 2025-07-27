@@ -87,7 +87,7 @@ private:
     Mutex _lock;
 };
 
-const std::string logdefaultdir = "/var/NetCal/log";
+const std::string logdefaultdir = "./log";
 const static std::string logfilename = "test.log";
 
 class FileLogStrategy : public LogStrategy

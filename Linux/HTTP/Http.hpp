@@ -3,7 +3,7 @@
 #include <string>
 #include <unordered_map>
 #include <sstream>
-#include <string_view>
+#include <functional>
 
 #include "Logger.hpp"
 
@@ -11,11 +11,13 @@
 static const std::string linesep = "\r\n";
 static const std::string innersep1 = " ";
 static const std::string innersep2 = ": ";
-static const std::string webroot = "./wwwroot";
-// static const std::string defaulthome = "blog_login.html";
-static const std::string defaulthome = "index.html";
+// static const std::string webroot = "./wwwroot";
+// static const std::string defaulthome = "index.html";
+static const std::string webroot = "./wwwroot_blog";
+static const std::string defaulthome = "blog_login.html";
 static const std::string defaultHtml404 = "404.html";
 static const std::string suffixsep = ".";
+static const std::string argssep = "?";
 
 class HttpRequest
 {
@@ -101,9 +103,35 @@ public:
         for (auto &[x, y] : _req_handers)
             LOG(LogLevel::DEBUG) << "kv: " << x << ": " << y;
 
-        LOG(LogLevel::DEBUG) << "查看路径: " << _path;
+        LOG(LogLevel::DEBUG) << "查看解析前的路径: " << _path;
         LOG(LogLevel::DEBUG) << "查看请求体: " << _req_body;
 #endif
+        // 解析参数
+        if (_method == "GET")
+        {
+            auto pos = _path.find(argssep);
+            if (pos != std::string::npos)
+            {
+                _req_body = _path.substr(pos + argssep.size());
+                _path = _path.substr(0, pos);
+            }
+#ifndef Debug
+            LOG(LogLevel::DEBUG) << "查看解析后的路径: " << _path;
+            LOG(LogLevel::DEBUG) << "查看解析后的参数: " << _req_body;
+#endif
+        }
+        else if (_method == "POST")
+        {
+            _req_body = reqstr;
+#ifndef Debug
+            LOG(LogLevel::DEBUG) << "查看解析后的参数: " << _req_body;
+#endif
+        }
+        else
+        {
+            // 还没有写
+        }
+
         return true;
     }
     std::string Path()
@@ -114,6 +142,11 @@ public:
     void SetPath(const std::string &path)
     {
         _path = path;
+    }
+
+    std::string Body()
+    {
+        return _req_body;
     }
 
     std::string Suffix()
@@ -302,8 +335,13 @@ private:
     std::string _resp_body;
 };
 
+using func_t = std::function<HttpResponse(HttpRequest &)>;
+
 class Http
 {
+private:
+    std::unordered_map<std::string, func_t> _handlers;
+
 private:
     std::string Suffix2Desc(const std::string &suffix)
     {
@@ -385,36 +423,47 @@ public:
     Http()
     {
     }
-
+    void Register(const std::string &action, func_t handler)
+    {
+        std::string key = webroot + action;
+        _handlers[key] = handler;
+    }
     std::string HandlerRequest(std::string &requeststr)
     {
         std::string respstr;
         HttpRequest req;                 // 请求
         if (req.Deserialize(requeststr)) // 反序列化
         {
-            HttpResponse resp;                // 构建回复
-            if(req.Path() == "/redir") // for test
+            HttpResponse resp; // 构建回复
+            // 交互式处理
+            std::string target = req.Path();
+            if (_handlers.find(target) != _handlers.end())
             {
-                resp.SetCode(307); // 设置临时重定向
-                resp.SetHeader("Location", "/" + defaultHtml404);
+                resp = _handlers[target](req); // 让上层进行处理
             }
-            else if (resp.ReadContent(req.Path())) // 读取内容
+            else // 处理静态网页资源
             {
-                std::string suffix = req.Suffix();                 // 获取后缀
-                std::string mime_type_value = Suffix2Desc(suffix); // 识别类型
-                resp.SetHeader("Content-type", mime_type_value);   // 添加类型
-                resp.SetCode(200);
-            }
-            else // 没有此路径的文件
-            {
-                std::string error_404 = webroot + "/" + defaultHtml404;
-                req.SetPath(error_404);       // 设置状态码
-                resp.ReadContent(req.Path()); // 读取内容
+                if (resp.ReadContent(req.Path())) // 读取内容
+                {
+                    std::string suffix = req.Suffix();                 // 获取后缀
+                    std::string mime_type_value = Suffix2Desc(suffix); // 识别类型
+                    resp.SetHeader("Content-type", mime_type_value);   // 添加类型
+                    resp.SetCode(200);
+                }
+                else // 没有此路径的文件
+                {
+                    resp.SetCode(301);
+                    resp.SetHeader("Location", "/404.html");
 
-                std::string suffix = req.Suffix();                 // 获取后缀
-                std::string mime_type_value = Suffix2Desc(suffix); // 识别类型
-                resp.SetHeader("Content-type", mime_type_value);   // 添加类型
-                resp.SetCode(404);
+                    // std::string error_404 = webroot + "/" + defaultHtml404;
+                    // req.SetPath(error_404);       // 设置状态码
+                    // resp.ReadContent(req.Path()); // 读取内容
+
+                    // std::string suffix = req.Suffix();                 // 获取后缀
+                    // std::string mime_type_value = Suffix2Desc(suffix); // 识别类型
+                    // resp.SetHeader("Content-type", mime_type_value);   // 添加类型
+                    // resp.SetCode(404);
+                }
             }
             respstr = resp.Serialize(); // 序列化
         }
