@@ -60,6 +60,10 @@ public:
             exit(CREATE_ERR);
         }
         LOG(LogLevel::INFO) << "create socket success! fd: " << _sockfd;
+        
+        // 设置地址复用
+        int opt = 1;
+        setsockopt(_sockfd, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt));
     }
     void BindSocketOrDie(int port) override
     {

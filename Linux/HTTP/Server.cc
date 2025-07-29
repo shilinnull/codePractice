@@ -3,7 +3,6 @@
 
 #include "Http.hpp"
 #include "TcpServer.hpp"
-#include "daemon.hpp"
 
 using namespace std;
 

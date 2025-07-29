@@ -9,7 +9,7 @@
 #include "Socket.hpp"
 #include "InetAddr.hpp"
 
-using callback_t = std::function<std::string(std::string&)>;
+using callback_t = std::function<std::string(std::string &)>;
 
 class TcpServer
 {
@@ -53,11 +53,12 @@ private:
             ssize_t n = sockfd->Recv(&inbuffer); // 大概率我们直接就能读取到完整的http请求
             if (n > 0)
             {
-                LOG(LogLevel::DEBUG) << "查看接收到的数据# ip: " <<  addr.ToString() << ": " << "\n" << inbuffer;
-                
+                LOG(LogLevel::DEBUG) << "查看接收到的数据# ip: " << addr.ToString() << ": " << "\n"
+                                     << inbuffer;
+
                 // 回掉函数，交给上层处理
                 std::string send_str = _cb(inbuffer);
-                if(send_str.empty())
+                if (send_str.empty())
                     continue;
                 // LOG(LogLevel::DEBUG) << "处理后, 准备发送给客户端: \n" << send_str;
                 sockfd->Send(send_str);
