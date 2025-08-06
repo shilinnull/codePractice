@@ -2,6 +2,7 @@
 #define SELECT_SERVER
 
 #include <algorithm>
+#include <sys/select.h>
 #include "Socket.hpp"
 
 const static int gsize = sizeof(fd_set) * 8;
