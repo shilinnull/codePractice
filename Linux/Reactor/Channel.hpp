@@ -16,7 +16,6 @@ public:
 
     void Recver() override
     {
-        Update(); // 更新最后一次活动时间
         for (;;)
         {
             char buffer[buffersize];
@@ -58,13 +57,13 @@ public:
         // if (!_outbuffer.empty())
         //     Owner()->EnableReadWrite(_sockfd, true, true);
 
+        // 最佳实践 -- 直接发送
         if(!_outbuffer.empty())
             Sender();
     }
 
     void Sender() override
     {
-        Update(); // 更新最后一次活动时间
         for (;;)
         {
             ssize_t n = send(_sockfd, _outbuffer.c_str(), _outbuffer.size(), 0);

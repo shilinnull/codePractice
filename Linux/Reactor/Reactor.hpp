@@ -11,6 +11,7 @@
 class Reactor
 {
     const static int size = 128;
+
 private:
     bool IsExist(std::shared_ptr<Connection> &conn)
     {
@@ -110,19 +111,6 @@ public:
         std::cout << "#############################" << std::endl;
     }
 
-    void CheckTimeOut()
-    {
-        uint64_t currtime = time(nullptr);
-        for (auto &conn : _connections)
-        {
-            uint64_t t = currtime - conn.second->LastActive();
-            if (t > 5 * 60 * 1000)
-            {
-                DelConnection(conn.second->Sockfd());
-            }
-        }
-    }
-
     void Dispatcher()
     {
         int timeout = 1000;
@@ -132,9 +120,7 @@ public:
             LoopOnce(timeout);
             // 2. 连接管理
             ShowConnection();
-            // 3. 超时管理
-            // CheckTimeOut(); // ...bug
-        }
+    }
     }
     ~Reactor() {}
 

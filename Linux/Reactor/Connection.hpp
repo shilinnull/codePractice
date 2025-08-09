@@ -28,8 +28,6 @@ public:
     Reactor *Owner() { return _owner; }
     void SetOwner(Reactor *r) { _owner = r; }
     void SetCallBack(callback_t cb) { _cb = cb; }
-    void Update() { lasttimestamp = time(nullptr); }
-    uint64_t LastActive() { return lasttimestamp; }
 
 protected:
     int _sockfd;            // 连接的socketfd
@@ -37,7 +35,6 @@ protected:
     InetAddr _peer;         // 连接的地址
     std::string _inbuffer;  // 连接的输入缓冲区
     std::string _outbuffer; // 连接的输出缓冲区
-    uint64_t lasttimestamp; // 连接的最后一次活动时间
 
     Reactor *_owner; // 方便添加使用Reactor方法
 
