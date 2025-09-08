@@ -27,7 +27,7 @@ Debug/
 Release/
 .idea/
 cmake-build-debug/
-CMakeLists.txt
+# CMakeLists.txt
 .vscode/
 build*/
 x64/
