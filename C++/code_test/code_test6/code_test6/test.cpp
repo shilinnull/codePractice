@@ -694,23 +694,253 @@ using namespace std;
 //	return 0;
 //}
 
-int main()
-{
-	int x; 
-	double y;
-	std::string z;
+//int main()
+//{
+//	int x; 
+//	double y;
+//	std::string z;
+//
+//	std::tuple<int, double, std::string> t1(10, 3.14, "hello");
+//	// 使用std::tie解包
+//	std::tie(x, y, z) = t1;
+//	// C++17结构化绑定
+//	auto& [a, b, c] = t1;
+//	return 0;
+//}
 
-	std::tuple<int, double, std::string> t1(10, 3.14, "hello");
-	// 使用std::tie解包
-	std::tie(x, y, z) = t1;
-	// C++17结构化绑定
-	auto& [a, b, c] = t1;
-	return 0;
+//template <unsigned int N>
+//struct Factorial {
+//	static const unsigned int value = N * Factorial<N - 1>::value;
+//};
+//
+//// 终止条件特化
+//template <>
+//struct Factorial<0> {
+//	static const unsigned int value = 1;
+//};
+//
+//int main()
+//{
+//	constexpr unsigned int fact5 = Factorial<5>::value; // 编译时计算出120
+//	return 0;
+//}
+
+//namespace lsl
+//{
+//// 主模板
+//template<typename T>
+//struct is_pointer {
+//	static constexpr bool value = false;
+//};
+//
+//// 针对指针类型的偏特化
+//template<typename T>
+//struct is_pointer<T*> {
+//	static constexpr bool value = true;
+//};
+//
+//// 主模板，默认情况类型不同
+//template<typename T, typename U>
+//struct is_same {
+//	static constexpr bool value = false;
+//};
+//
+//// 特化版本，当两个类型相同时
+//template<typename T>
+//struct is_same<T, T> {
+//	static constexpr bool value = true;
+//};
+//
+//// 移除 const
+//// 主模板，默认情况下不改变类型
+//template <typename T>
+//struct remove_const {
+//	using type = T;
+//};
+//
+//// 针对 const T 的特化版本，移除 const
+//template <typename T>
+//struct remove_const<const T> {
+//	using type = T;
+//};
+//
+//// 移除 指针
+//template <typename T>
+//struct remove_pointer {
+//	using type = T;
+//};
+//
+//template <typename T>
+//struct remove_pointer<T*> {
+//	using type = T;
+//};
+//
+//template <typename T>
+//struct remove_pointer<T* const> {
+//	using type = T;
+//};
+//
+//void func()
+//{
+//	static_assert(is_pointer<int*>::value, "int* is a pointer");
+//	static_assert(lsl::is_pointer<int>::value, "int is not a pointer");
+//	static_assert(is_same<int, int>::value, "int and int should be the same");
+//	static_assert(is_same<int, float>::value, "int and float should be different");
+//	static_assert(is_same<remove_pointer<int*>::type, int>::value, "int and int should be the same");
+//	static_assert(is_same<remove_const<const int>::type, int>::value, "int and int should be the same");
+//}
+//}
+//
+//int main()
+//{
+//	lsl::func();
+//	return 0;
+//}
+
+//
+//template<typename T>
+//void process(T value) {
+//	if constexpr (std::is_pointer_v<T>) {
+//		// 指针类型的处理
+//		std::cout << "Processing pointer: " << *value << std::endl;
+//	}
+//	else if constexpr (std::is_integral_v<T>) {
+//		// 整数类型的处理
+//		std::cout << "Processing integer: " << value * 2 << std::endl;
+//	}
+//	else if constexpr (std::is_floating_point_v<T>) {
+//		// 浮点类型的处理
+//		std::cout << "Processing float: " << value / 2.0 << std::endl;
+//	}
+//	else {
+//		// 默认处理
+//		std::cout << "Processing unknown type" << std::endl;
+//	}
+//}
+
+//
+//int main()
+//{
+//	// 使用
+//	int i = 42;
+//	process(i);					// Processing integer: 84
+//	process(&i);				// Processing pointer: 42
+//	process(3.14);				// Processing float: 1.57
+//	process("hello");			// Processing pointer: h
+//	process(string("world"));	// Processing unknown type
+//	return 0;
+//}
+
+// 版本1：仅适用于可递增的类型（如 int）
+/*
+template<typename T>
+auto foo(T x) -> decltype(++x, void()) {
+	std::cout << "foo(T): " << x << " (can be incremented)\n";
 }
+*/
+
+// C++17 使用void_t优化上面的写法
+//template<typename T>
+//auto foo(T x) -> std::void_t<decltype(++x)> {
+//	std::cout << "foo(T): " << x << " (can be incremented)\n";
+//}
+//
+//// 版本2：回退版本
+//void foo(...) {
+//	std::cout << "foo(...): fallback (cannot increment)\n";
+//}
+//
+//int main() 
+//{
+//	foo(42);					// 调用版本1（int 支持 ++x）
+//	foo(std::string("1111"));	// 调用版本2（string 不支持 ++x）
+//	return 0;
+//}
 
 
+//#include <type_traits>
+//// 对于整数类型启用此重载
+//template<typename T>
+//typename std::enable_if_t<std::is_integral_v<T>, T>
+//
+//add_one(T t) {
+//	return t + 1;
+//}
+//
+//// 对于浮点类型启用此重载
+//template<typename T>
+//typename std::enable_if_t<std::is_floating_point_v<T>, T>
+//add_one(T t) {
+//	return t + 2.0;
+//}
+//
+//// 模板参数的检查
+//template<typename T, typename = std::enable_if_t<std::is_integral_v<T>>>
+//void process_integer(T value) {
+//	// 只接受整数类型
+//}
+//
+//int main() 
+//{
+//	std::cout << add_one(5) << "\n";		// 调用整数版本，输出6
+//	std::cout << add_one(3.14) << "\n";		// 调用浮点版本，输出4.14
+//	//add_one("hello");					// 编译错误，没有匹配的重载
+//	process_integer(1);
+//	//process_integer(1.1);				// 编译错误，没有匹配的重载
+//	return 0;
+//}
 
+//template<typename T>
+//constexpr T pi = T(3.1415926535897932385);
+//
+//template<class T >
+//constexpr bool is_integral_v = is_integral<T>::value;
+//
+//template <typename T>
+//auto process(T value) {
+//	if constexpr (std::is_integral_v<T>) {
+//		return value * 2;
+//	}
+//	else if constexpr (std::is_floating_point_v<T>) {
+//		return value / 2;
+//	}
+//	else {
+//		return value;
+//	}
+//}
+//
+//int main() 
+//{
+//	process(1);
+//	process(1.1);
+//
+//	float f = pi<float>; // 单精度π
+//	double x = pi<double>; // 双精度π
+//	
+//	// 使用不同精度的π
+//	std::cout.precision(6);
+//	std::cout << "float π: " << f << std::endl;
+//
+//	std::cout.precision(10);
+//	std::cout << "double π: " << x << std::endl;
+//	return 0;
+//}
 
-
+//// 定义一个要求T是整形的概念
+//template< class T >
+//concept Integral = std::is_integral_v<T>;
+//
+//// 1、模板参数后直接使用
+//template<Integral T>
+//void f1(T x)
+//{
+//	std::cout << "有 concepts 约束" << std::endl;
+//}
+//
+//int main()
+//{
+//	f1(1);
+//	return 0;
+//}
 
 
