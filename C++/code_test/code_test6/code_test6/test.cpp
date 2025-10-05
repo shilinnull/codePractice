@@ -943,4 +943,119 @@ auto foo(T x) -> decltype(++x, void()) {
 //	return 0;
 //}
 
+//template<class T>
+//constexpr T pi = T(3.1415926535897932385L); // 变量模板
+//
+//template<class T>
+//T circular_area(T r) // 函数模板
+//{
+//	return pi<T> *r * r; // pi<T> 是变量模板实例化
+//}
+//
+//template<std::size_t N>
+//constexpr std::size_t factorial = N * factorial<N - 1>;
+//
+//// 特化
+//template<>
+//constexpr std::size_t factorial<0> = 1;
+//
+//template<class T>
+//constexpr bool is_const_v = is_const<T>::value;
+//
+//int main() 
+//{
+//	// 使用不同精度的π
+//	std::cout.precision(6);
+//	std::cout << "float π: " << pi<float> << std::endl;
+//
+//	std::cout.precision(10);
+//	std::cout << "double π: " << pi<double> << std::endl;
+//
+//	std::cout.precision(6);
+//	float radius1 = 2.5;
+//	std::cout << "半径为 " << radius1 << " 的圆面积: " << circular_area(radius1) << std::endl;
+//	std::cout.precision(10);
+//
+//	double radius2 = 2.5;
+//	std::cout << "半径为 " << radius2 << " 的圆面积: " << circular_area(radius2) << std::endl;
+//	std::cout << factorial<5> << std::endl;
+//	std::cout << factorial<10> << std::endl;
+//	return 0;
+//}
 
+//int main() 
+//{
+//	// 另一个泛型Lambda示例 - 返回两个参数中较大的一个
+//	auto getMax = [](const auto& a, const auto& b) {
+//		return a > b ? a : b;
+//	};
+//	
+//	std::cout << "最大整数: " << getMax(10, 20) << std::endl;
+//	std::cout << "最大字符串: " << getMax(std::string("apple"), std::string("banana")) << std::endl;
+//
+//	// 这里参数写成auto&&时类似引用折叠部分讲的万能引用
+//	// 实参是左值就是左值引用，实参是右值就是右值引用
+//	auto func = [](auto&& x, auto& y) {
+//		x += 97;
+//		y += 97;
+//	};
+//	
+//	int i = 0, j = 1;
+//	func(10, i);
+//	func(j, i);
+//	std::string s1("hello worldxxxxxxxxxxxx");
+//	func(move(s1), i);
+//	func(s1, i);
+//	
+//	// 也可以写成这样带可变模板参数的写法
+//	std::vector<std::string> v;
+//	auto f1 = [&v](auto&&... ts) {
+//			v.emplace_back(std::forward<decltype(ts)>(ts)...);
+//	};
+//	f1(move(s1));
+//	f1("1111111");
+//	f1(10, 'y');
+//	for (auto& e : v)
+//		std::cout << e << " ";
+//	return 0;
+//}
+
+//int main() 
+//{
+//	std::vector<int> numbers = { 1, 2, 3, 4, 5 };
+//	// 使用表达式初始化捕获的变量
+//	auto p = std::make_unique<int>(10);
+//	auto lambda1 = [value = 5, ptr = std::move(p), &numbers]() {
+//		std::cout << "捕获的值: " << value << std::endl;
+//		std::cout << "捕获的智能指针值: " << *ptr << std::endl;
+//		std::cout << "捕获的vector大小: " << numbers.size() << std::endl;
+//	};
+//	lambda1();
+//	
+//	// 另一个例子 - 在捕获时计算值
+//	int x = 10;
+//	auto lambda2 = [y = x * 2]() {
+//		std::cout << "y = x * 2 = " << y << std::endl;
+//	};
+//	lambda2();
+//	return 0;
+//}
+
+int main() 
+{
+	// 泛型 lambda，operator() 是一个拥有两个（模板）形参的模板
+	auto glambda = []<class T>(T a, auto&& b) { return a < b; };
+
+	// 泛型 lambda，operator() 是一个拥有一个形参包的模板
+	std::vector<std::string> v;
+	auto f2 = [&v]<typename... Args>(Args&&... ts) {
+		v.emplace_back(std::forward<Args>(ts)...);
+	};
+	std::string s1("hello wrold");
+	f2(s1);
+	f2("1111111");
+	f2(10, 'y');
+	for (auto& e : v)
+		std::cout << e << " ";
+	return 0;
+}
