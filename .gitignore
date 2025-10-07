@@ -45,3 +45,4 @@ out/
 # information for Eclipse / Flash Builder.
 /BinaryTree_Test_2/Queue.c
 /BinaryTree_Test_2/Queue.c
+*.slnx
