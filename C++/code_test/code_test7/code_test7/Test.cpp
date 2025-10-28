@@ -67,3 +67,46 @@ using namespace std;
 //}
 
 
+// #include "Cache.h"
+
+// int main() {
+//     cout << &bufferSize << endl;
+//     cout << &cacheSize << endl;
+//     func();
+//     return 0;
+// }
+
+#include <iostream>
+#include <map>
+#include <string>
+
+void ifwitchInit(){
+    std::map<std::string, int> m{{"Alice", 15}, {"Bob", 30}};
+    if(auto it = m.find("Alice"); it != m.end()) {
+        std::cout << "Found Alice, age: " << it->second << std::endl;
+    } else {
+        std::cout << "Alice not found" << std::endl;
+    }
+}
+int CheckVal(int v) {
+    return v % 2;
+}
+
+void SwitchwithInit(int value) {
+    switch (auto status = CheckVal(value); status)  {
+    case 0:
+        std::cout << "Status is Zero" << endl;
+        break;
+    case 1:
+        std::cout << "Status is one" << std::endl;
+        break;
+    default:
+        std::cout << "Unknown status: " << status << std::endl;
+    }
+}
+
+int main() {
+    ifwitchInit();
+    SwitchwithInit(42);
+    return 0;
+}

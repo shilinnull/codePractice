@@ -2,9 +2,15 @@
 
 using namespace std;
 
-// ÔÚ¶à¸ö·­Òëµ¥Ôª(.cppÎÄ¼ş)ÖĞ°üº¬´ËÍ·ÎÄ¼ş»áµ¼ÖÂÁ´½Ó´íÎó
-// int bufferSize = 1024;		// Á´½Ó±¨´í
-const int bufferSize = 1024;	// Ã¿¸ö.cppÎÄ¼ş¶¼»áÓĞ×Ô¼ºµÄbufferSize¸±±¾£¬Õâ²»ÊÇÎÒÃÇÏëÒªµÄ
-const int cacheSize = 4 * 1024;
+// åœ¨å¤šä¸ªç¿»è¯‘å•å…ƒ(.cppæ–‡ä»¶)ä¸­åŒ…å«æ­¤å¤´æ–‡ä»¶ä¼šå¯¼è‡´é“¾æ¥é”™è¯¯
+// int bufferSize = 1024;		// é“¾æ¥æŠ¥é”™
+const int bufferSize = 1024;	// æ¯ä¸ª.cppæ–‡ä»¶éƒ½ä¼šæœ‰è‡ªå·±çš„bufferSizeå‰¯æœ¬ï¼Œè¿™ä¸æ˜¯æˆ‘ä»¬æƒ³è¦çš„
+/*inline*/ const int cacheSize = 4 * 1024;  // æ¯ä¸€ä¸ªcppæ–‡ä»¶éƒ½æ˜¯åŒä¸€ä¸ªcacheSize
 
 void func();
+
+class Widget { 
+public:
+    inline static std::string name = "å¼ ä¸‰"; // å£°æ˜ 
+    static const int version = 1; // ä»…å¯¹æ•´å‹static constå…è®¸ç±»å†…å®šä¹‰åˆå§‹åŒ– 
+};
