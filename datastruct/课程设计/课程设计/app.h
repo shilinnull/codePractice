@@ -60,7 +60,6 @@ DLNode* GetDLinkHead();
 //信息结点存储
 Message* CreatMessage(const wchar_t* name, const wchar_t* street, const wchar_t* city, const wchar_t* state, const wchar_t* tel);
 
-
 //窗口结构体
 typedef struct ScreenWindow {
 	int width;//屏幕宽度

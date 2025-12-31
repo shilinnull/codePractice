@@ -39,6 +39,8 @@ void DestoryDLink(DLNode* head) {
 		cur = next;
 	}
 }
+
+
 //输入信息
 void enter(DLNode* head, Message* data) {
 	DLNode* node = CreatDLNode(data);
@@ -96,7 +98,8 @@ void save(DLNode* head) {
 	DLNode* cur = head->next; // 跳过头节点
 
 	while (cur != head) {
-		if (fwprintf(fp, L"%ls\t%ls\t%ls\t%ls\t%ls\n", cur->data->NAME, cur->data->STREET, cur->data->CITY, cur->data->STATE, cur->data->EIP) < 0) {
+		if (fwprintf(fp, L"%ls\t%ls\t%ls\t%ls\t%ls\n", cur->data->NAME, cur->data->STREET, \
+			cur->data->CITY, cur->data->STATE, cur->data->EIP) < 0) {
 			printf("无法写入数据!\n");
 			exit(-1);
 		}
@@ -127,7 +130,8 @@ void load(DLNode* head) {
 			exit(-1);
 		}
 
-		if (fwscanf(fp, L"%ls\t%ls\t%ls\t%ls\t%ls\n", Newnode->NAME, Newnode->STREET, Newnode->CITY, Newnode->STATE, Newnode->EIP) != 5) {
+		if (fwscanf(fp, L"%ls\t%ls\t%ls\t%ls\t%ls\n", Newnode->NAME, Newnode->STREET, \
+			Newnode->CITY, Newnode->STATE, Newnode->EIP) != 5) {
 			printf("读取数据错误!\n");
 			continue;
 		}
@@ -139,13 +143,12 @@ void load(DLNode* head) {
 		newnode->prev = cur;
 		cur = newnode;
 	}
-
 	// 连接首尾节点
 	cur->next = head;
 	head->prev = cur;
-
 	fclose(fp); // 关闭文件
 }
+
 
 //获取链表头部(包括信息装入....
 DLNode* GetDLinkHead() {
@@ -185,7 +188,6 @@ void DrawLines(ScreenWindow* Screen) {
 	line(0,0,0, Screen->height);
 	line(0, Screen->height, Screen->width, Screen->height);
 }
-
 
 //信息录入
 Message* enterMessage(ScreenWindow* Screen, ExMessage*mouse) {
@@ -460,8 +462,6 @@ int displayAllMessage(ScreenWindow* Screen, ExMessage* mouse, DLNode* cur) {
 
 	return resultcode;
 }
-
-
 
 //信息显示
 void displayMessage(ScreenWindow* Screen, ExMessage* mouse,DLNode*head) {

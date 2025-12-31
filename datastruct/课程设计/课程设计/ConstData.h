@@ -2,7 +2,6 @@
 #include <graphics.h>
 #include <conio.h>
 
-
 //屏幕大小
 extern const int Screen_Width = 400;
 extern const int Screen_Height = 600;
