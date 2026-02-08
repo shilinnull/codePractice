@@ -10,7 +10,7 @@ print(f"字典所有键：{list(student.keys())}")
 print(f"字典所有值：{list(student.values())}")
 print("\n=== 嵌套字典操作 ===")
 math_score = student["scores"]["计算机"]
-print(f"乔乾峰计算机成绩：{math_score}")
+print(f"梁仕林计算机成绩：{math_score}")
 student["scores"]["408"] = 120
 print(f"修改后408成绩：{student['scores']['408']}")
 print("\n=== 字典推导式 ===")

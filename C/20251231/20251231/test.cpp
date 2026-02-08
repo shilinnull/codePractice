@@ -67,40 +67,57 @@ private:
 // 两个线程交替打印1 - 100
 
 
-#include <Thread>
-#include <mutex>
+//#include <Thread>
+//#include <mutex>
+//
+//int main() {
+//	
+//	std::mutex mtx;
+//	condition_variable cv;
+//	bool flag = false;
+//	int i = 1, n = 100;
+//
+//	thread t1([&] {
+//		while (i < n) {
+//			unique_lock<std::mutex> lock(mtx);
+//			while (flag) cv.wait(lock);
+//			cout << "thread1: " << i++ << endl;
+//			flag = true;
+//			cv.notify_one();
+//		}
+//		});
+//
+//	thread t2([&] {
+//		while (i < n) {
+//			unique_lock<std::mutex> lock(mtx);
+//			while (!flag) cv.wait(lock);
+//			cout << "thread2: " << i++ << endl;
+//			flag = false;
+//			cv.notify_one();
+//		}
+//		});
+//
+//	t1.join();
+//	t2.join();
+//
+//	return 0;
+//}
+//
 
-int main() {
-	
-	std::mutex mtx;
-	condition_variable cv;
-	bool flag = false;
-	int i = 1, n = 100;
-
-	thread t1([&] {
-		while (i < n) {
-			unique_lock<std::mutex> lock(mtx);
-			while (flag) cv.wait(lock);
-			cout << "thread1: " << i++ << endl;
-			flag = true;
-			cv.notify_one();
-		}
-		});
-
-	thread t2([&] {
-		while (i < n) {
-			unique_lock<std::mutex> lock(mtx);
-			while (!flag) cv.wait(lock);
-			cout << "thread2: " << i++ << endl;
-			flag = false;
-			cv.notify_one();
-		}
-		});
-
-	t1.join();
-	t2.join();
-
-	return 0;
+int findminVal(int a[], int n) {
+	int *t = (int*)malloc(sizeof(int) * n);
+	for (int i = 0; i < n; i++) t[i] = 0;
+	for (int i = 0; i < n; i++) if (a[i] > 0) t[a[i]] = 1;
+	int i = 0;
+	for (i = 1; i < n; i++) if (t[i] == 0) return i;
+	return i + 1;
 }
 
+int main() {
+	//int a[] = {-5, 3, 2, 3};
+	int a[] = {1, 2, 3};
 
+	int n = findminVal(a, 3);
+	cout << n << endl;
+	return 0;
+}
