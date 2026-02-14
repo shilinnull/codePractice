@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>动物世界 - AI视频生成器</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #1a2a6c, #b21f1f, #fdbb2d);
+            color: #333;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            padding: 30px 0;
+            color: white;
+        }
+
+        h1 {
+            font-size: 3rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        .main-content {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 30px;
+            margin-top: 20px;
+        }
+
+        .input-section {
+            flex: 1;
+            min-width: 300px;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .output-section {
+            flex: 2;
+            min-width: 300px;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            color: #1a2a6c;
+            border-bottom: 2px solid #fdbb2d;
+            padding-bottom: 10px;
+        }
+
+        .animal-input {
+            width: 100%;
+            min-height: 150px;
+            padding: 15px;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            font-size: 1rem;
+            resize: vertical;
+            margin-bottom: 20px;
+            transition: border-color 0.3s;
+        }
+
+        .animal-input:focus {
+            border-color: #1a2a6c;
+            outline: none;
+        }
+
+        .examples {
+            margin-top: 20px;
+        }
+
+        .example-title {
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #555;
+        }
+
+        .example-item {
+            background: #f0f5ff;
+            padding: 10px;
+            border-radius: 8px;
+            margin-bottom: 8px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .example-item:hover {
+            background: #e0ebff;
+        }
+
+        .generate-btn {
+            background: linear-gradient(to right, #1a2a6c, #b21f1f);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 1.1rem;
+            border-radius: 50px;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 20px;
+            transition: transform 0.3s, box-shadow 0.3s;
+            font-weight: bold;
+            letter-spacing: 1px;
+        }
+
+        .generate-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .generate-btn:disabled {
+            background: #cccccc;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .video-container {
+            width: 100%;
+            background: #000;
+            border-radius: 10px;
+            overflow: hidden;
+            margin-bottom: 20px;
+            min-height: 300px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            position: relative;
+        }
+
+        .video-placeholder {
+            text-align: center;
+            padding: 40px;
+        }
+
+        .video-placeholder i {
+            font-size: 4rem;
+            margin-bottom: 20px;
+            opacity: 0.7;
+        }
+
+        .generated-video {
+            width: 100%;
+            height: auto;
+            max-height: 500px;
+            border-radius: 10px;
+        }
+
+        .result-info {
+            background: #f9f9f9;
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 20px;
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .spinner {
+            border: 5px solid #f3f3f3;
+            border-top: 5px solid #1a2a6c;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .error-message {
+            background: #ffebee;
+            color: #c62828;
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 20px;
+            display: none;
+        }
+
+        .success-message {
+            background: #e8f5e9;
+            color: #2e7d32;
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 20px;
+            display: none;
+        }
+
+        footer {
+            text-align: center;
+            color: white;
+            margin-top: 40px;
+            padding: 20px;
+            opacity: 0.8;
+        }
+
+        @media (max-width: 768px) {
+            .main-content {
+                flex-direction: column;
+            }
+
+            h1 {
+                font-size: 2.2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>动物世界 AI 视频生成器</h1>
+            <p class="subtitle">输入动物描述，AI为您生成专属动物视频</p>
+        </header>
+
+        <div class="main-content">
+            <div class="input-section">
+                <h2 class="section-title">描述您想看到的动物</h2>
+                <textarea class="animal-input" id="animalInput" placeholder="例如：一只在草原上奔跑的狮子，金色的毛发在阳光下闪闪发光..."></textarea>
+
+                <div class="examples">
+                    <div class="example-title">示例描述：</div>
+                    <div class="example-item" onclick="fillExample('一只憨态可掬的大熊猫在竹林中吃竹子，背景是青山绿水。')">
+                        大熊猫在竹林中吃竹子
+                    </div>
+                    <div class="example-item" onclick="fillExample('一群斑马在非洲大草原上奔跑，尘土飞扬，夕阳西下。')">
+                        斑马在草原上奔跑
+                    </div>
+                    <div class="example-item" onclick="fillExample('一只雄鹰在雪山之巅翱翔，展翅高飞，气势磅礴。')">
+                        雄鹰在雪山之巅翱翔
+                    </div>
+                </div>
+
+                <button class="generate-btn" id="generateBtn" onclick="generateVideo()">生成动物视频</button>
+            </div>
+
+            <div class="output-section">
+                <h2 class="section-title">生成的视频</h2>
+
+                <div class="video-container">
+                    <div class="video-placeholder" id="videoPlaceholder">
+                        <i>🐾</i>
+                        <p>视频将在这里显示</p>
+                        <p>请输入动物描述并点击生成按钮</p>
+                    </div>
+                    <video class="generated-video" id="generatedVideo" controls style="display: none;"></video>
+                </div>
+
+                <div class="loading" id="loading">
+                    <div class="spinner"></div>
+                    <p>AI正在努力生成视频，请稍候...</p>
+                </div>
+
+                <div class="error-message" id="errorMessage">
+                    生成视频时出现错误，请稍后重试。
+                </div>
+
+                <div class="success-message" id="successMessage">
+                    视频生成成功！
+                </div>
+
+                <div class="result-info" id="resultInfo" style="display: none;">
+                    <h3>视频信息</h3>
+                    <p><strong>描述：</strong> <span id="videoDescription"></span></p>
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            <p>动物世界 AI 视频生成器 &copy; | 使用AI技术生成逼真动物视频</p>
+        </footer>
+    </div>
+
+    <script>
+        // 填充示例文本
+        function fillExample(text) {
+            document.getElementById('animalInput').value = text;
+        }
+
+        // 生成视频函数
+        function generateVideo() {
+            const animalInput = document.getElementById('animalInput').value.trim();
+            const generateBtn = document.getElementById('generateBtn');
+            const videoPlaceholder = document.getElementById('videoPlaceholder');
+            const generatedVideo = document.getElementById('generatedVideo');
+            const loading = document.getElementById('loading');
+            const errorMessage = document.getElementById('errorMessage');
+            const successMessage = document.getElementById('successMessage');
+            const resultInfo = document.getElementById('resultInfo');
+            const videoDescription = document.getElementById('videoDescription');
+
+            // 验证输入
+            if (!animalInput) {
+                alert('请输入动物描述');
+                return;
+            }
+
+            // 禁用按钮并显示加载状态
+            generateBtn.disabled = true;
+            generateBtn.textContent = '生成中...';
+            videoPlaceholder.style.display = 'none';
+            generatedVideo.style.display = 'none';
+            errorMessage.style.display = 'none';
+            successMessage.style.display = 'none';
+            resultInfo.style.display = 'none';
+            loading.style.display = 'block';
+
+            // 调用后端API生成视频
+            fetch('/generate-video', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    input: animalInput
+                })
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('网络响应不正常');
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (data.success) {
+                    // 显示视频
+                    generatedVideo.src = data.video_url;
+                    generatedVideo.style.display = 'block';
+
+                    // 显示成功消息和结果信息
+                    successMessage.style.display = 'block';
+                    resultInfo.style.display = 'block';
+                    videoDescription.textContent = animalInput;
+                } else {
+                    // 显示错误消息
+                    errorMessage.textContent = data.error || '生成视频时出现错误，请稍后重试。';
+                    errorMessage.style.display = 'block';
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                errorMessage.textContent = '网络错误，请检查连接或稍后重试。';
+                errorMessage.style.display = 'block';
+            })
+            .finally(() => {
+                // 恢复按钮状态
+                generateBtn.disabled = false;
+                generateBtn.textContent = '生成动物视频';
+                loading.style.display = 'none';
+            });
+        }
+
+        // 初始化页面
+        document.addEventListener('DOMContentLoaded', function() {
+            // 可以添加其他初始化代码
+        });
+    </script>
+</body>
+</html>

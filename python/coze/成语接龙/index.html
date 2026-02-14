@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>成语接龙游戏</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Arial', sans-serif;
+        }
+
+        body {
+            background-color: #f5f5f5;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 30px;
+            padding: 20px 0;
+            border-bottom: 2px solid #3498db;
+        }
+
+        .game-info {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #666;
+        }
+
+        .current-idiom {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .current-idiom h2 {
+            color: #2980b9;
+            margin-bottom: 10px;
+        }
+
+        #currentIdiom {
+            font-size: 28px;
+            font-weight: bold;
+            color: #e74c3c;
+            letter-spacing: 5px;
+            margin: 10px 0;
+        }
+
+        .controls {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+
+        .input-area {
+            display: flex;
+            gap: 10px;
+            flex: 1;
+        }
+
+        #idiomInput {
+            flex: 1;
+            padding: 12px 15px;
+            font-size: 16px;
+            border: 2px solid #3498db;
+            border-radius: 4px;
+            outline: none;
+        }
+
+        #idiomInput:focus {
+            border-color: #2980b9;
+            box-shadow: 0 0 5px rgba(52, 152, 219, 0.5);
+        }
+
+        .btn {
+            padding: 12px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+
+        #submitBtn {
+            background-color: #3498db;
+            color: white;
+        }
+
+        #submitBtn:hover {
+            background-color: #2980b9;
+        }
+
+        #surrenderBtn {
+            background-color: #e74c3c;
+            color: white;
+            margin-left: 10px;
+        }
+
+        #surrenderBtn:hover {
+            background-color: #c0392b;
+        }
+
+        .btn:disabled {
+            background-color: #bdc3c7;
+            cursor: not-allowed;
+        }
+
+        .status-message {
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 4px;
+            display: none;
+        }
+
+        .status-message.error {
+            background-color: #f8d7da;
+            color: #721c24;
+            display: block;
+        }
+
+        .status-message.success {
+            background-color: #d4edda;
+            color: #155724;
+            display: block;
+        }
+
+        .status-message.info {
+            background-color: #d1ecf1;
+            color: #0c5460;
+            display: block;
+        }
+
+        .history {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .history h3 {
+            color: #2c3e50;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #eee;
+        }
+
+        #historyList {
+            list-style-type: none;
+        }
+
+        #historyList li {
+            padding: 10px 15px;
+            border-bottom: 1px solid #f1f1f1;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        #historyList li:last-child {
+            border-bottom: none;
+        }
+
+        #historyList li .user {
+            color: #e74c3c;
+            font-weight: bold;
+        }
+
+        #historyList li .ai {
+            color: #2ecc71;
+            font-weight: bold;
+        }
+
+        #historyList li .time {
+            font-size: 12px;
+            color: #7f8c8d;
+            margin-left: 10px;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 20px;
+            color: #666;
+        }
+
+        .debug-info {
+            margin-top: 20px;
+            font-size: 12px;
+            color: #666;
+            padding: 10px;
+            background-color: #f9f9f9;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>成语接龙游戏</h1>
+        <div class="game-info">智能体已生成初始成语，请接下一个成语</div>
+
+        <div class="current-idiom">
+            <h2>当前成语</h2>
+            <div id="currentIdiom" class="loading">加载中...</div>
+        </div>
+
+        <div class="controls">
+            <div class="input-area">
+                <input type="text" id="idiomInput" placeholder="请输入四字成语" maxlength="4" disabled>
+                <button id="submitBtn" class="btn" disabled>提交</button>
+            </div>
+            <button id="surrenderBtn" class="btn">认输</button>
+        </div>
+
+        <div class="status-message" id="statusMessage"></div>
+
+        <div class="history">
+            <h3>游戏历史</h3>
+            <ul id="historyList">
+                <li>游戏尚未开始</li>
+            </ul>
+        </div>
+
+        <div class="debug-info" id="debugInfo">调试信息：页面已加载</div>
+    </div>
+
+    <script>
+        // 获取DOM元素
+        const idiomInput = document.getElementById('idiomInput');
+        const submitBtn = document.getElementById('submitBtn');
+        const surrenderBtn = document.getElementById('surrenderBtn');
+        const currentIdiomElement = document.getElementById('currentIdiom');
+        const statusMessage = document.getElementById('statusMessage');
+        const historyList = document.getElementById('historyList');
+        const debugInfo = document.getElementById('debugInfo');
+
+        // API URL
+        const API_URL = {
+            PLAY: '/api/play',
+            INIT: '/api/init',
+            RESTART: '/api/restart'
+        };
+
+        // 显示调试信息
+        function showDebugInfo(text) {
+            debugInfo.textContent = `调试信息：${text}`;
+            console.log(text);
+        }
+
+        // 显示状态消息
+        function showMessage(text, type) {
+            statusMessage.textContent = text;
+            statusMessage.className = `status-message ${type}`;
+            statusMessage.style.display = 'block';
+
+            // 3秒后自动隐藏成功消息
+            if (type === 'success') {
+                setTimeout(() => {
+                    statusMessage.style.display = 'none';
+                }, 3000);
+            }
+        }
+
+        // 更新历史记录
+        function updateHistory(history) {
+            if (!history || !Array.isArray(history) || history.length === 0) {
+                historyList.innerHTML = '<li>暂无历史记录</li>';
+                return;
+            }
+
+            historyList.innerHTML = '';
+
+            history.forEach(record => {
+                const li = document.createElement('li');
+                li.innerHTML = `
+                    <span class="user">你: ${record.user || '无'}</span>
+                    <span class="ai">AI: ${record.ai || '无'}</span>
+                    <span class="time">${record.timestamp || '未知时间'}</span>
+                `;
+                historyList.appendChild(li);
+            });
+        }
+
+        // 获取初始成语
+        async function fetchInitialIdiom() {
+            try {
+                showDebugInfo('正在获取初始成语...');
+                const response = await fetch(API_URL.INIT);
+
+                if (!response.ok) {
+                    throw new Error(`初始化失败: ${response.status}`);
+                }
+
+                const data = await response.json();
+                currentIdiomElement.textContent = data.current_idiom;
+                updateHistory(data.history);
+
+                // 启用输入框和提交按钮
+                idiomInput.disabled = false;
+                submitBtn.disabled = false;
+
+                showDebugInfo('初始成语获取成功');
+                showMessage('游戏已准备就绪，请接成语', 'success');
+            } catch (error) {
+                showDebugInfo(`获取初始成语失败: ${error.message}`);
+                currentIdiomElement.textContent = '加载失败';
+                showMessage(`初始化失败: ${error.message}，请刷新页面重试`, 'error');
+            }
+        }
+
+        // 提交成语
+        async function submitIdiom() {
+            const userInput = idiomInput.value.trim();
+
+            // 验证输入
+            if (!userInput) {
+                showMessage('请输入成语', 'error');
+                return;
+            }
+
+            if (userInput.length !== 4) {
+                showMessage('请输入四字成语', 'error');
+                return;
+            }
+
+            if (!/^[\u4e00-\u9fa5]+$/.test(userInput)) {
+                showMessage('请输入中文成语', 'error');
+                return;
+            }
+
+            // 禁用按钮和输入框
+            submitBtn.disabled = true;
+            surrenderBtn.disabled = true;
+            idiomInput.disabled = true;
+            submitBtn.textContent = '提交中...';
+
+            try {
+                showDebugInfo(`提交成语: ${userInput}`);
+
+                const response = await fetch(API_URL.PLAY, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ idiom: userInput })
+                });
+
+                const responseData = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(responseData.error || `请求失败，状态码: ${response.status}`);
+                }
+
+                if (responseData.success) {
+                    // 更新当前成语
+                    currentIdiomElement.textContent = responseData.current_idiom;
+
+                    // 显示成功消息
+                    showMessage(`成功接成语: ${responseData.sdk_response}`, 'success');
+
+                    // 更新历史记录
+                    updateHistory(responseData.history);
+
+                    // 清空输入框
+                    idiomInput.value = '';
+                } else {
+                    showMessage(responseData.error || '接龙失败，请重试', 'error');
+                }
+            } catch (error) {
+                showMessage(`请求失败: ${error.message}`, 'error');
+                showDebugInfo(`请求错误详情: ${error.stack}`);
+            } finally {
+                // 启用按钮和输入框
+                submitBtn.disabled = false;
+                surrenderBtn.disabled = false;
+                idiomInput.disabled = false;
+                submitBtn.textContent = '提交';
+            }
+        }
+
+        // 重置游戏
+        async function restartGame() {
+            if (!confirm('确定要认输并重新开始游戏吗？')) {
+                return;
+            }
+
+            // 禁用按钮
+            submitBtn.disabled = true;
+            surrenderBtn.disabled = true;
+            idiomInput.disabled = true;
+            currentIdiomElement.textContent = '重新开始中...';
+            showMessage('正在重新开始游戏...', 'info');
+
+            try {
+                showDebugInfo('重置游戏中...');
+
+                const response = await fetch(API_URL.RESTART, {
+                    method: 'POST'
+                });
+
+                if (!response.ok) {
+                    const errorData = await response.json().catch(() => ({}));
+                    throw new Error(errorData.error || `重置失败，状态码: ${response.status}`);
+                }
+
+                const data = await response.json();
+
+                if (data.success) {
+                    // 更新当前成语
+                    currentIdiomElement.textContent = data.current_idiom;
+
+                    // 更新历史记录
+                    updateHistory(data.history);
+
+                    // 清空输入框
+                    idiomInput.value = '';
+
+                    showMessage('游戏已重新开始，新的成语已生成', 'success');
+                    showDebugInfo('游戏重置成功');
+
+                    // 启用输入框和按钮
+                    idiomInput.disabled = false;
+                    submitBtn.disabled = false;
+                } else {
+                    showMessage(data.error || '重置游戏失败', 'error');
+                }
+            } catch (error) {
+                showMessage(`重置失败: ${error.message}`, 'error');
+                showDebugInfo(`重置错误详情: ${error.stack}`);
+
+                // 尝试恢复显示当前成语
+                currentIdiomElement.textContent = '加载失败';
+            } finally {
+                // 启用按钮
+                surrenderBtn.disabled = false;
+            }
+        }
+
+        // 事件监听
+        submitBtn.addEventListener('click', submitIdiom);
+        surrenderBtn.addEventListener('click', restartGame);
+
+        idiomInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter' && !submitBtn.disabled) {
+                submitIdiom();
+            }
+        });
+
+        // 页面加载时获取初始成语
+        window.addEventListener('load', fetchInitialIdiom);
+    </script>
+</body>
+</html>
