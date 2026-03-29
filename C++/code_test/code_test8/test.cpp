@@ -245,3 +245,52 @@ using namespace std;
 //  }
 //  getchar();
 //}
+
+#include <future>
+
+//void TestFuture(promise<string> ps) { 
+//  ps.set_value("TestFuture value");
+//}
+//int main() {
+//  promise<string> p;
+//  auto fu = p.get_future();  // std::future<string>
+//  auto re = std::thread(TestFuture, move(p));
+//  cout << "fu = " << fu.get() << endl;
+//  cout << "end std::async" << endl;
+//  re.join();
+//  return 0;
+//}
+
+#include <future>
+#include <iostream>
+#include <string>
+#include <thread>
+
+//using namespace std;
+//string TestPackagedTask(int index) {
+//  cout << "begin TestPackagedTask " << index << endl;
+//  return "TestPackagedTask return";
+//}
+//
+//int main() {
+//  std::packaged_task<string(int)> task(TestPackagedTask);
+//  auto result = task.get_future();
+//  task(100);
+//  cout << "result.get() = " << result.get() << endl;
+//
+//  return 0;
+//}
+
+//string testasy(string str) {
+//  cout << "test asy " << str << endl;
+//  this_thread::sleep_for(chrono::seconds(3));
+//  return str + " in async";
+//}
+//int main() {
+//  // future<string> re =
+//  auto re = std::async(testasy, "test");
+//  // auto re = std::async(launch::deferred, testasy, "test");
+//  cout << "end async" << endl;
+//  this_thread::sleep_for(chrono::seconds(1));
+//  std::cout << "the future result : " << re.get() << std::endl;
+//}
