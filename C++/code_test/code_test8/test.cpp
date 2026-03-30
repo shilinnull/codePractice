@@ -3,15 +3,15 @@
 
 using namespace std;
 
-//class A {
-//public:
+// class A {
+// public:
 //	A() { cout << "A()" << endl; }
 //	~A() { cout << "~A()" << endl; }
 //	weak_ptr<A> next;
-//};
+// };
 //
 //
-//int main() {
+// int main() {
 //	shared_ptr<A> a(new A());
 //	shared_ptr<A> b(new A());
 //	a->next = b;
@@ -23,20 +23,20 @@ using namespace std;
 //	cout << b.use_count() << endl;
 //
 //	return 0;
-//}
+// }
 
-//#include <atomic>
-//#include <functional>
+// #include <atomic>
+// #include <functional>
 //
-//namespace lsl {
-//template<class T>
-//class shared_ptr {
-//public:
+// namespace lsl {
+// template<class T>
+// class shared_ptr {
+// public:
 //	explicit shared_ptr(T* ptr = nullptr)
 //		: ptr_(ptr), count_(new atomic<int>(1)) {
 //		cout << "shared_ptr(T* ptr)" << endl;
 //	}
-//	
+//
 //	shared_ptr(const shared_ptr& sp)
 //		: ptr_(sp.ptr_), count_(sp.count_)
 //	{
@@ -53,10 +53,8 @@ using namespace std;
 //
 //	//sp1 = sp2;
 //	shared_ptr<T>& operator=(const shared_ptr<T>& sp) {
-//		cout << "shared_ptr<T>& operator=(const shared_ptr<T>& sp)" << endl;
-//		if (this != &sp) {
-//			release();	// 把当前的资源释放掉
-//			ptr_ = sp.ptr_;
+//		cout << "shared_ptr<T>& operator=(const shared_ptr<T>& sp)" <<
+//endl; 		if (this != &sp) { 			release();	// 把当前的资源释放掉 			ptr_ = sp.ptr_;
 //			count_ = sp.count_;
 //			deleter_ = sp.deleter_;
 //			++(*count_);
@@ -71,7 +69,7 @@ using namespace std;
 //
 //	void release() {
 //		if (--(*count_) == 0) {
-//            cout << "release resource" << endl;
+//             cout << "release resource" << endl;
 //			//delete ptr_;
 //			deleter_(ptr_);
 //			delete count_;
@@ -84,14 +82,14 @@ using namespace std;
 //		cout << "~shared_ptr()" << endl;
 //		release();
 //	}
-//private:
+// private:
 //	T* ptr_;
 //	atomic<int>* count_;
 //	function<void(T*)> deleter_ = [](T* ptr) { delete ptr; };
-//};
-//}
+// };
+// }
 //
-//int main() {
+// int main() {
 //	lsl::shared_ptr<int> sp1(new int(10));
 //	cout << sp1.get() << endl; // 输出指针地址
 //	cout << *sp1 << endl;	// 输出指针指向的值
@@ -101,49 +99,49 @@ using namespace std;
 //	cout << sp2.get() << endl; // 输出指针地址
 //	cout << *sp2 << endl;      // 输出指针指向的值
 //	cout << sp2.use_count() << endl; // 输出引用计数
-//	
-//	// 测试自定义删除器
-//    auto custom_deleter = [](int* ptr) {
-//        cout << "Custom deleter called for value: " << *ptr << endl;
-//        delete ptr;
-//    };
 //
-//	lsl::shared_ptr<int> sp3(new int(100), custom_deleter); // 使用自定义删除器
-//	cout << sp3.use_count() << endl;
+//	// 测试自定义删除器
+//     auto custom_deleter = [](int* ptr) {
+//         cout << "Custom deleter called for value: " << *ptr << endl;
+//         delete ptr;
+//     };
+//
+//	lsl::shared_ptr<int> sp3(new int(100), custom_deleter); //
+//使用自定义删除器 	cout << sp3.use_count() << endl;
 //
 //	return 0;
-//}
+// }
 
 #include <thread>
 #include <vector>
 
-//int main() { 
-//    vector<std::thread> v;
-//    for (int i = 0; i < 1000; ++i) {
-//        v.emplace_back(thread([i]() {
-//            this_thread::sleep_for(chrono::seconds(1));
-//            cout << "thread - " << i << endl; })
-//        );
-//    }
+// int main() {
+//     vector<std::thread> v;
+//     for (int i = 0; i < 1000; ++i) {
+//         v.emplace_back(thread([i]() {
+//             this_thread::sleep_for(chrono::seconds(1));
+//             cout << "thread - " << i << endl; })
+//         );
+//     }
 //
-//    for (int i = 0; i < 1000; ++i) {
+//     for (int i = 0; i < 1000; ++i) {
 //		v[i].join();
-//    }
-//	return 0; 
-//}
+//     }
+//	return 0;
+// }
 
 #include <mutex>
 
-//class XMutex {
-//public:
+// class XMutex {
+// public:
 //	XMutex(mutex& mtx) : mtx_(mtx) { mtx.lock(); }
 //	~XMutex() { mtx_.unlock(); }
-//private:
+// private:
 //	std::mutex& mtx_;
-//};
+// };
 
-//timed_mutex tmux;
-//void ThreadMainTime(int i)
+// timed_mutex tmux;
+// void ThreadMainTime(int i)
 //{
 //	for (;;)
 //	{
@@ -157,8 +155,8 @@ using namespace std;
 //		tmux.unlock();
 //		this_thread::sleep_for(chrono::milliseconds(1));
 //	}
-//}
-//int main(int argc, char* argv[])
+// }
+// int main(int argc, char* argv[])
 //{
 //	for (int i = 0; i < 3; i++) {
 //		thread th(ThreadMainTime, i);
@@ -167,130 +165,203 @@ using namespace std;
 //
 //	getchar();
 //	return 0;
-//}
+// }
 
-//recursive_mutex rmux;
-//void Task1() {
-//  rmux.lock();
-//  // 组合业务 用到同一个锁
-//  cout << "task1 [in]" << endl;
-//  rmux.unlock();
-//}
-//void Task2() {
-//  rmux.lock();
-//  // 组合业务 用到同一个锁
-//  cout << "task2 [in]" << endl;
-//  
-//  rmux.unlock();
-//}
-//void ThreadMainRec(int i) {
-//  for (;;) {
-//    rmux.lock();
-//    // 组合业务 用到同一个锁
-//    Task1();
-//    Task2();
-//    cout << i << "[in]" << endl;
-//    this_thread::sleep_for(chrono::milliseconds(2000));
-//    rmux.unlock();
-//    this_thread::sleep_for(chrono::milliseconds(1));
-//  }
-//}
+// recursive_mutex rmux;
+// void Task1() {
+//   rmux.lock();
+//   // 组合业务 用到同一个锁
+//   cout << "task1 [in]" << endl;
+//   rmux.unlock();
+// }
+// void Task2() {
+//   rmux.lock();
+//   // 组合业务 用到同一个锁
+//   cout << "task2 [in]" << endl;
 //
-//int main(int argc, char* argv[]) {
-//  for (int i = 0; i < 3; i++) {
-//    thread th(ThreadMainRec, i);
-//    th.detach();
-//  }
+//   rmux.unlock();
+// }
+// void ThreadMainRec(int i) {
+//   for (;;) {
+//     rmux.lock();
+//     // 组合业务 用到同一个锁
+//     Task1();
+//     Task2();
+//     cout << i << "[in]" << endl;
+//     this_thread::sleep_for(chrono::milliseconds(2000));
+//     rmux.unlock();
+//     this_thread::sleep_for(chrono::milliseconds(1));
+//   }
+// }
 //
-//  getchar();
-//}
+// int main(int argc, char* argv[]) {
+//   for (int i = 0; i < 3; i++) {
+//     thread th(ThreadMainRec, i);
+//     th.detach();
+//   }
+//
+//   getchar();
+// }
 
 #include <shared_mutex>
 
 //// c++17
-//shared_mutex smux;
+// shared_mutex smux;
 //// c++ 14
-//shared_timed_mutex stmux;
-//void ThreadWrite(int i) {
-//  for (;;) {
-//    stmux.lock_shared(); // 获取共享锁
-//    // 读数据
-//    stmux.unlock_shared();
-//    stmux.lock();        // 获取互斥锁   
-//    cout << i << " Write" << endl;
-//    this_thread::sleep_for(chrono::milliseconds(100));
-//    stmux.unlock();
-//    this_thread::sleep_for(chrono::milliseconds(3000));
-//  }
-//}
+// shared_timed_mutex stmux;
+// void ThreadWrite(int i) {
+//   for (;;) {
+//     stmux.lock_shared(); // 获取共享锁
+//     // 读数据
+//     stmux.unlock_shared();
+//     stmux.lock();        // 获取互斥锁
+//     cout << i << " Write" << endl;
+//     this_thread::sleep_for(chrono::milliseconds(100));
+//     stmux.unlock();
+//     this_thread::sleep_for(chrono::milliseconds(3000));
+//   }
+// }
 //
-//void ThreadRead(int i) {
-//  for (;;) {
-//    stmux.lock_shared();
-//    cout << i << " Read" << endl;
-//    this_thread::sleep_for(chrono::milliseconds(500));
-//    stmux.unlock_shared();
-//    this_thread::sleep_for(chrono::milliseconds(50));
-//  }
-//}
-//int main(int argc, char *argv[]) {
-//  for (int i = 0; i < 3; i++) {
-//    thread th(ThreadWrite, i + 1);
-//    th.detach();
-//  }
-//  this_thread::sleep_for(chrono::milliseconds(100));
-//  for (int i = 0; i < 3; i++) {
-//    thread th(ThreadRead, i + 1);
-//    th.detach();
-//  }
-//  getchar();
-//}
+// void ThreadRead(int i) {
+//   for (;;) {
+//     stmux.lock_shared();
+//     cout << i << " Read" << endl;
+//     this_thread::sleep_for(chrono::milliseconds(500));
+//     stmux.unlock_shared();
+//     this_thread::sleep_for(chrono::milliseconds(50));
+//   }
+// }
+// int main(int argc, char *argv[]) {
+//   for (int i = 0; i < 3; i++) {
+//     thread th(ThreadWrite, i + 1);
+//     th.detach();
+//   }
+//   this_thread::sleep_for(chrono::milliseconds(100));
+//   for (int i = 0; i < 3; i++) {
+//     thread th(ThreadRead, i + 1);
+//     th.detach();
+//   }
+//   getchar();
+// }
 
 #include <future>
 
-//void TestFuture(promise<string> ps) { 
-//  ps.set_value("TestFuture value");
-//}
-//int main() {
-//  promise<string> p;
-//  auto fu = p.get_future();  // std::future<string>
-//  auto re = std::thread(TestFuture, move(p));
-//  cout << "fu = " << fu.get() << endl;
-//  cout << "end std::async" << endl;
-//  re.join();
-//  return 0;
-//}
+// void TestFuture(promise<string> ps) {
+//   ps.set_value("TestFuture value");
+// }
+// int main() {
+//   promise<string> p;
+//   auto fu = p.get_future();  // std::future<string>
+//   auto re = std::thread(TestFuture, move(p));
+//   cout << "fu = " << fu.get() << endl;
+//   cout << "end std::async" << endl;
+//   re.join();
+//   return 0;
+// }
 
 #include <future>
 #include <iostream>
 #include <string>
 #include <thread>
 
+// using namespace std;
+// string TestPackagedTask(int index) {
+//   cout << "begin TestPackagedTask " << index << endl;
+//   return "TestPackagedTask return";
+// }
+//
+// int main() {
+//   std::packaged_task<string(int)> task(TestPackagedTask);
+//   auto result = task.get_future();
+//   task(100);
+//   cout << "result.get() = " << result.get() << endl;
+//
+//   return 0;
+// }
+
+// string testasy(string str) {
+//   cout << "test asy " << str << endl;
+//   this_thread::sleep_for(chrono::seconds(3));
+//   return str + " in async";
+// }
+// int main() {
+//   // future<string> re =
+//   auto re = std::async(testasy, "test");
+//   // auto re = std::async(launch::deferred, testasy, "test");
+//   cout << "end async" << endl;
+//   this_thread::sleep_for(chrono::seconds(1));
+//   std::cout << "the future result : " << re.get() << std::endl;
+// }
+
+#include <iostream>
+
+#include "xthreadpool.h"
 //using namespace std;
-//string TestPackagedTask(int index) {
-//  cout << "begin TestPackagedTask " << index << endl;
-//  return "TestPackagedTask return";
-//}
+//class MyTask : public XTask {
+// public:
+//  int Run() {
+//    cout << "================================================" << endl;
+//    cout << this_thread::get_id() << " Mytask " << name << endl;
+//    cout << "================================================" << endl;
+//    for (int i = 0; i < 10; i++) {
+//      if (is_exit()) break;
+//      cout << "." << flush;
+//      this_thread::sleep_for(chrono::milliseconds(500));
+//    }
+//    return 100;
+//  }
+//  std::string name = "";
+//};
 //
-//int main() {
-//  std::packaged_task<string(int)> task(TestPackagedTask);
-//  auto result = task.get_future();
-//  task(100);
-//  cout << "result.get() = " << result.get() << endl;
+//int main(int argc, char* argv[]) {
+//  XThreadPool pool;
+//  pool.Init(16);
+//  pool.Start();
 //
+//  // MyTask task1;
+//  // task1.name = "test name 001";
+//  // pool.AddTask(&task1);
+//  // MyTask task2;
+//  // task2.name = "test name 002";
+//  // pool.AddTask(&task2);
+//
+//  {
+//    auto task3 = make_shared<MyTask>();
+//    task3->name = "test shared 003";
+//    pool.AddTask(task3);
+//
+//    auto task4 = make_shared<MyTask>();
+//    task4->name = "test shared 004";
+//    pool.AddTask(task4);
+//    auto re = task4->GetReturn();
+//    cout << "task4->GetReturn() = " << re << endl;
+//  }
+//  this_thread::sleep_for(chrono::milliseconds(100));
+//  cout << "task run  count = " << pool.task_run_count() << endl;
+//
+//  this_thread::sleep_for(chrono::seconds(1));
+//  pool.Stop();
+//  cout << "task run  count = " << pool.task_run_count() << endl;
+//
+//  getchar();
 //  return 0;
 //}
 
-//string testasy(string str) {
-//  cout << "test asy " << str << endl;
-//  this_thread::sleep_for(chrono::seconds(3));
-//  return str + " in async";
-//}
-//int main() {
-//  // future<string> re =
-//  auto re = std::async(testasy, "test");
-//  // auto re = std::async(launch::deferred, testasy, "test");
-//  cout << "end async" << endl;
-//  this_thread::sleep_for(chrono::seconds(1));
-//  std::cout << "the future result : " << re.get() << std::endl;
-//}
+#include <barrier>
+void TestBar(int i, barrier<>* bar) {
+  this_thread::sleep_for(chrono::seconds(i));
+  cout << i << " begin wait" << endl;
+  bar->wait(bar->arrive());  // 期待数 -1 阻塞等待，期待为0是返回
+  cout << i << " end wait" << endl;
+}
+
+int main(int argc, char* argv[]) {
+  int count = 3;
+  barrier bar(count);  // 初始数量
+  for (int i = 0; i < count; i++) {
+    thread th(TestBar, i, &bar);
+    th.detach();
+  }
+  getchar();
+  return 0;
+}
