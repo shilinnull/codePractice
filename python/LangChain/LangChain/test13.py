@@ -1,4 +1,3 @@
-from ast import Str
 from typing import List, Iterator
 
 from langchain_core.output_parsers import StrOutputParser
@@ -15,7 +14,7 @@ parser = StrOutputParser()
 #
 # asyncio.run(async_stream())
 
-def split_into_list(input: Iterator[str])-> Iterator[List[Str]]:
+def split_into_list(input: Iterator[str])-> Iterator[List[str]]:
     buffer=""
     for chunk in input:
         buffer += chunk
