@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>控制语句实验</title>
+</head>
+<body>
+<h1>Jinja2控制语句演⽰</h1>
+
+    <h2>1. 条件判断</h2>
+    {% if score >= 90 %}
+        <p>成绩等级：优秀</p>
+    {% elif score >= 60 %}
+        <p>成绩等级：及格</p>
+    {% else %}
+        <p>成绩等级：不及格</p>
+    {% endif %}
+
+    <h2>2. 循环遍历</h2>
+    <ul>
+        {% for book in book_list %}
+            <li>第{{ loop.index }}本：《{{ book }}》</li>
+        {% endfor %}
+    </ul>
+
+</body>
+</html>

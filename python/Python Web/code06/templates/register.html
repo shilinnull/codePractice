@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <title>用户注册</title>
+</head>
+<body>
+  <h1>Flask-WTF表单注册</h1>
+  <form action="/register" method="post">
+    <!-- 自动生成CSRF令牌，必须添加 -->
+    {{ form.csrf_token }}
+
+    <div>
+      {{ form.username.label }}
+      {{ form.username }}
+      <!-- 显示校验错误信息 -->
+      {% for error in form.username.errors %}
+      <span style="color: red;">{{ error }}</span>
+      {% endfor %}
+    </div>
+
+    <div style="margin: 10px 0;">
+      {{ form.password.label }}
+      {{ form.password }}
+      {% for error in form.password.errors %}
+      <span style="color: red;">{{ error }}</span>
+      {% endfor %}
+    </div>
+
+    <div>
+      {{ form.submit }}
+    </div>
+  </form>
+  {% if msg %}
+  <p style="color: green;">{{ msg }}</p>
+  {% endif %}
+</body>
+</html>

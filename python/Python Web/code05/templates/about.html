@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <!-- 继承基模板 -->
+    {% extends "base.html" %}
+
+    <!-- 重写标题块 -->
+    {% block title %}关于实验{% endblock %}
+
+    <!-- 重写主体内容块 -->
+    {% block content %}
+    <h1>关于实验三</h1>
+    <p>本实验核心内容：Jinja2模板引擎的使用</p>
+    <p>实验目标：掌握模板渲染、继承、静态文件引用的基础用法</p>
+    {% endblock %}
+</body>
+</html>
