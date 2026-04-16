@@ -1,0 +1,23 @@
+# Flask核⼼依赖（匹配实验环境）
+Flask==2.3.3
+Jinja2==3.1.6
+MarkupSafe==3.0.3
+Werkzeug==3.1.6
+blinker==1.9.0
+click==8.3.1
+colorama==0.4.6
+itsdangerous==2.2.0
+pip==25.3
+setuptools==80.10.1
+wheel==0.41.2
+# MySQL数据库相关依赖
+pymysql==1.1.0
+flask-sqlalchemy==3.1.1
+flask-cors==4.0.0
+mysql-connector-python==8.2.0
+#房价预测功能所需机器学习依赖
+scikit-learn==1.5.0
+numpy==2.0.0
+pandas==2.2.0
+scipy==1.13.0
+joblib==1.4.0
