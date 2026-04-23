@@ -419,7 +419,7 @@
                         <div class="col-lg-4 col-md-4 mx-auto">
                             <div>
                                 <a href="/house/{{ house.id }}">
-                                    <img class='img-fluid img-box' src="/static/img/house-bg1.jpg" alt="">
+                                    <img class='img-fluid img-box' src="{{ house.id|houseimage }}" alt="">
                                 </a>
                             </div>
                         </div>
@@ -486,7 +486,7 @@
                         <div class="col-lg-10 col-md-10 mx-auto browse-record-first-div">
                             <div class="course">
                                 <div><a href="/house/{{ house.id }}"><img class='img-fluid img-box'
-                                                                          src="/static/img/house-bg1.jpg" alt=""></a>
+                                                                          src="{{ house.id|houseimage }}" alt=""></a>
                                 </div>
                                 <div class="course-info">
                                     <span class="glyphicon glyphicon-map-marker"></span>

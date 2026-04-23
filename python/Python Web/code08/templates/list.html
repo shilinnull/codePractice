@@ -255,7 +255,7 @@
 
                         <div class="col-lg-5 col-md-5 mx-auto">
                             <div><a href="/house/{{ house.id }}"><img class='img-fluid img-box'
-                                                                      src="/static/img/house-bg1.jpg" alt=""></a></div>
+                                                                      src="{{ house.id|houseimage }}" alt=""></a></div>
                         </div>
                         <div class="col-lg-5 col-md-5 mx-auto">
                             <div class="collection-line-info">
@@ -437,24 +437,23 @@
 <script>
     $(document).ready(function () {
         $(".zxf_pagediv").createPage({
-            pageNum: {{total_num}},  // 总的页码数
-            {#pageNum: 10,  // 总的页码数#}
-            current: Number($('#fill-data').attr('class')),  // 当前的页码
+            pageNum: {{ total_num }},  // 总的页码数
+        current: parseInt($('#fill-data').data('current')) || 1,  // 从 data-current 属性获取当前页码
             backfun: function (e) {  // 回调函数
-                console.log(e['current']);  // e['current] 是单击更多房源链接文本时候的页码
-                var n_current = e['current'];
-                // 获取当前页的地址
-                var part_path = window.location.pathname;
-                var path_list = part_path.split('/');
-                // 将单击下一页的页码替换原来的页码
-                path_list[3] = n_current;
-                // 获取重新拼接的新URL地址
-                var n_url = path_list.join('/');
-                console.log(n_url);
-                // 重新加载
-                window.location.replace(n_url);
-            }
-        });
+            console.log(e['current']);  // 用户点击的页码
+            var n_current = e['current'];
+            // 获取当前页的地址
+            var part_path = window.location.pathname;
+            var path_list = part_path.split('/');
+            // 将单击下一页的页码替换原来的页码
+            path_list[3] = n_current;
+            // 获取重新拼接的新URL地址
+            var n_url = path_list.join('/');
+            console.log(n_url);
+            // 重新加载
+            window.location.replace(n_url);
+        }
+    });
     });
 </script>
 

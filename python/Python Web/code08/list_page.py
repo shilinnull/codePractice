@@ -46,8 +46,13 @@ def return_new_list(page):
     house_num = House.query.count()
     # 计算总的页码数，向上取整
     total_num = math.ceil(house_num / 10)
+    # 处理页码超出范围的情况
+    if page < 1:
+        page = 1
+    elif page > total_num:
+        page = total_num if total_num > 0 else 1
     result = House.query.order_by(
-        House.publish_time.desc()).paginate(page, per_page=10)
+        House.publish_time.desc()).paginate(page=page, per_page=10)
     return render_template('list.html', house_list=result.items, page_num=result.page, total_num=total_num)
 
 
@@ -58,8 +63,13 @@ def return_hot_list(page):
     house_num = House.query.count()
     # 计算总的页码数，向上取整
     total_num = math.ceil(house_num / 10)
+    # 处理页码超出范围的情况
+    if page < 1:
+        page = 1
+    elif page > total_num:
+        page = total_num if total_num > 0 else 1
     result = House.query.order_by(
-        House.page_views.desc()).paginate(page, per_page=10)
+        House.page_views.desc()).paginate(page=page, per_page=10)
     return render_template('list.html', house_list=result.items, page_num=result.page, total_num=total_num)
 
 
@@ -77,5 +87,12 @@ def deal_direction(word):
         return word
 
 
+# 根据house的id循环显示不同的图片
+def get_house_image(house_id):
+    image_list = ['/static/img/house-bg1.jpg', '/static/img/house-bg2.jpeg', '/static/img/house-gb.jpg']
+    return image_list[house_id % 3]
+
+
 list_page.add_app_template_filter(deal_title_over, 'dealover')
 list_page.add_app_template_filter(deal_direction, 'dealdirection')
+list_page.add_app_template_filter(get_house_image, 'houseimage')

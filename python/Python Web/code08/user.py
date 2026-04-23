@@ -6,6 +6,15 @@ import json
 user_page = Blueprint('user_page', __name__)
 
 
+# 根据house的id循环显示不同的图片
+def get_house_image(house_id):
+    image_list = ['/static/img/house-bg1.jpg', '/static/img/house-bg2.jpeg', '/static/img/house-gb.jpg']
+    return image_list[house_id % 3]
+
+
+user_page.add_app_template_filter(get_house_image, 'houseimage')
+
+
 @user_page.route('/register', methods=["POST"])
 def register():
     # 获取用户的注册信息，包括用户名、密码、邮箱

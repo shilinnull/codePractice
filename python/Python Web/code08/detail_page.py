@@ -198,3 +198,12 @@ def deal_traffic_txt(word):
 
 
 detail_page.add_app_template_filter(deal_traffic_txt, 'dealNone')
+
+
+# 根据house的id循环显示不同的图片
+def get_house_image(house_id):
+    image_list = ['/static/img/house-bg1.jpg', '/static/img/house-bg2.jpeg', '/static/img/house-gb.jpg']
+    return image_list[house_id % 3]
+
+
+detail_page.add_app_template_filter(get_house_image, 'houseimage')
