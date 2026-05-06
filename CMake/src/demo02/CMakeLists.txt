@@ -1,6 +1,8 @@
 cmake_minimum_required(VERSION 3.20)
-project(xlog)
-include_directories("xlog") # 指定头文件搜索路径
-add_library(xlog SHARED xlog/xlog.cpp) # 生成共享库
-add_executable(test_xlog test_xlog/testxlog.cpp) # 生成可执行文件
-target_link_libraries(test_xlog xlog) # 指定加载库
+project(CALC)
+set(CMAKE_CXX_STANDARD 11) # 指定标准
+#set(SRC_LIST add.c;div.c;main.c;mult.c;sub.c)
+include_directories(${PROJECT_SOURCE_DIR}/include)
+#aux_source_directory(${CMAKE_CURRENT_SOURCE_DIR}/src SRC_LIST)
+file(GLOB SRC_LIST ${CMAKE_CURRENT_SOURCE_DIR}/src/*.c)
+add_executable(app ${SRC_LIST})
